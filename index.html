@@ -307,5 +307,22 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
   if (event.key === "Enter") searchListings();
 });
 </script>
+
+<!-- TOSEVIA Supabase connection -->
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const SUPABASE_URL = "https://ydjjwftkhqqgyzbsfgmh.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = sb_publishable_2HneFnl3wHsoMS_WBHdqQg_PHJubdd4
+
+  const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  window.toseviaSupabase = supabase;
+  console.log("TOSEVIA database connection is ready.");
+</script>
+
 </body>
 </html>
