@@ -5,8 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#102b55">
-<meta name="description" content="TOSEVIA — Your World. Your Marketplace. Discover products and services from around the world.">
-<title>TOSEVIA | Global Marketplace</title>
+<meta name="description" content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world.">
+<title>TOBAY | Global Marketplace</title>
 <style>
 :root {
   --navy:#102b55;
@@ -138,7 +138,7 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 <main>
 <section class="hero" id="home">
  <div class="container hero-content">
-  <div class="eyebrow">WELCOME TO TOSEVIA</div>
+  <div class="eyebrow">WELCOME TO TOBAY</div>
   <h1>Your World.<br><span>Your Marketplace.</span></h1>
   <p>Discover products. Find services. Connect with sellers and skilled professionals across the world — all in one marketplace.</p>
   <div class="search-panel">
@@ -178,7 +178,7 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 <section class="section" id="explore" style="background:#fff">
  <div class="container">
   <div class="section-head">
-   <div><h2>Discover the Marketplace</h2><p>Explore the kinds of products and services TOSEVIA is being built to support.</p></div>
+   <div><h2>Discover the Marketplace</h2><p>Explore the kinds of products and services TOBAY is being built to support.</p></div>
   </div>
   <div class="type-tabs">
    <button class="tab active" onclick="filterType('all',this)">All</button>
@@ -213,7 +213,7 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 <section class="section" id="sell">
  <div class="container">
   <div class="seller-banner">
-   <div><h2>Take Your Business to the World</h2><p>Are you a business owner, independent seller or skilled professional? TOSEVIA is being built to help you showcase products and services to a wider audience.</p></div>
+   <div><h2>Take Your Business to the World</h2><p>Are you a business owner, independent seller or skilled professional? TOBAY is being built to help you showcase products and services to a wider audience.</p></div>
    <button class="btn btn-orange" onclick="showNotice('Seller registration is coming soon. We are building the registration system.')">Become a Seller</button>
   </div>
  </div>
@@ -237,11 +237,11 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
    <div class="footer-brand"><a class="logo" href="#home" style="color:white">TOSE<span>VIA</span></a><p>Your World. Your Marketplace.<br>Products. Services. Opportunities.</p></div>
    <div class="footer-links">
     <div><strong>Marketplace</strong><a href="#categories">Categories</a><a href="#explore">Explore</a></div>
-    <div><strong>Join TOSEVIA</strong><a href="#sell">Become a Seller</a><a href="#home">For Buyers</a></div>
-    <div><strong>Information</strong><a href="#home">About TOSEVIA</a><a href="#home">Contact — coming soon</a></div>
+    <div><strong>Join TOBAY</strong><a href="#sell">Become a Seller</a><a href="#home">For Buyers</a></div>
+    <div><strong>Information</strong><a href="#home">About TOBAY</a><a href="#home">Contact — coming soon</a></div>
    </div>
   </div>
-  <div class="copyright">© <span id="year"></span> TOSEVIA Global Marketplace. All rights reserved.</div>
+  <div class="copyright">© <span id="year"></span> TOBAY Global Marketplace. All rights reserved.</div>
  </div>
 </footer>
 
@@ -308,48 +308,48 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
 });
 </script>
 
-<!-- TOSEVIA Supabase connection -->
+<!-- TOBAY Supabase connection -->
 
-<!-- TOSEVIA ACCOUNT REGISTRATION -->
+<!-- TOBAY ACCOUNT REGISTRATION -->
 <section id="account" style="padding:50px 20px;max-width:650px;margin:30px auto;text-align:center;">
-  <h2>Join TOSEVIA</h2>
+  <h2>Join TOBAY</h2>
   <p>Create an account to explore the marketplace or apply to become a seller.</p>
 
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:25px 0;">
-    <button type="button" onclick="showToseviaForm('buyer')">Register as Buyer</button>
-    <button type="button" onclick="showToseviaForm('seller')">Register as Seller</button>
-    <button type="button" onclick="showToseviaForm('login')">Login</button>
+    <button type="button" onclick="showTobayForm('buyer')">Register as Buyer</button>
+    <button type="button" onclick="showTobayForm('seller')">Register as Seller</button>
+    <button type="button" onclick="showTobayForm('login')">Login</button>
   </div>
 
-  <form id="toseviaAccountForm" style="display:none;text-align:left;padding:25px;border:1px solid #ddd;border-radius:12px;">
-    <h3 id="toseviaFormTitle">Create your account</h3>
+  <form id="tobayAccountForm" style="display:none;text-align:left;padding:25px;border:1px solid #ddd;border-radius:12px;">
+    <h3 id="tobayFormTitle">Create your account</h3>
 
-    <label for="toseviaName">Full name</label>
-    <input id="toseviaName" type="text" autocomplete="name" placeholder="Enter your full name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+    <label for="tobayName">Full name</label>
+    <input id="tobayName" type="text" autocomplete="name" placeholder="Enter your full name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 
   
-<div id="toseviaBusinessField" style="display:none;">
-  <label for="toseviaBusiness">Business or professional name</label>
-  <input id="toseviaBusiness" type="text" placeholder="Enter business name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+<div id="tobayBusinessField" style="display:none;">
+  <label for="tobayBusiness">Business or professional name</label>
+  <input id="tobayBusiness" type="text" placeholder="Enter business name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 
-  <label for="toseviaDescription">What products or services do you offer?</label>
-  <textarea id="toseviaDescription" placeholder="Describe your business or services" rows="4" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;"></textarea>
+  <label for="tobayDescription">What products or services do you offer?</label>
+  <textarea id="tobayDescription" placeholder="Describe your business or services" rows="4" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;"></textarea>
 
-  <label for="toseviaLocation">Business location</label>
-  <input id="toseviaLocation" type="text" placeholder="City and country" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+  <label for="tobayLocation">Business location</label>
+  <input id="tobayLocation" type="text" placeholder="City and country" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 </div>
 
-    <label for="toseviaEmail">Email address</label>
-    <input id="toseviaEmail" type="email" autocomplete="email" required placeholder="Enter your email" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+    <label for="tobayEmail">Email address</label>
+    <input id="tobayEmail" type="email" autocomplete="email" required placeholder="Enter your email" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 
-    <label for="toseviaPassword">Password</label>
-    <input id="toseviaPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+    <label for="tobayPassword">Password</label>
+    <input id="tobayPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 
-    <button id="toseviaSubmit" type="submit">Create Account</button>
-    <p id="toseviaAccountMessage" role="status" aria-live="polite"></p>
+    <button id="tobaySubmit" type="submit">Create Account</button>
+    <p id="tobayAccountMessage" role="status" aria-live="polite"></p>
   </form>
 </section>
-<!-- END TOSEVIA ACCOUNT REGISTRATION -->
+<!-- END TOBAY ACCOUNT REGISTRATION -->
 
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
@@ -363,24 +363,24 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
     SUPABASE_PUBLISHABLE_KEY
   );
 
-  window.toseviaSupabase = supabase;
+  window.tobaySupabase = supabase;
 
-// TOSEVIA REGISTRATION AND LOGIN
+// TOBAY REGISTRATION AND LOGIN
 
-let toseviaAccountMode = "buyer";
+let tobayAccountMode = "buyer";
 
-window.showToseviaForm = function(mode) {
-  toseviaAccountMode = mode;
+window.showTobayForm = function(mode) {
+  tobayAccountMode = mode;
 
-  const form = document.getElementById("toseviaAccountForm");
-  const name = document.getElementById("toseviaName");
-  const businessField = document.getElementById("toseviaBusinessField");
-  const business = document.getElementById("toseviaBusiness");
-  const description = document.getElementById("toseviaDescription");
-  const location = document.getElementById("toseviaLocation");
-  const title = document.getElementById("toseviaFormTitle");
-  const submit = document.getElementById("toseviaSubmit");
-  const message = document.getElementById("toseviaAccountMessage");
+  const form = document.getElementById("tobayAccountForm");
+  const name = document.getElementById("tobayName");
+  const businessField = document.getElementById("tobayBusinessField");
+  const business = document.getElementById("tobayBusiness");
+  const description = document.getElementById("tobayDescription");
+  const location = document.getElementById("tobayLocation");
+  const title = document.getElementById("tobayFormTitle");
+  const submit = document.getElementById("tobaySubmit");
+  const message = document.getElementById("tobayAccountMessage");
 
   form.style.display = "block";
 
@@ -394,7 +394,7 @@ window.showToseviaForm = function(mode) {
   location.required = mode === "seller";
 
   title.textContent =
-    mode === "login" ? "Login to TOSEVIA" :
+    mode === "login" ? "Login to TOBAY" :
     mode === "seller" ? "Seller Registration" :
     "Buyer Registration";
 
@@ -404,19 +404,19 @@ window.showToseviaForm = function(mode) {
   form.scrollIntoView({ behavior: "smooth", block: "center" });
 };
 
-document.getElementById("toseviaAccountForm").addEventListener("submit", async function(event) {
+document.getElementById("tobayAccountForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  const name = document.getElementById("toseviaName").value.trim();
-  const business = document.getElementById("toseviaBusiness").value.trim();
-  const description = document.getElementById("toseviaDescription").value.trim();
-  const location = document.getElementById("toseviaLocation").value.trim();
-  const email = document.getElementById("toseviaEmail").value.trim();
-  const password = document.getElementById("toseviaPassword").value;
-  const message = document.getElementById("toseviaAccountMessage");
-  const submit = document.getElementById("toseviaSubmit");
+  const name = document.getElementById("tobayName").value.trim();
+  const business = document.getElementById("tobayBusiness").value.trim();
+  const description = document.getElementById("tobayDescription").value.trim();
+  const location = document.getElementById("tobayLocation").value.trim();
+  const email = document.getElementById("tobayEmail").value.trim();
+  const password = document.getElementById("tobayPassword").value;
+  const message = document.getElementById("tobayAccountMessage");
+  const submit = document.getElementById("tobaySubmit");
 
-  if (toseviaAccountMode === "seller" &&
+  if (tobayAccountMode === "seller" &&
       (!business || !description || !location)) {
     message.textContent = "Please complete all business details.";
     return;
@@ -428,7 +428,7 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
   try {
     let result;
 
-    if (toseviaAccountMode === "login") {
+    if (tobayAccountMode === "login") {
       result = await supabase.auth.signInWithPassword({
         email,
         password
@@ -466,7 +466,7 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
         message.textContent =
           "Login successful! Your seller application is pending approval.";
       } else {
-        message.textContent = "Login successful. Welcome to TOSEVIA!";
+        message.textContent = "Login successful. Welcome to TOBAY!";
       }
 
     } else {
@@ -476,16 +476,16 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
         options: {
           data: {
             full_name: name,
-            business_name: toseviaAccountMode === "seller" ? business : "",
-            business_description: toseviaAccountMode === "seller" ? description : "",
-            business_location: toseviaAccountMode === "seller" ? location : ""
+            business_name: tobayAccountMode === "seller" ? business : "",
+            business_description: tobayAccountMode === "seller" ? description : "",
+            business_location: tobayAccountMode === "seller" ? location : ""
           }
         }
       });
 
       if (result.error) throw result.error;
 
-      if (toseviaAccountMode === "seller") {
+      if (tobayAccountMode === "seller") {
         if (result.data.session) {
           const user = result.data.user;
 
