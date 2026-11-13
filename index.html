@@ -366,28 +366,32 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
   window.toseviaSupabase = supabase;
 
 // TOSEVIA REGISTRATION AND LOGIN
+
 let toseviaAccountMode = "buyer";
 
 window.showToseviaForm = function(mode) {
   toseviaAccountMode = mode;
 
   const form = document.getElementById("toseviaAccountForm");
-  const nameField = document.getElementById("toseviaName");
+  const name = document.getElementById("toseviaName");
   const businessField = document.getElementById("toseviaBusinessField");
+  const business = document.getElementById("toseviaBusiness");
+  const description = document.getElementById("toseviaDescription");
+  const location = document.getElementById("toseviaLocation");
   const title = document.getElementById("toseviaFormTitle");
   const submit = document.getElementById("toseviaSubmit");
   const message = document.getElementById("toseviaAccountMessage");
 
   form.style.display = "block";
 
-  nameField.required = mode !== "login";
-  nameField.style.display = mode === "login" ? "none" : "block";
+  name.style.display = mode === "login" ? "none" : "block";
+  name.required = mode !== "login";
 
   businessField.style.display = mode === "seller" ? "block" : "none";
 
-  document.getElementById("toseviaBusiness").required = mode === "seller";
-  document.getElementById("toseviaDescription").required = mode === "seller";
-  document.getElementById("toseviaLocation").required = mode === "seller";
+  business.required = mode === "seller";
+  description.required = mode === "seller";
+  location.required = mode === "seller";
 
   title.textContent =
     mode === "login" ? "Login to TOSEVIA" :
@@ -412,7 +416,8 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
   const message = document.getElementById("toseviaAccountMessage");
   const submit = document.getElementById("toseviaSubmit");
 
-  if (toseviaAccountMode === "seller" && (!business || !description || !location)) {
+  if (toseviaAccountMode === "seller" &&
+      (!business || !description || !location)) {
     message.textContent = "Please complete all business details.";
     return;
   }
@@ -424,7 +429,46 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
     let result;
 
     if (toseviaAccountMode === "login") {
-      result = await supabase.auth.signInWithPassword({ email, password });
+      result = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (result.error) throw result.error;
+
+      const user = result.data.user;
+      const metadata = user.user_metadata || {};
+
+      if (metadata.business_name) {
+        const { data: existing, error: checkError } = await supabase
+          .from("seller_applications")
+          .select("id")
+          .eq("user_id", user.id)
+          .limit(1);
+
+        if (checkError) throw checkError;
+
+        if (!existing || existing.length === 0) {
+          const { error: applicationError } = await supabase
+            .from("seller_applications")
+            .insert({
+              user_id: user.id,
+              business_name: metadata.business_name,
+              business_description: metadata.business_description || "",
+              business_location: metadata.business_location || "",
+              contact_email: user.email,
+              status: "pending"
+            });
+
+          if (applicationError) throw applicationError;
+        }
+
+        message.textContent =
+          "Login successful! Your seller application is pending approval.";
+      } else {
+        message.textContent = "Login successful. Welcome to TOSEVIA!";
+      }
+
     } else {
       result = await supabase.auth.signUp({
         email,
@@ -438,69 +482,37 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
           }
         }
       });
-    }
 
-    if (result.error) throw result.error;
+      if (result.error) throw result.error;
 
-    if (toseviaAccountMode === "login") {
-      const user = result.data.user;
-      const details = user.user_metadata || {};
+      if (toseviaAccountMode === "seller") {
+        if (result.data.session) {
+          const user = result.data.user;
 
-      if (details.business_name) {
-        const { data: existing, error: checkError } = await supabase
-          .from("seller_applications")
-          .select("id")
-          .eq("user_id", user.id)
-          .limit(1);
-
-        if (checkError) throw checkError;
-
-        if (!existing.length) {
           const { error: applicationError } = await supabase
             .from("seller_applications")
             .insert({
               user_id: user.id,
-              business_name: details.business_name,
-              business_description: details.business_description || "",
-              business_location: details.business_location || "",
+              business_name: business,
+              business_description: description,
+              business_location: location,
               contact_email: user.email,
               status: "pending"
             });
 
           if (applicationError) throw applicationError;
-        }
 
-        message.textContent = "Login successful! Your seller application is pending approval.";
+          message.textContent =
+            "Seller account created. Your application is pending approval.";
+        } else {
+          message.textContent =
+            "Registration received. Confirm your email, then log in to submit your seller application.";
+        }
       } else {
-        message.textContent = "Login successful. Welcome to TOSEVIA!";
+        message.textContent = result.data.session
+          ? "Buyer account created successfully!"
+          : "Registration received. Please check your email to confirm your account.";
       }
-
-  } else if (toseviaAccountMode === "seller") {
-  if (result.data.session) {
-    const user = result.data.user;
-
-    const { error: applicationError } = await supabase
-      .from("seller_applications")
-      .insert({
-        user_id: user.id,
-        business_name: business,
-        business_description: description,
-        business_location: location,
-        contact_email: user.email,
-        status: "pending"
-      });
-
-    if (applicationError) throw applicationError;
-
-    message.textContent = "Seller account created. Your application is pending approval.";
-  } else {
-    message.textContent = "Registration received. Confirm your email, then log in to submit your seller application.";
-  }
-} 
-    } else {
-      message.textContent = result.data.session
-        ? "Buyer account created successfully!"
-        : "Registration received. Please check your email to confirm your account.";
     }
 
   } catch (error) {
@@ -510,40 +522,6 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
   }
 });
 
-    } else {
-      result = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: name,
-            business_name: toseviaAccountMode === "seller" ? business : ""
-          }
-        }
-      });
-    }
-
-    if (result.error) throw result.error;
-
-    if (toseviaAccountMode === "login") {
-      message.textContent = "Login successful. Welcome to TOSEVIA!";
-    } else if (result.data.session) {
-      message.textContent = toseviaAccountMode === "seller"
-        ? "Account created. Your seller application will require approval."
-        : "Buyer account created successfully!";
-    } else {
-      message.textContent = "Registration received. Please check your email to confirm your account.";
-    }
-
-  } catch (error) {
-    message.textContent = error.message || "Something went wrong. Please try again.";
-  } finally {
-    submit.disabled = false;
-  }
-});
-// END TOSEVIA REGISTRATION AND LOGIN
-
-  console.log("TOSEVIA database connection is ready.");
 </script>
 </body>
 </html>
