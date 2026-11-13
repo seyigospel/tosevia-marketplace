@@ -327,10 +327,17 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
     <label for="toseviaName">Full name</label>
     <input id="toseviaName" type="text" autocomplete="name" placeholder="Enter your full name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 
-    <div id="toseviaBusinessField" style="display:none;">
-      <label for="toseviaBusiness">Business or professional name</label>
-      <input id="toseviaBusiness" type="text" placeholder="Enter business name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
-    </div>
+  
+<div id="toseviaBusinessField" style="display:none;">
+  <label for="toseviaBusiness">Business or professional name</label>
+  <input id="toseviaBusiness" type="text" placeholder="Enter business name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+
+  <label for="toseviaDescription">What products or services do you offer?</label>
+  <textarea id="toseviaDescription" placeholder="Describe your business or services" rows="4" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;"></textarea>
+
+  <label for="toseviaLocation">Business location</label>
+  <input id="toseviaLocation" type="text" placeholder="City and country" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+</div>
 
     <label for="toseviaEmail">Email address</label>
     <input id="toseviaEmail" type="email" autocomplete="email" required placeholder="Enter your email" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
@@ -385,15 +392,23 @@ window.showToseviaForm = function(mode) {
   message.textContent = "";
 };
 
+
 document.getElementById("toseviaAccountForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
   const name = document.getElementById("toseviaName").value.trim();
   const business = document.getElementById("toseviaBusiness").value.trim();
+  const description = document.getElementById("toseviaDescription").value.trim();
+  const location = document.getElementById("toseviaLocation").value.trim();
   const email = document.getElementById("toseviaEmail").value.trim();
   const password = document.getElementById("toseviaPassword").value;
   const message = document.getElementById("toseviaAccountMessage");
   const submit = document.getElementById("toseviaSubmit");
+
+  if (toseviaAccountMode === "seller" && (!business || !description || !location)) {
+    message.textContent = "Please complete all business details.";
+    return;
+  }
 
   message.textContent = "Please wait...";
   submit.disabled = true;
@@ -402,10 +417,92 @@ document.getElementById("toseviaAccountForm").addEventListener("submit", async f
     let result;
 
     if (toseviaAccountMode === "login") {
-      result = await supabase.auth.signInWithPassword({
+      result = await supabase.auth.signInWithPassword({ email, password });
+    } else {
+      result = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          data: {
+            full_name: name,
+            business_name: toseviaAccountMode === "seller" ? business : "",
+            business_description: toseviaAccountMode === "seller" ? description : "",
+            business_location: toseviaAccountMode === "seller" ? location : ""
+          }
+        }
       });
+    }
+
+    if (result.error) throw result.error;
+
+    if (toseviaAccountMode === "login") {
+      const user = result.data.user;
+      const details = user.user_metadata || {};
+
+      if (details.business_name) {
+        const { data: existing, error: checkError } = await supabase
+          .from("seller_applications")
+          .select("id")
+          .eq("user_id", user.id)
+          .limit(1);
+
+        if (checkError) throw checkError;
+
+        if (!existing.length) {
+          const { error: applicationError } = await supabase
+            .from("seller_applications")
+            .insert({
+              user_id: user.id,
+              business_name: details.business_name,
+              business_description: details.business_description || "",
+              business_location: details.business_location || "",
+              contact_email: user.email,
+              status: "pending"
+            });
+
+          if (applicationError) throw applicationError;
+        }
+
+        message.textContent = "Login successful! Your seller application is pending approval.";
+      } else {
+        message.textContent = "Login successful. Welcome to TOSEVIA!";
+      }
+
+  } else if (toseviaAccountMode === "seller") {
+  if (result.data.session) {
+    const user = result.data.user;
+
+    const { error: applicationError } = await supabase
+      .from("seller_applications")
+      .insert({
+        user_id: user.id,
+        business_name: business,
+        business_description: description,
+        business_location: location,
+        contact_email: user.email,
+        status: "pending"
+      });
+
+    if (applicationError) throw applicationError;
+
+    message.textContent = "Seller account created. Your application is pending approval.";
+  } else {
+    message.textContent = "Registration received. Confirm your email, then log in to submit your seller application.";
+  }
+} 
+    } else {
+      message.textContent = result.data.session
+        ? "Buyer account created successfully!"
+        : "Registration received. Please check your email to confirm your account.";
+    }
+
+  } catch (error) {
+    message.textContent = error.message || "Something went wrong. Please try again.";
+  } finally {
+    submit.disabled = false;
+  }
+});
+
     } else {
       result = await supabase.auth.signUp({
         email,
