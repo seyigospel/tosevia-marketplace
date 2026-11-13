@@ -379,9 +379,15 @@ window.showToseviaForm = function(mode) {
   const message = document.getElementById("toseviaAccountMessage");
 
   form.style.display = "block";
+
   nameField.required = mode !== "login";
   nameField.style.display = mode === "login" ? "none" : "block";
+
   businessField.style.display = mode === "seller" ? "block" : "none";
+
+  document.getElementById("toseviaBusiness").required = mode === "seller";
+  document.getElementById("toseviaDescription").required = mode === "seller";
+  document.getElementById("toseviaLocation").required = mode === "seller";
 
   title.textContent =
     mode === "login" ? "Login to TOSEVIA" :
@@ -390,8 +396,9 @@ window.showToseviaForm = function(mode) {
 
   submit.textContent = mode === "login" ? "Login" : "Create Account";
   message.textContent = "";
-};
 
+  form.scrollIntoView({ behavior: "smooth", block: "center" });
+};
 
 document.getElementById("toseviaAccountForm").addEventListener("submit", async function(event) {
   event.preventDefault();
