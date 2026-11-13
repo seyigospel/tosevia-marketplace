@@ -310,6 +310,40 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
 
 <!-- TOSEVIA Supabase connection -->
 
+<!-- TOSEVIA ACCOUNT REGISTRATION -->
+<section id="account" style="padding:50px 20px;max-width:650px;margin:30px auto;text-align:center;">
+  <h2>Join TOSEVIA</h2>
+  <p>Create an account to explore the marketplace or apply to become a seller.</p>
+
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:25px 0;">
+    <button type="button" onclick="showToseviaForm('buyer')">Register as Buyer</button>
+    <button type="button" onclick="showToseviaForm('seller')">Register as Seller</button>
+    <button type="button" onclick="showToseviaForm('login')">Login</button>
+  </div>
+
+  <form id="toseviaAccountForm" style="display:none;text-align:left;padding:25px;border:1px solid #ddd;border-radius:12px;">
+    <h3 id="toseviaFormTitle">Create your account</h3>
+
+    <label for="toseviaName">Full name</label>
+    <input id="toseviaName" type="text" autocomplete="name" placeholder="Enter your full name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+
+    <div id="toseviaBusinessField" style="display:none;">
+      <label for="toseviaBusiness">Business or professional name</label>
+      <input id="toseviaBusiness" type="text" placeholder="Enter business name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+    </div>
+
+    <label for="toseviaEmail">Email address</label>
+    <input id="toseviaEmail" type="email" autocomplete="email" required placeholder="Enter your email" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+
+    <label for="toseviaPassword">Password</label>
+    <input id="toseviaPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+
+    <button id="toseviaSubmit" type="submit">Create Account</button>
+    <p id="toseviaAccountMessage" role="status" aria-live="polite"></p>
+  </form>
+</section>
+<!-- END TOSEVIA ACCOUNT REGISTRATION -->
+
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -323,6 +357,87 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
   );
 
   window.toseviaSupabase = supabase;
+
+// TOSEVIA REGISTRATION AND LOGIN
+let toseviaAccountMode = "buyer";
+
+window.showToseviaForm = function(mode) {
+  toseviaAccountMode = mode;
+
+  const form = document.getElementById("toseviaAccountForm");
+  const nameField = document.getElementById("toseviaName");
+  const businessField = document.getElementById("toseviaBusinessField");
+  const title = document.getElementById("toseviaFormTitle");
+  const submit = document.getElementById("toseviaSubmit");
+  const message = document.getElementById("toseviaAccountMessage");
+
+  form.style.display = "block";
+  nameField.required = mode !== "login";
+  nameField.style.display = mode === "login" ? "none" : "block";
+  businessField.style.display = mode === "seller" ? "block" : "none";
+
+  title.textContent =
+    mode === "login" ? "Login to TOSEVIA" :
+    mode === "seller" ? "Seller Registration" :
+    "Buyer Registration";
+
+  submit.textContent = mode === "login" ? "Login" : "Create Account";
+  message.textContent = "";
+};
+
+document.getElementById("toseviaAccountForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("toseviaName").value.trim();
+  const business = document.getElementById("toseviaBusiness").value.trim();
+  const email = document.getElementById("toseviaEmail").value.trim();
+  const password = document.getElementById("toseviaPassword").value;
+  const message = document.getElementById("toseviaAccountMessage");
+  const submit = document.getElementById("toseviaSubmit");
+
+  message.textContent = "Please wait...";
+  submit.disabled = true;
+
+  try {
+    let result;
+
+    if (toseviaAccountMode === "login") {
+      result = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+    } else {
+      result = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            business_name: toseviaAccountMode === "seller" ? business : ""
+          }
+        }
+      });
+    }
+
+    if (result.error) throw result.error;
+
+    if (toseviaAccountMode === "login") {
+      message.textContent = "Login successful. Welcome to TOSEVIA!";
+    } else if (result.data.session) {
+      message.textContent = toseviaAccountMode === "seller"
+        ? "Account created. Your seller application will require approval."
+        : "Buyer account created successfully!";
+    } else {
+      message.textContent = "Registration received. Please check your email to confirm your account.";
+    }
+
+  } catch (error) {
+    message.textContent = error.message || "Something went wrong. Please try again.";
+  } finally {
+    submit.disabled = false;
+  }
+});
+// END TOSEVIA REGISTRATION AND LOGIN
 
   console.log("TOSEVIA database connection is ready.");
 </script>
