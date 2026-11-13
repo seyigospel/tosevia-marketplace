@@ -401,6 +401,110 @@ window.showTobayForm = function(mode) {
   form.scrollIntoView({ behavior: "smooth", block: "center" });
 };
 
+async function loadTobayAdminDashboard(user) {
+  const message = document.getElementById("tobayAccountMessage");
+
+  const { data: admin, error: adminError } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (adminError) {
+    message.textContent = "Unable to verify administrator access.";
+    return;
+  }
+
+  if (!admin) return;
+
+  let panel = document.getElementById("tobayAdminDashboard");
+
+  if (!panel) {
+    panel = document.createElement("section");
+    panel.id = "tobayAdminDashboard";
+    panel.style.cssText =
+      "display:none;margin:30px auto;padding:25px;background:#fff;border:2px solid #e99b24;border-radius:12px;max-width:1000px;";
+    document.getElementById("tobayAccountForm").after(panel);
+  }
+
+  panel.style.display = "block";
+  panel.innerHTML = `
+    <h2>TOBAY Admin Dashboard</h2>
+    <p>Seller Applications Management</p>
+    <div id="tobayAdminApplications">Loading applications...</div>
+  `;
+
+  const { data: applications, error } = await supabase
+    .from("seller_applications")
+    .select("id,business_name,business_description,business_location,contact_email,status,created_at")
+    .order("created_at", { ascending: false });
+
+  const list = document.getElementById("tobayAdminApplications");
+
+  if (error) {
+    list.textContent = "Could not load applications: " + error.message;
+    return;
+  }
+
+  if (!applications || applications.length === 0) {
+    list.textContent = "No seller applications yet.";
+    return;
+  }
+
+  list.replaceChildren();
+
+  applications.forEach(application => {
+    const card = document.createElement("div");
+    card.style.cssText =
+      "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+    const details = document.createElement("div");
+    details.textContent =
+      "Business: " + application.business_name +
+      " | Email: " + application.contact_email +
+      " | Location: " + application.business_location +
+      " | Status: " + application.status;
+
+    const description = document.createElement("p");
+    description.textContent = application.business_description;
+
+    card.append(details, description);
+
+    if (application.status === "pending") {
+      ["approved", "rejected"].forEach(status => {
+        const button = document.createElement("button");
+        button.textContent =
+          status === "approved" ? "Approve" : "Reject";
+        button.style.cssText =
+          "margin:8px 8px 0 0;padding:10px 18px;cursor:pointer;";
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+
+          const { error: reviewError } = await supabase.rpc(
+            "admin_review_seller_application",
+            {
+              application_id: application.id,
+              new_status: status
+            }
+          );
+
+          if (reviewError) {
+            alert("Review failed: " + reviewError.message);
+            button.disabled = false;
+            return;
+          }
+
+          await loadTobayAdminDashboard(user);
+        });
+
+        card.appendChild(button);
+      });
+    }
+
+    list.appendChild(card);
+  });
+}
+
 document.getElementById("tobayAccountForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
@@ -435,7 +539,7 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
 
       const user = result.data.user;
       const metadata = user.user_metadata || {};
-
+await loadTobayAdminDashboard(user);
       if (metadata.business_name) {
         const { data: existing, error: checkError } = await supabase
           .from("seller_applications")
