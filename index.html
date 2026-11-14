@@ -401,7 +401,7 @@ window.showTobayForm = function(mode) {
   form.scrollIntoView({ behavior: "smooth", block: "center" });
 };
 
-async function loadTobaySellerDashboard(user) {
+  window.loadTobaySellerDashboard = async function(user) {
   const message = document.getElementById("tobayAccountMessage");
 
   const { data: application, error: applicationError } = await supabase
@@ -675,7 +675,7 @@ async function loadTobaySellerDashboard(user) {
   });
 
   await loadMyListings();
-}
+};
 async function loadTobayAdminDashboard(user) {
   const message = document.getElementById("tobayAccountMessage");
 
@@ -910,7 +910,7 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
 
       const user = result.data.user;
       const metadata = user.user_metadata || {};
-      await loadTobaySellerDashboard(user);
+     await window.loadTobaySellerDashboard(user);
 await loadTobayAdminDashboard(user);
       if (metadata.business_name) {
         const { data: existing, error: checkError } = await supabase
