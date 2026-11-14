@@ -402,6 +402,284 @@ window.showTobayForm = function(mode) {
 };
 
 async function loadTobayAdminDashboard(user) {
+
+  
+async function loadTobaySellerDashboard(user) {
+  const message = document.getElementById("tobayAccountMessage");
+
+  const { data: application, error: applicationError } = await supabase
+    .from("seller_applications")
+    .select("id,status")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (applicationError) {
+    if (message) message.textContent = "Unable to check seller approval.";
+    return;
+  }
+
+  if (!application) return;
+
+  let panel = document.getElementById("tobaySellerDashboard");
+
+  if (!panel) {
+    panel = document.createElement("section");
+    panel.id = "tobaySellerDashboard";
+    panel.style.cssText =
+      "display:none;margin:30px auto;padding:25px;background:#fff;border:2px solid #174b91;border-radius:12px;max-width:1000px;";
+    document.getElementById("tobayAccountForm").after(panel);
+  }
+
+  panel.style.display = "block";
+
+  if (application.status !== "approved") {
+    panel.innerHTML = `
+      <h2>TOBAY Seller Dashboard</h2>
+      <p>Your seller application status is:
+        <strong>${application.status}</strong>
+      </p>
+      <p>You can add products and services after your application is approved.</p>
+    `;
+    return;
+  }
+
+  panel.innerHTML = `
+    <h2>TOBAY Seller Dashboard</h2>
+    <p>Add your products or services to the marketplace.</p>
+
+    <form id="tobayListingForm">
+      <label>Listing type</label>
+      <select id="tobayListingType" required style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+        <option value="product">Product</option>
+        <option value="service">Service</option>
+      </select>
+
+      <label>Product or service name</label>
+      <input id="tobayListingTitle" required maxlength="150"
+        placeholder="Enter the name"
+        style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+      <label>Description</label>
+      <textarea id="tobayListingDescription" required maxlength="3000"
+        placeholder="Describe what you are selling"
+        style="display:block;width:100%;padding:12px;margin:8px 0 15px;min-height:100px;"></textarea>
+
+      <label>Category</label>
+      <input id="tobayListingCategory" required maxlength="100"
+        placeholder="Example: Fashion, Electronics, Catering"
+        style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+      <label>Price</label>
+      <input id="tobayListingPrice" type="number" min="0.01" step="0.01" required
+        placeholder="Enter price"
+        style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+      <label>Currency</label>
+      <select id="tobayListingCurrency" required
+        style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+        <option value="NGN">NGN - Nigerian Naira</option>
+        <option value="USD">USD - US Dollar</option>
+        <option value="GBP">GBP - British Pound</option>
+        <option value="EUR">EUR - Euro</option>
+      </select>
+
+      <label>Product photos (JPEG, PNG or WebP; maximum 5 MB each)</label>
+      <input id="tobayListingImages" type="file" accept="image/jpeg,image/png,image/webp" multiple
+        style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+      <button type="submit"
+        style="background:#174b91;color:white;padding:13px 24px;border:0;border-radius:6px;cursor:pointer;">
+        Submit Listing for Approval
+      </button>
+
+      <p id="tobayListingMessage"></p>
+    </form>
+
+    <hr style="margin:25px 0;">
+    <h3>My Listings</h3>
+    <div id="tobayMyListings">Loading your listings...</div>
+  `;
+
+  const form = document.getElementById("tobayListingForm");
+  const listingMessage = document.getElementById("tobayListingMessage");
+  const submitButton = form.querySelector('button[type="submit"]');
+
+  async function loadMyListings() {
+    const container = document.getElementById("tobayMyListings");
+    container.textContent = "Loading your listings...";
+
+    const { data: listings, error } = await supabase
+      .from("listings")
+      .select("id,title,description,category,price,currency,status,image_urls,listing_type")
+      .eq("seller_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      container.textContent = "Could not load listings: " + error.message;
+      return;
+    }
+
+    container.replaceChildren();
+
+    if (!listings || listings.length === 0) {
+      container.textContent = "You have not added any listings yet.";
+      return;
+    }
+
+    listings.forEach(listing => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+      const title = document.createElement("h4");
+      title.textContent = listing.title;
+
+      const details = document.createElement("p");
+      details.textContent =
+        listing.listing_type + " | " +
+        listing.category + " | " +
+        listing.currency + " " + listing.price +
+        " | Status: " + listing.status;
+
+      const description = document.createElement("p");
+      description.textContent = listing.description;
+
+      card.append(title, details, description);
+
+      (listing.image_urls || []).forEach(path => {
+        const { data } = supabase.storage
+          .from("tobay-listings")
+          .getPublicUrl(path);
+
+        const image = document.createElement("img");
+        image.src = data.publicUrl;
+        image.alt = listing.title;
+        image.style.cssText =
+          "width:110px;height:100px;object-fit:cover;margin:5px;border-radius:6px;";
+        card.appendChild(image);
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete Listing";
+      deleteButton.style.cssText =
+        "display:block;margin-top:12px;padding:9px 15px;cursor:pointer;";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to delete this listing?")) return;
+
+        deleteButton.disabled = true;
+
+        const { error: deleteError } = await supabase
+          .from("listings")
+          .delete()
+          .eq("id", listing.id)
+          .eq("seller_id", user.id);
+
+        if (deleteError) {
+          alert("Could not delete listing: " + deleteError.message);
+          deleteButton.disabled = false;
+          return;
+        }
+
+        if (listing.image_urls && listing.image_urls.length > 0) {
+          await supabase.storage
+            .from("tobay-listings")
+            .remove(listing.image_urls);
+        }
+
+        await loadMyListings();
+      });
+
+      card.appendChild(deleteButton);
+      container.appendChild(card);
+    });
+  }
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const listingType = document.getElementById("tobayListingType").value;
+    const title = document.getElementById("tobayListingTitle").value.trim();
+    const description = document.getElementById("tobayListingDescription").value.trim();
+    const category = document.getElementById("tobayListingCategory").value.trim();
+    const price = Number(document.getElementById("tobayListingPrice").value);
+    const currency = document.getElementById("tobayListingCurrency").value;
+    const files = Array.from(document.getElementById("tobayListingImages").files);
+
+    if (!title || !description || !category || !Number.isFinite(price) || price <= 0) {
+      listingMessage.textContent = "Please complete all fields and enter a valid price.";
+      return;
+    }
+
+    for (const file of files) {
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+        listingMessage.textContent =
+          "Each photo must be JPEG, PNG or WebP and no larger than 5 MB.";
+        return;
+      }
+    }
+
+    submitButton.disabled = true;
+    listingMessage.textContent = "Uploading photos and submitting your listing...";
+
+    const uploadedPaths = [];
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const path = user.id + "/" + Date.now() + "-" + i + "-" + safeName;
+
+        const { error: uploadError } = await supabase.storage
+          .from("tobay-listings")
+          .upload(path, file, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.type
+          });
+
+        if (uploadError) throw uploadError;
+
+        uploadedPaths.push(path);
+      }
+
+      const { error: insertError } = await supabase
+        .from("listings")
+        .insert({
+          seller_id: user.id,
+          listing_type: listingType,
+          title,
+          description,
+          category,
+          price,
+          currency,
+          image_urls: uploadedPaths,
+          status: "pending"
+        });
+
+      if (insertError) throw insertError;
+
+      form.reset();
+      listingMessage.textContent =
+        "Your listing was submitted successfully and is waiting for admin approval.";
+
+      await loadMyListings();
+
+    } catch (error) {
+      if (uploadedPaths.length > 0) {
+        await supabase.storage.from("tobay-listings").remove(uploadedPaths);
+      }
+
+      listingMessage.textContent = "Submission failed: " + error.message;
+
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+
+  await loadMyListings();
+}
+
   const message = document.getElementById("tobayAccountMessage");
 
   const { data: admin, error: adminError } = await supabase
@@ -503,6 +781,102 @@ async function loadTobayAdminDashboard(user) {
 
     list.appendChild(card);
   });
+  
+  const listingsHeading = document.createElement("h3");
+  listingsHeading.textContent = "Product & Service Approval";
+  listingsHeading.style.marginTop = "35px";
+
+  const listingsContainer = document.createElement("div");
+  listingsContainer.id = "tobayAdminListings";
+  listingsContainer.textContent = "Loading listings...";
+
+  panel.append(listingsHeading, listingsContainer);
+
+  const { data: listings, error: listingsError } = await supabase
+    .from("listings")
+    .select("id,seller_id,listing_type,title,description,category,price,currency,status,image_urls,created_at")
+    .order("created_at", { ascending: false });
+
+  if (listingsError) {
+    listingsContainer.textContent =
+      "Could not load listings: " + listingsError.message;
+    return;
+  }
+
+  listingsContainer.replaceChildren();
+
+  if (!listings || listings.length === 0) {
+    listingsContainer.textContent = "No product or service listings yet.";
+  }
+
+  (listings || []).forEach(listing => {
+    const card = document.createElement("div");
+    card.style.cssText =
+      "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+    const title = document.createElement("h4");
+    title.textContent = listing.title;
+
+    const details = document.createElement("p");
+    details.textContent =
+      listing.listing_type + " | " +
+      listing.category + " | " +
+      listing.currency + " " + listing.price +
+      " | Status: " + listing.status;
+
+    const description = document.createElement("p");
+    description.textContent = listing.description;
+
+    card.append(title, details, description);
+
+    (listing.image_urls || []).forEach(path => {
+      const { data } = supabase.storage
+        .from("tobay-listings")
+        .getPublicUrl(path);
+
+      const image = document.createElement("img");
+      image.src = data.publicUrl;
+      image.alt = listing.title;
+      image.style.cssText =
+        "width:100px;height:90px;object-fit:cover;margin:5px;border-radius:6px;";
+      card.appendChild(image);
+    });
+
+    if (listing.status === "pending") {
+      ["published", "rejected"].forEach(status => {
+        const button = document.createElement("button");
+        button.textContent =
+          status === "published" ? "Approve & Publish" : "Reject";
+        button.style.cssText =
+          "margin:8px 8px 0 0;padding:10px 16px;cursor:pointer;";
+
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+
+          const { error: reviewError } = await supabase.rpc(
+            "admin_review_listing",
+            {
+              listing_id: listing.id,
+              new_status: status
+            }
+          );
+
+          if (reviewError) {
+            alert("Review failed: " + reviewError.message);
+            button.disabled = false;
+            return;
+          }
+
+          await loadTobayAdminDashboard(user);
+        });
+
+        card.appendChild(button);
+      });
+    }
+
+    listingsContainer.appendChild(card);
+  });
+
 }
 
 document.getElementById("tobayAccountForm").addEventListener("submit", async function(event) {
@@ -539,6 +913,7 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
 
       const user = result.data.user;
       const metadata = user.user_metadata || {};
+      await loadTobaySellerDashboard(user);
 await loadTobayAdminDashboard(user);
       if (metadata.business_name) {
         const { data: existing, error: checkError } = await supabase
