@@ -452,28 +452,104 @@ function updateListings() {
           Number(item.price).toLocaleString()
         : "Price not specified";
 
-      const detailDescription = document.createElement("p");
-      detailDescription.style.cssText = "white-space:pre-wrap;";
-      detailDescription.textContent =
-        item.description || "No description provided.";
+    
+const detailDescription = document.createElement("p");
+detailDescription.style.cssText = "white-space:pre-wrap;";
+detailDescription.textContent =
+  item.description || "No description provided.";
 
-      panel.append(
-        closeButton,
-        detailTitle,
-        detailImage,
-        detailPrice,
-        detailType,
-        detailCategory,
-        detailDescription
+const contactArea = document.createElement("div");
+contactArea.style.cssText =
+  "margin-top:20px;padding-top:15px;border-top:1px solid #ddd;";
+
+const contactHeading = document.createElement("h3");
+contactHeading.textContent = "Contact Seller";
+
+const contactStatus = document.createElement("p");
+contactStatus.textContent = "Loading seller contact details...";
+
+contactArea.append(contactHeading, contactStatus);
+
+panel.append(
+  closeButton,
+  detailTitle,
+  detailImage,
+  detailPrice,
+  detailType,
+  detailCategory,
+  detailDescription,
+  contactArea
+);
+
+modal.appendChild(panel);
+
+modal.addEventListener("click", event => {
+  if (event.target === modal) modal.remove();
+});
+
+document.body.appendChild(modal);
+
+(async () => {
+  const { data, error } = await window.tobaySupabase.rpc(
+    "get_listing_seller_contact",
+    { p_listing_id: item.id }
+  );
+
+  contactStatus.textContent = "";
+
+  if (error || !data || data.length === 0) {
+    contactStatus.textContent =
+      "Seller contact information is currently unavailable.";
+    return;
+  }
+
+  const seller = data[0];
+
+  if (seller.whatsapp_number) {
+    const phone = String(seller.whatsapp_number).replace(/\D/g, "");
+
+    if (phone) {
+      const whatsappButton = document.createElement("a");
+      whatsappButton.href =
+        "https://wa.me/" + phone +
+        "?text=" + encodeURIComponent(
+          "Hello, I am interested in " +
+          (item.title || "your listing") + " on TOBAY."
+        );
+      whatsappButton.target = "_blank";
+      whatsappButton.rel = "noopener noreferrer";
+      whatsappButton.textContent = "Contact Seller on WhatsApp";
+      whatsappButton.style.cssText =
+        "display:block;text-align:center;background:#168b48;" +
+        "color:white;padding:13px;margin:10px 0;border-radius:8px;" +
+        "text-decoration:none;font-weight:bold;";
+
+      contactArea.appendChild(whatsappButton);
+    }
+  }
+
+  if (seller.contact_email) {
+    const emailButton = document.createElement("a");
+    emailButton.href =
+      "mailto:" + seller.contact_email +
+      "?subject=" + encodeURIComponent(
+        "Enquiry about " + (item.title || "your listing") + " on TOBAY"
       );
+    emailButton.textContent = "Contact Seller by Email";
+    emailButton.style.cssText =
+      "display:block;text-align:center;background:#123b70;" +
+      "color:white;padding:13px;margin:10px 0;border-radius:8px;" +
+      "text-decoration:none;font-weight:bold;";
 
-      modal.appendChild(panel);
+    contactArea.appendChild(emailButton);
+  }
 
-      modal.addEventListener("click", event => {
-        if (event.target === modal) modal.remove();
-      });
-
-      document.body.appendChild(modal);
+  if (!seller.whatsapp_number && !seller.contact_email) {
+    contactStatus.textContent =
+      "The seller has not provided contact details.";
+  }
+})();
+ 
     });
 
     body.append(
