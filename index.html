@@ -305,6 +305,7 @@ console.error("Marketplace error:", error);
 }
 
   window.loadTobayMarketplace = loadTobayMarketplace;
+  console.log("TOBAY marketplace function is ready");
 function updateListings() {
   const grid = document.getElementById("listingGrid");
   const emptyMessage = document.getElementById("emptyMessage");
@@ -492,8 +493,14 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
     SUPABASE_PUBLISHABLE_KEY
   );
 
-  window.tobaySupabase = supabase;
-window.loadTobayMarketplace();
+window.tobaySupabase = supabase;
+
+if (typeof window.loadTobayMarketplace === "function") {
+  window.loadTobayMarketplace();
+} else {
+  document.getElementById("listingGrid").textContent =
+    "Marketplace function not found. Please refresh.";
+}
   
 // TOBAY REGISTRATION AND LOGIN
 
