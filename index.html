@@ -1207,6 +1207,7 @@ await loadTobayAdminDashboard(user);
             business_name: tobayAccountMode === "seller" ? business : "",
             business_description: tobayAccountMode === "seller" ? description : "",
             business_location: tobayAccountMode === "seller" ? location : ""
+            whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
           }
         }
       });
@@ -1224,6 +1225,7 @@ await loadTobayAdminDashboard(user);
               business_name: business,
               business_description: description,
               business_location: location,
+              whatsapp_number: whatsapp,
               contact_email: user.email,
               status: "pending"
             });
