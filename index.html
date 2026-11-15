@@ -407,8 +407,7 @@ document.getElementById("marketplaceSearch")
 document.getElementById("marketplaceCategory")
   .addEventListener("change", updateListings);
 console.log("TOBAY MARKETPLACE SCRIPT IS RUNNING");
-// Load published products and services
-loadTobayMarketplace();
+
 
 function searchListings() {
   currentCategory = "all";
@@ -493,7 +492,8 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
   );
 
   window.tobaySupabase = supabase;
-
+window.loadTobayMarketplace();
+  
 // TOBAY REGISTRATION AND LOGIN
 
 let tobayAccountMode = "buyer";
