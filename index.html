@@ -174,40 +174,41 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
  </div>
 </section>
 
+
 <section class="section" id="explore" style="background:#fff">
- <div class="container">
-  <div class="section-head">
-   <div><h2>Discover the Marketplace</h2><p>Explore the kinds of products and services TOBAY is being built to support.</p></div>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Discover the Marketplace</h2>
+        <p>Explore products and services from sellers around the world.</p>
+      </div>
+    </div>
+
+    <div class="marketplace-tools">
+      <input type="search" id="marketplaceSearch"
+        placeholder="Search products and services...">
+
+      <select id="marketplaceCategory">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+
+    <div class="type-tabs">
+      <button class="tab active" data-type="all">All</button>
+      <button class="tab" data-type="product">Products</button>
+      <button class="tab" data-type="service">Services</button>
+    </div>
+
+    <div class="listing-grid" id="listingGrid">
+      <p>Loading marketplace listings...</p>
+    </div>
+
+    <p class="empty-message" id="emptyMessage" hidden>
+      No published listings found.
+    </p>
   </div>
-  <div class="type-tabs">
-   <button class="tab active" onclick="filterType('all',this)">All</button>
-   <button class="tab" onclick="filterType('product',this)">Products</button>
-   <button class="tab" onclick="filterType('service',this)">Services</button>
-  </div>
-  <div class="listing-grid" id="listingGrid">
-   <article class="listing" data-type="product" data-category="fashion" data-search="fashion clothing african wear shoes bags">
-    <div class="listing-art">👗</div><div class="listing-body"><span class="tag">Product category</span><h3>Fashion & Clothing</h3><p>Discover fashion, clothing, footwear and accessories.</p><span class="demo-label">Example category</span></div>
-   </article>
-   <article class="listing" data-type="product" data-category="electronics" data-search="electronics phones gadgets computers">
-    <div class="listing-art">📱</div><div class="listing-body"><span class="tag">Product category</span><h3>Electronics & Gadgets</h3><p>Explore phones, computers and everyday technology.</p><span class="demo-label">Example category</span></div>
-   </article>
-   <article class="listing" data-type="product" data-category="home" data-search="home living furniture decor household">
-    <div class="listing-art">🛋️</div><div class="listing-body"><span class="tag">Product category</span><h3>Home & Living</h3><p>Find furniture, home decor and household essentials.</p><span class="demo-label">Example category</span></div>
-   </article>
-   <article class="listing" data-type="service" data-category="creative" data-search="creative graphic design branding photography video">
-    <div class="listing-art">🎨</div><div class="listing-body"><span class="tag">Service category</span><h3>Creative & Design</h3><p>Discover graphic design, branding, photography and media services.</p><span class="demo-label">Example category</span></div>
-   </article>
-   <article class="listing" data-type="service" data-category="professional" data-search="professional business consulting accounting writing virtual assistant">
-    <div class="listing-art">💻</div><div class="listing-body"><span class="tag">Service category</span><h3>Business & Professional</h3><p>Find business support, consulting and professional expertise.</p><span class="demo-label">Example category</span></div>
-   </article>
-   <article class="listing" data-type="service" data-category="repairs" data-search="repairs trades plumbing electrical maintenance">
-    <div class="listing-art">🛠️</div><div class="listing-body"><span class="tag">Service category</span><h3>Repairs & Skilled Trades</h3><p>Explore repair, maintenance and practical local services.</p><span class="demo-label">Example category</span></div>
-   </article>
-  </div>
-  <p class="empty-message" id="emptyMessage" hidden>No matching examples found. Try another search.</p>
-  <div class="notice">These are demonstration categories, not live seller listings. Real seller accounts, listings, messaging and transactions will be added as we develop the marketplace.</div>
- </div>
 </section>
+
 
 <section class="section" id="sell">
  <div class="container">
