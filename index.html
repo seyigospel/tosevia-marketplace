@@ -429,7 +429,7 @@ function chooseCategory(category) {
   currentCategory = category;
   currentType = "all";
   document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-  document.querySelector('.tab[onclick*="filterType(\\'all\\'"]')?.classList.add("active");
+  document.querySelector('#explore .tab[data-type="all"]')?.classList.add("active");
   updateListings();
 }
 
