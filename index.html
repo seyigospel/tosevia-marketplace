@@ -269,13 +269,15 @@ async function loadTobayMarketplace() {
   const categorySelect = document.getElementById("marketplaceCategory");
 
   grid.textContent = "Loading marketplace listings...";
-
+const loadingTimer = setTimeout(() => {
+  grid.textContent = "Supabase is taking too long to respond. Check your connection.";
+}, 10000);
   const { data, error } = await window.tobaySupabase
     .from("listings")
     .select("id, listing_type, title, description, category, price, currency, image_urls, created_at")
     .eq("status", "published")
     .order("created_at", { ascending: false });
-
+clearTimeout(loadingTimer);
   if (error) {
   grid.textContent = "Marketplace error: " + error.message;
 console.error("Marketplace error:", error);
