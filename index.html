@@ -264,45 +264,49 @@ function showNotice(message) {
 
 let tobayMarketplaceListings = [];
 
+
 async function loadTobayMarketplace() {
   const grid = document.getElementById("listingGrid");
   const categorySelect = document.getElementById("marketplaceCategory");
 
-  grid.textContent = "Loading marketplace listings...";
-const loadingTimer = setTimeout(() => {
-  grid.textContent = "Supabase is taking too long to respond. Check your connection.";
-}, 10000);
-  const { data, error } = await window.tobaySupabase
-    .from("listings")
-    .select("id, listing_type, title, description, category, price, currency, image_urls, created_at")
-    .eq("status", "published")
-    .order("created_at", { ascending: false });
-clearTimeout(loadingTimer);
-  if (error) {
-  grid.textContent = "Marketplace error: " + error.message;
-console.error("Marketplace error:", error);
-    return;
+  grid.textContent = "Connecting to marketplace...";
+
+  try {
+    const { data, error } = await window.tobaySupabase
+      .from("listings")
+      .select("id, listing_type, title, description, category, price, currency, image_urls, created_at")
+      .eq("status", "published")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      grid.textContent = "Marketplace error: " + error.message;
+      return;
+    }
+
+    tobayMarketplaceListings = data || [];
+
+    const categories = [...new Set(
+      tobayMarketplaceListings
+        .map(item => item.category)
+        .filter(Boolean)
+    )].sort();
+
+    categorySelect.innerHTML = '<option value="">All Categories</option>';
+
+    categories.forEach(category => {
+      const option = document.createElement("option");
+      option.value = category.toLowerCase();
+      option.textContent = category;
+      categorySelect.appendChild(option);
+    });
+
+    updateListings();
+
+  } catch (error) {
+    grid.textContent = "Connection failed: " + error.message;
   }
-
-  tobayMarketplaceListings = data || [];
-
-  const categories = [...new Set(
-    tobayMarketplaceListings
-      .map(item => item.category)
-      .filter(Boolean)
-  )].sort();
-
-  categorySelect.innerHTML = '<option value="">All Categories</option>';
-
-  categories.forEach(category => {
-    const option = document.createElement("option");
-    option.value = category.toLowerCase();
-    option.textContent = category;
-    categorySelect.appendChild(option);
-  });
-
-  updateListings();
 }
+
 
   window.loadTobayMarketplace = loadTobayMarketplace;
   console.log("TOBAY marketplace function is ready");
