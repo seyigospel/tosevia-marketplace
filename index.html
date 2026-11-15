@@ -306,6 +306,7 @@ console.error("Marketplace error:", error);
 
   window.loadTobayMarketplace = loadTobayMarketplace;
   console.log("TOBAY marketplace function is ready");
+
 function updateListings() {
   const grid = document.getElementById("listingGrid");
   const emptyMessage = document.getElementById("emptyMessage");
@@ -341,14 +342,14 @@ function updateListings() {
     const imageArea = document.createElement("div");
     imageArea.className = "listing-art";
 
-   const imagePath = Array.isArray(item.image_urls)
-  ? item.image_urls[0]
-  : "";
+    const imagePath = Array.isArray(item.image_urls)
+      ? item.image_urls[0]
+      : "";
 
-const imageUrl = imagePath
-  ? "https://ydjjwftkhqqgyzbsfgmh.supabase.co/storage/v1/object/public/tobay-listings/" +
-    imagePath.split("/").slice(-2).join("/")
-  : "";
+    const imageUrl = imagePath
+      ? "https://ydjjwftkhqqgyzbsfgmh.supabase.co/storage/v1/object/public/tobay-listings/" +
+        imagePath.split("/").slice(-2).join("/")
+      : "";
 
     if (imageUrl) {
       const img = document.createElement("img");
@@ -377,14 +378,113 @@ const imageUrl = imagePath
     description.textContent = item.description || "";
 
     const categoryText = document.createElement("p");
-    categoryText.textContent = "Category: " + (item.category || "General");
+    categoryText.textContent =
+      "Category: " + (item.category || "General");
 
     const price = document.createElement("strong");
     price.textContent = item.price != null
-      ? (item.currency || "") + " " + Number(item.price).toLocaleString()
+      ? (item.currency || "") + " " +
+        Number(item.price).toLocaleString()
       : "Price not specified";
 
-    body.append(tag, title, description, categoryText, price);
+    const detailsButton = document.createElement("button");
+    detailsButton.textContent = "View Details";
+    detailsButton.type = "button";
+    detailsButton.style.cssText =
+      "display:block;width:100%;margin-top:15px;padding:12px;" +
+      "background:#123b70;color:white;border:0;border-radius:8px;" +
+      "font-weight:bold;cursor:pointer;";
+
+    detailsButton.addEventListener("click", () => {
+      const oldModal = document.getElementById("tobayDetailsModal");
+      if (oldModal) oldModal.remove();
+
+      const modal = document.createElement("div");
+      modal.id = "tobayDetailsModal";
+      modal.style.cssText =
+        "position:fixed;inset:0;background:rgba(0,0,0,.75);" +
+        "z-index:99999;display:flex;align-items:center;" +
+        "justify-content:center;padding:15px;overflow-y:auto;";
+
+      const panel = document.createElement("div");
+      panel.style.cssText =
+        "background:white;width:100%;max-width:550px;" +
+        "max-height:90vh;overflow-y:auto;border-radius:14px;" +
+        "padding:20px;position:relative;";
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "✕ Close";
+      closeButton.type = "button";
+      closeButton.style.cssText =
+        "display:block;margin-left:auto;padding:9px 14px;" +
+        "border:0;border-radius:6px;background:#eeeeee;" +
+        "cursor:pointer;";
+
+      closeButton.addEventListener("click", () => modal.remove());
+
+      const detailTitle = document.createElement("h2");
+      detailTitle.textContent = item.title || "Listing Details";
+
+      const detailImage = document.createElement("img");
+      detailImage.alt = item.title || "Product image";
+      detailImage.style.cssText =
+        "width:100%;max-height:350px;object-fit:contain;" +
+        "border-radius:10px;margin:12px 0;";
+
+      if (imageUrl) {
+        detailImage.src = imageUrl;
+      } else {
+        detailImage.style.display = "none";
+      }
+
+      const detailType = document.createElement("p");
+      detailType.textContent =
+        "Listing type: " + (item.listing_type || "Not specified");
+
+      const detailCategory = document.createElement("p");
+      detailCategory.textContent =
+        "Category: " + (item.category || "General");
+
+      const detailPrice = document.createElement("h3");
+      detailPrice.style.color = "#123b70";
+      detailPrice.textContent = item.price != null
+        ? (item.currency || "") + " " +
+          Number(item.price).toLocaleString()
+        : "Price not specified";
+
+      const detailDescription = document.createElement("p");
+      detailDescription.style.cssText = "white-space:pre-wrap;";
+      detailDescription.textContent =
+        item.description || "No description provided.";
+
+      panel.append(
+        closeButton,
+        detailTitle,
+        detailImage,
+        detailPrice,
+        detailType,
+        detailCategory,
+        detailDescription
+      );
+
+      modal.appendChild(panel);
+
+      modal.addEventListener("click", event => {
+        if (event.target === modal) modal.remove();
+      });
+
+      document.body.appendChild(modal);
+    });
+
+    body.append(
+      tag,
+      title,
+      description,
+      categoryText,
+      price,
+      detailsButton
+    );
+
     card.append(imageArea, body);
     grid.appendChild(card);
 
@@ -393,6 +493,7 @@ const imageUrl = imagePath
 
   emptyMessage.hidden = visible !== 0;
 }
+
 
 // Marketplace filters
 document.querySelectorAll("#explore .tab").forEach(tab => {
