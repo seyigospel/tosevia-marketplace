@@ -627,6 +627,7 @@ window.showTobayForm = function(mode) {
   const business = document.getElementById("tobayBusiness");
   const description = document.getElementById("tobayDescription");
   const location = document.getElementById("tobayLocation");
+  const whatsapp = document.getElementById("tobayWhatsApp");
   const title = document.getElementById("tobayFormTitle");
   const submit = document.getElementById("tobaySubmit");
   const message = document.getElementById("tobayAccountMessage");
@@ -641,6 +642,7 @@ window.showTobayForm = function(mode) {
   business.required = mode === "seller";
   description.required = mode === "seller";
   location.required = mode === "seller";
+  whatsapp.required = mode === "seller";
 
   title.textContent =
     mode === "login" ? "Login to TOBAY" :
