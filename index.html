@@ -341,9 +341,14 @@ function updateListings() {
     const imageArea = document.createElement("div");
     imageArea.className = "listing-art";
 
-    const imageUrl = Array.isArray(item.image_urls)
-      ? item.image_urls[0]
-      : "";
+   const imagePath = Array.isArray(item.image_urls)
+  ? item.image_urls[0]
+  : "";
+
+const imageUrl = imagePath
+  ? "https://ydjjwftkhqqgyzbsfgmh.supabase.co/storage/v1/object/public/tobay-listings/" +
+    imagePath.split("/").slice(-2).join("/")
+  : "";
 
     if (imageUrl) {
       const img = document.createElement("img");
