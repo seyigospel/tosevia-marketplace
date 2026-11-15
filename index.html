@@ -277,8 +277,8 @@ async function loadTobayMarketplace() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    grid.textContent = "Unable to load listings. Please try again later.";
-    console.error("Marketplace error:", error);
+  grid.textContent = "Marketplace error: " + error.message;
+console.error("Marketplace error:", error);
     return;
   }
 
