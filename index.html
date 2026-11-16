@@ -598,7 +598,7 @@ profileButton.style.cssText =
   "background:#fff;color:#123b70;border:1px solid #123b70;" +
   "border-radius:7px;cursor:pointer;font-weight:bold;";
 
-profileButton.addEventListener("click", () => {
+profileButton.addEventListener("click", async () => {
   const oldProfile = document.getElementById("tobaySellerProfile");
   if (oldProfile) oldProfile.remove();
 
@@ -629,15 +629,35 @@ profileButton.addEventListener("click", () => {
     ? "Location: " + location
     : "Location not provided";
 
+  const ratingDisplay = document.createElement("p");
+ratingDisplay.textContent = "Loading seller rating...";
+
+(async () => {
+  const { data, error } = await window.tobaySupabase.rpc(
+    "get_seller_rating_summary",
+    { p_seller_id: item.seller_id }
+  );
+
+  if (error || !data || data.length === 0) {
+    ratingDisplay.textContent = "No ratings yet";
+    return;
+  }
+
+  const rating = data[0];
+  ratingDisplay.textContent =
+    "⭐ " + Number(rating.average_rating).toFixed(1) +
+    " / 5 (" + rating.total_reviews + " reviews)";
+})();
   const profileHeading = document.createElement("h3");
   profileHeading.textContent = "Products and Services";
 
-  profilePanel.append(
-    closeProfile,
-    profileTitle,
-    profileLocation,
-    profileHeading
-  );
+profilePanel.append(
+  closeProfile,
+  profileTitle,
+  profileLocation,
+  ratingDisplay,
+  profileHeading
+);
 
   const sellerListings = tobayMarketplaceListings.filter(
     listing => listing.seller_id === item.seller_id
@@ -660,6 +680,158 @@ profileButton.addEventListener("click", () => {
     entry.append(name, price);
     profilePanel.appendChild(entry);
   });
+
+  
+  const reviewsHeading = document.createElement("h3");
+  reviewsHeading.textContent = "Customer Reviews";
+  reviewsHeading.style.marginTop = "25px";
+
+  const reviewsList = document.createElement("div");
+  reviewsList.textContent = "Loading customer reviews...";
+
+  profilePanel.append(reviewsHeading, reviewsList);
+
+  const { data: reviews, error: reviewsError } =
+    await window.tobaySupabase
+      .from("seller_reviews")
+      .select("rating, review, created_at")
+      .eq("seller_id", item.seller_id)
+      .order("created_at", { ascending: false });
+
+  reviewsList.innerHTML = "";
+
+  if (reviewsError) {
+    reviewsList.textContent = "Unable to load reviews.";
+  } else if (!reviews || reviews.length === 0) {
+    reviewsList.textContent = "No customer reviews yet.";
+  } else {
+    reviews.forEach(review => {
+      const reviewCard = document.createElement("div");
+      reviewCard.style.cssText =
+        "padding:12px 0;border-bottom:1px solid #ddd;";
+
+      const stars = document.createElement("strong");
+      stars.textContent = "⭐".repeat(review.rating);
+
+      const reviewText = document.createElement("p");
+      reviewText.textContent = review.review;
+
+      const reviewDate = document.createElement("small");
+      reviewDate.textContent =
+        new Date(review.created_at).toLocaleDateString();
+
+      reviewCard.append(stars, reviewText, reviewDate);
+      reviewsList.appendChild(reviewCard);
+    });
+  }
+
+  const reviewFormHeading = document.createElement("h3");
+  reviewFormHeading.textContent = "Write a Review";
+
+  const ratingSelect = document.createElement("select");
+  ratingSelect.style.cssText =
+    "display:block;width:100%;padding:12px;margin:10px 0;";
+
+  [5, 4, 3, 2, 1].forEach(number => {
+    const option = document.createElement("option");
+    option.value = number;
+    option.textContent = number + " Stars";
+    ratingSelect.appendChild(option);
+  });
+
+  const reviewInput = document.createElement("textarea");
+  reviewInput.placeholder = "Share your experience with this seller...";
+  reviewInput.maxLength = 1000;
+  reviewInput.style.cssText =
+    "display:block;width:100%;min-height:90px;padding:12px;" +
+    "box-sizing:border-box;margin:10px 0;";
+
+  const submitReview = document.createElement("button");
+  submitReview.type = "button";
+  submitReview.textContent = "Submit Review";
+  submitReview.style.cssText =
+    "padding:12px 18px;background:#123b70;color:white;" +
+    "border:0;border-radius:7px;cursor:pointer;font-weight:bold;";
+
+  const reviewMessage = document.createElement("p");
+
+  const { data: authData } =
+    await window.tobaySupabase.auth.getUser();
+
+  if (!authData.user) {
+    reviewMessage.textContent =
+      "Please sign in to submit a review.";
+    submitReview.disabled = true;
+  }
+
+  submitReview.addEventListener("click", async () => {
+    if (!authData.user) return;
+
+    const reviewText = reviewInput.value.trim();
+
+    if (reviewText.length < 5) {
+      reviewMessage.textContent =
+        "Please write at least 5 characters.";
+      return;
+    }
+
+    submitReview.disabled = true;
+    reviewMessage.textContent = "Submitting review...";
+
+    const { error } = await window.tobaySupabase.rpc(
+      "submit_seller_review",
+      {
+        p_seller_id: item.seller_id,
+        p_rating: Number(ratingSelect.value),
+        p_review: reviewText
+      }
+    );
+
+    if (error) {
+      reviewMessage.textContent =
+        "Could not submit review: " + error.message;
+      submitReview.disabled = false;
+      return;
+    }
+
+    reviewMessage.textContent = "Your review was submitted!";
+    reviewInput.value = "";
+
+    const { data: updatedReviews } =
+      await window.tobaySupabase
+        .from("seller_reviews")
+        .select("rating, review, created_at")
+        .eq("seller_id", item.seller_id)
+        .order("created_at", { ascending: false });
+
+    reviewsList.innerHTML = "";
+
+    (updatedReviews || []).forEach(review => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "padding:12px 0;border-bottom:1px solid #ddd;";
+
+      const stars = document.createElement("strong");
+      stars.textContent = "⭐".repeat(review.rating);
+
+      const content = document.createElement("p");
+      content.textContent = review.review;
+
+      card.append(stars, content);
+      reviewsList.appendChild(card);
+    });
+
+    submitReview.disabled = true;
+    submitReview.textContent = "Review Submitted";
+  });
+
+  profilePanel.append(
+    reviewFormHeading,
+    ratingSelect,
+    reviewInput,
+    submitReview,
+    reviewMessage
+  );
 
   profileModal.appendChild(profilePanel);
   profileModal.onclick = event => {
