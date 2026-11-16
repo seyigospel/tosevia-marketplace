@@ -607,12 +607,27 @@ document.body.appendChild(modal);
     "border-radius:50%;border:2px solid #ddd;" +
     "vertical-align:middle;margin-right:8px;";
 
-  sellerInfo.prepend(sellerLogo);
 }
 
   sellerInfo.textContent = location
     ? "Seller: " + businessName + " · " + location
     : "Seller: " + businessName;
+
+if (businessLogoPath) {
+  const { data: logoData } = window.tobaySupabase.storage
+    .from("tobay-listings")
+    .getPublicUrl(businessLogoPath);
+
+  const sellerLogo = document.createElement("img");
+  sellerLogo.src = logoData.publicUrl;
+  sellerLogo.alt = businessName + " logo";
+  sellerLogo.style.cssText =
+    "width:45px;height:45px;object-fit:cover;" +
+    "border-radius:50%;border:2px solid #ddd;" +
+    "vertical-align:middle;margin-right:8px;";
+
+  sellerInfo.prepend(sellerLogo);
+}
       const profileButton = document.createElement("button");
 profileButton.textContent = "View Seller Profile";
 profileButton.type = "button";
