@@ -690,7 +690,8 @@ profilePanel.append(
   reviewsList.textContent = "Loading customer reviews...";
 
   profilePanel.append(reviewsHeading, reviewsList);
-
+const { data: authData } =
+  await window.tobaySupabase.auth.getUser();
   const { data: reviews, error: reviewsError } =
     await window.tobaySupabase
       .from("seller_reviews")
@@ -788,9 +789,6 @@ if (authData.user && review.reviewer_id === authData.user.id) {
     "border:0;border-radius:7px;cursor:pointer;font-weight:bold;";
 
   const reviewMessage = document.createElement("p");
-
-  const { data: authData } =
-    await window.tobaySupabase.auth.getUser();
 
   if (!authData.user) {
     reviewMessage.textContent =
