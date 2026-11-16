@@ -1340,6 +1340,9 @@ window.showTobayForm = function(mode) {
     <hr style="margin:25px 0;">
     <h3>My Listings</h3>
     <div id="tobayMyListings">Loading your listings...</div>
+    <hr style="margin:25px 0;">
+<h3>Incoming EasyBuy Orders</h3>
+<div id="tobaySellerOrders">Loading your orders...</div>
   `;
 const saveBusinessButton = document.getElementById("tobaySaveBusinessProfile");
 const businessMessage = document.getElementById("tobayBusinessProfileMessage");
@@ -1442,6 +1445,94 @@ uploadImagesButton.addEventListener("click", async () => {
   uploadImagesButton.disabled = false;
   uploadImagesButton.textContent = "Upload Logo and Profile Photo";
 });
+ 
+  async function loadTobaySellerOrders() {
+    const container = document.getElementById("tobaySellerOrders");
+    container.textContent = "Loading your orders...";
+
+    const { data: orders, error } = await supabase
+      .from("easybuy_orders")
+      .select("id,total_amount,currency,payment_option,order_status,created_at,listing:listings(title)")
+      .eq("seller_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      container.textContent = "Could not load orders: " + error.message;
+      return;
+    }
+
+    container.replaceChildren();
+
+    if (!orders || orders.length === 0) {
+      container.textContent = "You have no incoming orders yet.";
+      return;
+    }
+
+    orders.forEach(order => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+      const title = document.createElement("h4");
+      title.textContent =
+        order.listing?.title || "Marketplace listing";
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Amount: " + order.currency + " " + order.total_amount +
+        " | Payment option: " +
+        (order.payment_option === "easybuy" ? "EasyBuy Instalments" : "Buy Now") +
+        " | Status: " + order.order_status;
+
+      const notice = document.createElement("p");
+      notice.textContent =
+        "Payment has not been collected or verified.";
+
+      card.append(title, details, notice);
+
+      if (order.order_status === "pending") {
+        ["accepted", "rejected"].forEach(status => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent =
+            status === "accepted" ? "Accept Order" : "Reject Order";
+
+          button.style.cssText =
+            "margin:8px 8px 0 0;padding:10px 16px;" +
+            "cursor:pointer;border:0;border-radius:6px;" +
+            (status === "accepted"
+              ? "background:#168b48;color:white;"
+              : "background:#b42318;color:white;");
+
+          button.addEventListener("click", async () => {
+            button.disabled = true;
+
+            const { error: reviewError } = await supabase.rpc(
+              "review_tobay_easybuy_order",
+              {
+                p_order_id: order.id,
+                p_new_status: status
+              }
+            );
+
+            if (reviewError) {
+              alert("Could not update order: " + reviewError.message);
+              button.disabled = false;
+              return;
+            }
+
+            await loadTobaySellerOrders();
+          });
+
+          card.appendChild(button);
+        });
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+   
   const form = document.getElementById("tobayListingForm");
   const listingMessage = document.getElementById("tobayListingMessage");
   const submitButton = form.querySelector('button[type="submit"]');
@@ -1529,8 +1620,9 @@ uploadImagesButton.addEventListener("click", async () => {
             .remove(listing.image_urls);
         }
 
-        await loadMyListings();
-      });
+      await loadMyListings();
+  await loadTobaySellerOrders();
+}; 
 
       card.appendChild(deleteButton);
       container.appendChild(card);
