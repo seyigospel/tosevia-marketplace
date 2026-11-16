@@ -1060,7 +1060,7 @@ window.showTobayForm = function(mode) {
 
   const { data: application, error: applicationError } = await supabase
     .from("seller_applications")
-    .select("id,status")
+    .select("id,status,business_name,business_description,business_location,contact_email,whatsapp_number")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -1096,6 +1096,32 @@ window.showTobayForm = function(mode) {
 
   panel.innerHTML = `
     <h2>TOBAY Seller Dashboard</h2>
+    <h3>Edit Business Profile</h3>
+
+<label>Business Name</label>
+<input id="tobayEditBusinessName" value="${application.business_name || ""}"
+  style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+<label>Business Description</label>
+<textarea id="tobayEditBusinessDescription"
+  style="display:block;width:100%;padding:12px;margin:8px 0 15px;">${application.business_description || ""}</textarea>
+
+<label>Business Location</label>
+<input id="tobayEditBusinessLocation" value="${application.business_location || ""}"
+  style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+<label>WhatsApp Number</label>
+<input id="tobayEditWhatsApp" value="${application.whatsapp_number || ""}"
+  style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+<button type="button" id="tobaySaveBusinessProfile"
+  style="background:#174b91;color:white;padding:12px 20px;border:0;border-radius:6px;cursor:pointer;">
+  Save Business Profile
+</button>
+
+<p id="tobayBusinessProfileMessage"></p>
+
+<hr style="margin:25px 0;">
     <p>Add your products or services to the marketplace.</p>
 
     <form id="tobayListingForm">
@@ -1150,7 +1176,30 @@ window.showTobayForm = function(mode) {
     <h3>My Listings</h3>
     <div id="tobayMyListings">Loading your listings...</div>
   `;
+const saveBusinessButton = document.getElementById("tobaySaveBusinessProfile");
+const businessMessage = document.getElementById("tobayBusinessProfileMessage");
 
+saveBusinessButton.addEventListener("click", async () => {
+  saveBusinessButton.disabled = true;
+  saveBusinessButton.textContent = "Saving...";
+  businessMessage.textContent = "";
+
+  const { error } = await supabase.rpc("update_my_tobay_business", {
+    p_business_name: document.getElementById("tobayEditBusinessName").value.trim(),
+    p_business_description: document.getElementById("tobayEditBusinessDescription").value.trim(),
+    p_business_location: document.getElementById("tobayEditBusinessLocation").value.trim(),
+    p_whatsapp_number: document.getElementById("tobayEditWhatsApp").value.trim()
+  });
+
+  if (error) {
+    businessMessage.textContent = "Could not save: " + error.message;
+  } else {
+    businessMessage.textContent = "Business profile updated successfully!";
+  }
+
+  saveBusinessButton.disabled = false;
+  saveBusinessButton.textContent = "Save Business Profile";
+});
   const form = document.getElementById("tobayListingForm");
   const listingMessage = document.getElementById("tobayListingMessage");
   const submitButton = form.querySelector('button[type="submit"]');
