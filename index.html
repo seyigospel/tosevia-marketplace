@@ -587,7 +587,8 @@ document.body.appendChild(modal);
   const businessName = seller.business_name || "Seller";
   const location = seller.business_location || "";
       const description = seller.business_description || "";
-
+const businessLogoPath = seller.business_logo_path || "";
+const sellerPhotoPath = seller.seller_photo_path || "";
   sellerInfo.textContent = location
     ? "Seller: " + businessName + " · " + location
     : "Seller: " + businessName;
@@ -626,7 +627,37 @@ profileButton.addEventListener("click", async () => {
 
   const profileTitle = document.createElement("h2");
   profileTitle.textContent = businessName;
+const profileImages = document.createElement("div");
+profileImages.style.cssText =
+  "display:flex;gap:15px;align-items:center;flex-wrap:wrap;margin:15px 0;";
 
+async function addProfileImage(path, label, size) {
+  if (!path) return;
+
+  const { data } = window.tobaySupabase.storage
+    .from("tobay-listings")
+    .getPublicUrl(path);
+
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText = "text-align:center;";
+
+  const image = document.createElement("img");
+  image.src = data.publicUrl;
+  image.alt = label;
+  image.style.cssText =
+    "width:" + size + "px;height:" + size + "px;" +
+    "object-fit:cover;border-radius:50%;border:2px solid #ddd;";
+
+  const caption = document.createElement("p");
+  caption.textContent = label;
+  caption.style.cssText = "font-size:12px;margin:5px 0;";
+
+  wrapper.append(image, caption);
+  profileImages.appendChild(wrapper);
+}
+
+await addProfileImage(businessLogoPath, "Business Logo", 90);
+await addProfileImage(sellerPhotoPath, "Seller Photo", 90);
   const profileLocation = document.createElement("p");
   profileLocation.textContent = location
     ? "Location: " + location
@@ -665,6 +696,7 @@ profileDescription.style.cssText =
 profilePanel.append(
   closeProfile,
   profileTitle,
+  profileImages,
   profileLocation,
   profileDescription,
   ratingDisplay,
