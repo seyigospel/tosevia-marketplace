@@ -586,6 +586,23 @@ document.body.appendChild(modal);
   const seller = data[0];
   const businessName = seller.business_name || "Seller";
   const location = seller.business_location || "";
+      const businessLogoPath = seller.business_logo_path || "";
+
+if (businessLogoPath) {
+  const { data: logoData } = window.tobaySupabase.storage
+    .from("tobay-listings")
+    .getPublicUrl(businessLogoPath);
+
+  const sellerLogo = document.createElement("img");
+  sellerLogo.src = logoData.publicUrl;
+  sellerLogo.alt = businessName + " logo";
+  sellerLogo.style.cssText =
+    "width:45px;height:45px;object-fit:cover;" +
+    "border-radius:50%;border:2px solid #ddd;" +
+    "vertical-align:middle;margin-right:8px;";
+
+  sellerInfo.prepend(sellerLogo);
+}
       const description = seller.business_description || "";
 const businessLogoPath = seller.business_logo_path || "";
 const sellerPhotoPath = seller.seller_photo_path || "";
