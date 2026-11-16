@@ -1060,7 +1060,7 @@ window.showTobayForm = function(mode) {
 
   const { data: application, error: applicationError } = await supabase
     .from("seller_applications")
-    .select("id,status,business_name,business_description,business_location,contact_email,whatsapp_number")
+   .select("id,status,business_name,business_description,business_location,contact_email,whatsapp_number,business_logo_path,seller_photo_path")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -1097,7 +1097,15 @@ window.showTobayForm = function(mode) {
   panel.innerHTML = `
     <h2>TOBAY Seller Dashboard</h2>
     <h3>Edit Business Profile</h3>
+<label>Business Logo</label>
+<input id="tobayBusinessLogo" type="file"
+  accept="image/jpeg,image/png,image/webp"
+  style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
 
+<label>Seller Profile Photo</label>
+<input id="tobaySellerPhoto" type="file"
+  accept="image/jpeg,image/png,image/webp"
+  style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
 <label>Business Name</label>
 <input id="tobayEditBusinessName" value="${application.business_name || ""}"
   style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
@@ -1118,7 +1126,12 @@ window.showTobayForm = function(mode) {
   style="background:#174b91;color:white;padding:12px 20px;border:0;border-radius:6px;cursor:pointer;">
   Save Business Profile
 </button>
+<button type="button" id="tobayUploadProfileImages"
+  style="background:#c99a28;color:white;padding:12px 20px;border:0;border-radius:6px;cursor:pointer;margin-top:10px;">
+  Upload Logo and Profile Photo
+</button>
 
+<p id="tobayProfileImageMessage"></p>
 <p id="tobayBusinessProfileMessage"></p>
 
 <hr style="margin:25px 0;">
@@ -1199,6 +1212,83 @@ saveBusinessButton.addEventListener("click", async () => {
 
   saveBusinessButton.disabled = false;
   saveBusinessButton.textContent = "Save Business Profile";
+});
+    const uploadImagesButton = document.getElementById("tobayUploadProfileImages");
+const profileImageMessage = document.getElementById("tobayProfileImageMessage");
+
+uploadImagesButton.addEventListener("click", async () => {
+  uploadImagesButton.disabled = true;
+  uploadImagesButton.textContent = "Uploading...";
+  profileImageMessage.textContent = "";
+
+  try {
+    const logoFile = document.getElementById("tobayBusinessLogo").files[0];
+    const photoFile = document.getElementById("tobaySellerPhoto").files[0];
+
+    if (!logoFile && !photoFile) {
+      throw new Error("Please select a business logo or seller photo.");
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    const uploadedPaths = {};
+
+    for (const file of [logoFile, photoFile]) {
+      if (!file) continue;
+
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error("Only JPG, PNG and WebP images are allowed.");
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("Each image must be 5 MB or smaller.");
+      }
+    }
+
+    if (logoFile) {
+      const logoPath = user.id + "/" + Date.now() + "-business-logo-" + logoFile.name;
+      const { error } = await supabase.storage
+        .from("tobay-listings")
+        .upload(logoPath, logoFile, { contentType: logoFile.type });
+
+      if (error) throw error;
+      uploadedPaths.logo = logoPath;
+    }
+
+    if (photoFile) {
+      const photoPath = user.id + "/" + Date.now() + "-seller-photo-" + photoFile.name;
+      const { error } = await supabase.storage
+        .from("tobay-listings")
+        .upload(photoPath, photoFile, { contentType: photoFile.type });
+
+      if (error) throw error;
+      uploadedPaths.photo = photoPath;
+    }
+
+    const { data: currentProfile, error: profileError } = await supabase
+      .from("seller_applications")
+      .select("business_logo_path,seller_photo_path")
+      .eq("user_id", user.id)
+      .single();
+
+    if (profileError) throw profileError;
+
+    const { error: saveError } = await supabase.rpc(
+      "update_my_tobay_profile_images",
+      {
+        p_business_logo_path: uploadedPaths.logo || currentProfile.business_logo_path,
+        p_seller_photo_path: uploadedPaths.photo || currentProfile.seller_photo_path
+      }
+    );
+
+    if (saveError) throw saveError;
+
+    profileImageMessage.textContent = "Your images were uploaded successfully!";
+  } catch (error) {
+    profileImageMessage.textContent = "Upload failed: " + error.message;
+  }
+
+  uploadImagesButton.disabled = false;
+  uploadImagesButton.textContent = "Upload Logo and Profile Photo";
 });
   const form = document.getElementById("tobayListingForm");
   const listingMessage = document.getElementById("tobayListingMessage");
