@@ -274,7 +274,7 @@ async function loadTobayMarketplace() {
   try {
     const { data, error } = await window.tobaySupabase
       .from("listings")
-      .select("id, listing_type, title, description, category, price, currency, image_urls, created_at")
+     .select("id, seller_id, listing_type, title, description, category, price, currency, image_urls, created_at") 
       .eq("status", "published")
       .order("created_at", { ascending: false });
 
@@ -590,6 +590,86 @@ document.body.appendChild(modal);
   sellerInfo.textContent = location
     ? "Seller: " + businessName + " · " + location
     : "Seller: " + businessName;
+      const profileButton = document.createElement("button");
+profileButton.textContent = "View Seller Profile";
+profileButton.type = "button";
+profileButton.style.cssText =
+  "display:block;margin-top:8px;padding:8px 12px;" +
+  "background:#fff;color:#123b70;border:1px solid #123b70;" +
+  "border-radius:7px;cursor:pointer;font-weight:bold;";
+
+profileButton.addEventListener("click", () => {
+  const oldProfile = document.getElementById("tobaySellerProfile");
+  if (oldProfile) oldProfile.remove();
+
+  const profileModal = document.createElement("div");
+  profileModal.id = "tobaySellerProfile";
+  profileModal.style.cssText =
+    "position:fixed;inset:0;background:rgba(0,0,0,.75);" +
+    "z-index:100000;display:flex;align-items:center;" +
+    "justify-content:center;padding:15px;";
+
+  const profilePanel = document.createElement("div");
+  profilePanel.style.cssText =
+    "background:white;width:100%;max-width:550px;" +
+    "max-height:85vh;overflow-y:auto;padding:22px;" +
+    "border-radius:14px;";
+
+  const closeProfile = document.createElement("button");
+  closeProfile.textContent = "✕ Close";
+  closeProfile.style.cssText =
+    "float:right;padding:9px;border:0;border-radius:6px;cursor:pointer;";
+  closeProfile.onclick = () => profileModal.remove();
+
+  const profileTitle = document.createElement("h2");
+  profileTitle.textContent = businessName;
+
+  const profileLocation = document.createElement("p");
+  profileLocation.textContent = location
+    ? "Location: " + location
+    : "Location not provided";
+
+  const profileHeading = document.createElement("h3");
+  profileHeading.textContent = "Products and Services";
+
+  profilePanel.append(
+    closeProfile,
+    profileTitle,
+    profileLocation,
+    profileHeading
+  );
+
+  const sellerListings = tobayMarketplaceListings.filter(
+    listing => listing.seller_id === item.seller_id
+  );
+
+  sellerListings.forEach(listing => {
+    const entry = document.createElement("div");
+    entry.style.cssText =
+      "padding:12px 0;border-bottom:1px solid #ddd;";
+
+    const name = document.createElement("strong");
+    name.textContent = listing.title || "Untitled listing";
+
+    const price = document.createElement("p");
+    price.textContent = listing.price != null
+      ? (listing.currency || "") + " " +
+        Number(listing.price).toLocaleString()
+      : "Price not specified";
+
+    entry.append(name, price);
+    profilePanel.appendChild(entry);
+  });
+
+  profileModal.appendChild(profilePanel);
+  profileModal.onclick = event => {
+    if (event.target === profileModal) profileModal.remove();
+  };
+
+  document.body.appendChild(profileModal);
+});
+
+body.appendChild(profileButton);
 })();
 
     visible++;
