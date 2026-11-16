@@ -1620,9 +1620,8 @@ uploadImagesButton.addEventListener("click", async () => {
             .remove(listing.image_urls);
         }
 
-      await loadMyListings();
-  await loadTobaySellerOrders();
-}; 
+        await loadMyListings();
+      });
 
       card.appendChild(deleteButton);
       container.appendChild(card);
@@ -1712,6 +1711,7 @@ uploadImagesButton.addEventListener("click", async () => {
   });
 
   await loadMyListings();
+  await loadTobaySellerOrders();
 };
 async function loadTobayAdminDashboard(user) {
   const message = document.getElementById("tobayAccountMessage");
