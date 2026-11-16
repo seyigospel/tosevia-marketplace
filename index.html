@@ -466,6 +466,89 @@ detailDescription.style.cssText = "white-space:pre-wrap;";
 detailDescription.textContent =
   item.description || "No description provided.";
 
+const purchaseArea = document.createElement("div");
+purchaseArea.style.cssText =
+  "margin-top:20px;padding:15px;background:#f5f8fc;" +
+  "border-radius:10px;border:1px solid #dce5f0;";
+
+const purchaseHeading = document.createElement("h3");
+purchaseHeading.textContent = "Choose How to Buy";
+
+const easyBuyInfo = document.createElement("p");
+easyBuyInfo.textContent =
+  "EasyBuy: Pay 30% deposit, 35% after 30 days, " +
+  "and the final 35% after 60 days.";
+
+easyBuyInfo.style.cssText =
+  "font-size:14px;line-height:1.6;color:#555;";
+
+const buyNowButton = document.createElement("button");
+buyNowButton.textContent = "Buy Now – Full Payment";
+buyNowButton.type = "button";
+buyNowButton.style.cssText =
+  "display:block;width:100%;padding:13px;margin:10px 0;" +
+  "background:#123b70;color:white;border:0;" +
+  "border-radius:8px;font-weight:bold;cursor:pointer;";
+
+const easyBuyButton = document.createElement("button");
+easyBuyButton.textContent = "EasyBuy – Pay in Instalments";
+easyBuyButton.type = "button";
+easyBuyButton.style.cssText =
+  "display:block;width:100%;padding:13px;margin:10px 0;" +
+  "background:#168b48;color:white;border:0;" +
+  "border-radius:8px;font-weight:bold;cursor:pointer;";
+
+const purchaseMessage = document.createElement("p");
+purchaseMessage.style.cssText =
+  "font-size:14px;line-height:1.5;color:#123b70;";
+
+async function placeTobayOrder(paymentOption, button) {
+  buyNowButton.disabled = true;
+  easyBuyButton.disabled = true;
+  purchaseMessage.textContent = "Submitting your order request...";
+
+  try {
+    const { data, error } = await window.tobaySupabase.rpc(
+      "create_tobay_easybuy_order",
+      {
+        p_listing_id: item.id,
+        p_payment_option: paymentOption
+      }
+    );
+
+    if (error) throw error;
+
+    purchaseMessage.textContent =
+      "Your order request has been received! " +
+      "Order reference: " + data +
+      ". Please wait for the seller to review it. " +
+      "No payment has been collected yet.";
+
+  } catch (error) {
+    purchaseMessage.textContent =
+      "Order could not be placed: " + error.message;
+  }
+
+  buyNowButton.disabled = false;
+  easyBuyButton.disabled = false;
+}
+
+buyNowButton.addEventListener("click", () => {
+  placeTobayOrder("buy_now", buyNowButton);
+});
+
+easyBuyButton.addEventListener("click", () => {
+  placeTobayOrder("easybuy", easyBuyButton);
+});
+
+purchaseArea.append(
+  purchaseHeading,
+  easyBuyInfo,
+  buyNowButton,
+  easyBuyButton,
+  purchaseMessage
+);
+
 const contactArea = document.createElement("div");
 contactArea.style.cssText =
   "margin-top:20px;padding-top:15px;border-top:1px solid #ddd;";
@@ -486,6 +569,7 @@ panel.append(
   detailType,
   detailCategory,
   detailDescription,
+  purchaseArea,
   contactArea
 );
 
