@@ -586,6 +586,7 @@ document.body.appendChild(modal);
   const seller = data[0];
   const businessName = seller.business_name || "Seller";
   const location = seller.business_location || "";
+      const description = seller.business_description || "";
 
   sellerInfo.textContent = location
     ? "Seller: " + businessName + " · " + location
@@ -653,10 +654,19 @@ ratingDisplay.textContent = "Loading seller rating...";
   const profileHeading = document.createElement("h3");
   profileHeading.textContent = "Products and Services";
 
+const profileDescription = document.createElement("p");
+profileDescription.textContent = description
+  ? description
+  : "Business description not provided";
+
+profileDescription.style.cssText =
+  "color:#555;line-height:1.6;margin:10px 0 20px;";
+
 profilePanel.append(
   closeProfile,
   profileTitle,
   profileLocation,
+  profileDescription,
   ratingDisplay,
   profileHeading
 );
