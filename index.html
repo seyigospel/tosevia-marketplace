@@ -382,6 +382,10 @@ function updateListings() {
     description.textContent = item.description || "";
 
     const categoryText = document.createElement("p");
+    const sellerInfo = document.createElement("p");
+sellerInfo.textContent = "Seller: Loading business details...";
+sellerInfo.style.cssText =
+  "font-size:13px;color:#666;margin:6px 0;";
     categoryText.textContent =
       "Category: " + (item.category || "General");
 
@@ -556,17 +560,37 @@ document.body.appendChild(modal);
  
     });
 
-    body.append(
-      tag,
-      title,
-      description,
-      categoryText,
-      price,
-      detailsButton
-    );
+   body.append(
+  tag,
+  title,
+  description,
+  categoryText,
+  sellerInfo,
+  price,
+  detailsButton
+);
 
     card.append(imageArea, body);
     grid.appendChild(card);
+    (async () => {
+  const { data, error } = await window.tobaySupabase.rpc(
+    "get_listing_seller_public_info",
+    { p_listing_id: item.id }
+  );
+
+  if (error || !data || data.length === 0) {
+    sellerInfo.textContent = "Seller details unavailable";
+    return;
+  }
+
+  const seller = data[0];
+  const businessName = seller.business_name || "Seller";
+  const location = seller.business_location || "";
+
+  sellerInfo.textContent = location
+    ? "Seller: " + businessName + " · " + location
+    : "Seller: " + businessName;
+})();
 
     visible++;
   });
