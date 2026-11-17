@@ -2370,6 +2370,12 @@ async function loadTobayAdminEarnings(panel) {
       <h3 style="margin:26px 0 10px;color:#102b55;">Paid-feature requests</h3>
       <div id="tobayPaidFeatureRequests" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading requests...</div>
 
+      <h3 style="margin:26px 0 10px;color:#102b55;">Unpaid orders</h3>
+      <p style="font-size:12px;color:#718096;margin-bottom:8px;">
+        Move an order to the verification queue only after the buyer has submitted payment evidence. This step does not mark the order as paid.
+      </p>
+      <div id="tobayUnpaidOrdersQueue" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading unpaid orders...</div>
+
       <h3 style="margin:26px 0 10px;color:#102b55;">Payment verification queue</h3>
       <p style="font-size:12px;color:#718096;margin-bottom:8px;">
         Only orders marked “pending verification” appear here. Verify a payment only after independently confirming that the money was actually received.
@@ -2609,6 +2615,84 @@ async function loadTobayAdminEarnings(panel) {
     note.style.cssText = "color:#718096;font-size:11px;margin-top:10px;";
     note.textContent = "Requests are shown for admin review. They cannot be activated until the payment has been verified.";
     requestsContainer.appendChild(note);
+  }
+
+  // Admin-only control for moving an unpaid order into the verification queue.
+  // This does not mark the order as paid; payment is verified in the next step.
+  const unpaidQueue = document.getElementById("tobayUnpaidOrdersQueue");
+  unpaidQueue.textContent = "Loading unpaid orders...";
+
+  const { data: unpaidOrders, error: unpaidError } = await supabase
+    .from("easybuy_orders")
+    .select("id,buyer_id,seller_id,total_amount,currency,payment_option,order_status,payment_status,created_at")
+    .eq("payment_status", "unpaid")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  unpaidQueue.replaceChildren();
+
+  if (unpaidError) {
+    unpaidQueue.textContent = "Could not load unpaid orders: " + unpaidError.message;
+  } else if (!unpaidOrders || unpaidOrders.length === 0) {
+    unpaidQueue.textContent = "There are no unpaid orders available.";
+  } else {
+    unpaidOrders.forEach(order => {
+      const card = document.createElement("div");
+      card.style.cssText = "padding:14px 0;border-bottom:1px solid #edf0f5;";
+
+      const heading = document.createElement("strong");
+      heading.textContent = "Order " + order.id.slice(0, 8) + " · " +
+        (order.currency || "NGN") + " " + Number(order.total_amount).toLocaleString();
+
+      const details = document.createElement("p");
+      details.style.cssText = "font-size:12px;color:#59677c;margin:5px 0;";
+      details.textContent =
+        "Buyer ID: " + order.buyer_id +
+        " · Seller ID: " + order.seller_id +
+        " · " + (order.payment_option === "easybuy" ? "EasyBuy instalments" : "Buy Now") +
+        " · Order: " + order.order_status +
+        " · Payment: " + order.payment_status +
+        " · " + new Date(order.created_at).toLocaleString();
+
+      const moveButton = document.createElement("button");
+      moveButton.type = "button";
+      moveButton.textContent = "Move to Verification Queue";
+      moveButton.style.cssText = "margin-top:8px;padding:10px 14px;background:#19477f;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer;";
+
+      const resultMessage = document.createElement("p");
+      resultMessage.style.cssText = "font-size:12px;margin-top:7px;";
+
+      moveButton.addEventListener("click", async () => {
+        const confirmed = confirm(
+          "Has the buyer submitted payment evidence for this order? Only move it to the verification queue after you have received the evidence. This will NOT mark the order as paid."
+        );
+        if (!confirmed) return;
+
+        moveButton.disabled = true;
+        moveButton.textContent = "Moving...";
+        resultMessage.textContent = "";
+
+        const { data: moveResult, error: moveError } = await supabase.rpc(
+          "move_tobay_order_to_verification",
+          { p_order_id: order.id }
+        );
+
+        if (moveError) {
+          resultMessage.textContent = "Could not move order: " + moveError.message;
+          resultMessage.style.color = "#b42318";
+          moveButton.disabled = false;
+          moveButton.textContent = "Move to Verification Queue";
+          return;
+        }
+
+        resultMessage.textContent = moveResult || "Order moved to verification queue.";
+        resultMessage.style.color = "#168b48";
+        await loadTobayAdminEarnings(panel);
+      });
+
+      card.append(heading, details, moveButton, resultMessage);
+      unpaidQueue.appendChild(card);
+    });
   }
 
   // Admin-only payment verification queue. The database RPC performs the
