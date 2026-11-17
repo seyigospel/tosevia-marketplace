@@ -1950,6 +1950,17 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
       const metadata = user.user_metadata || {};
      await window.loadTobaySellerDashboard(user);
 await loadTobayAdminDashboard(user);
+     const { data: adminRecord, error: adminCheckError } = await supabase
+  .from("admin_users")
+  .select("user_id")
+  .eq("user_id", user.id)
+  .maybeSingle();
+
+if (adminCheckError) throw adminCheckError;
+
+if (!metadata.business_name && !adminRecord) {
+  await loadTobayBuyerOrders(user);
+} 
       if (metadata.business_name) {
         const { data: existing, error: checkError } = await supabase
           .from("seller_applications")
