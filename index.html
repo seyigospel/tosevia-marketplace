@@ -2420,11 +2420,11 @@ async function loadTobayAdminEarnings(panel) {
         { setting_key: "commission_enabled", setting_value: commissionEnabled },
         { setting_key: "commission_rate_percent", setting_value: commissionRate },
         { setting_key: "subscriptions_enabled", setting_value: subscriptionsEnabled },
-        { setting_key: "premium_subscription_price_ngn", setting_value: premiumPrice },
+        { setting_key: "premium_subscription_price_ngn", setting_value: premiumPrice ?? 0 },
         { setting_key: "featured_listings_enabled", setting_value: featuredEnabled },
-        { setting_key: "featured_listing_fee_ngn", setting_value: featuredFee },
+        { setting_key: "featured_listing_fee_ngn", setting_value: featuredFee ?? 0 },
         { setting_key: "advertising_enabled", setting_value: adsEnabled },
-        { setting_key: "advertising_fee_ngn", setting_value: adsFee }
+        { setting_key: "advertising_fee_ngn", setting_value: adsFee ?? 0 }
       ];
 
       const { error: settingsError } = await supabase
@@ -2470,11 +2470,11 @@ async function loadTobayAdminEarnings(panel) {
     document.getElementById("tobaySetCommissionEnabled").checked = settings.commission_enabled === true;
     document.getElementById("tobaySetCommissionRate").value = settings.commission_rate_percent ?? "";
     document.getElementById("tobaySetSubscriptionEnabled").checked = settings.subscriptions_enabled === true;
-    document.getElementById("tobaySetPremiumPrice").value = settings.premium_subscription_price_ngn ?? "";
+    document.getElementById("tobaySetPremiumPrice").value = Number(settings.premium_subscription_price_ngn || 0) > 0 ? settings.premium_subscription_price_ngn : "";
     document.getElementById("tobaySetFeaturedEnabled").checked = settings.featured_listings_enabled === true;
-    document.getElementById("tobaySetFeaturedFee").value = settings.featured_listing_fee_ngn ?? "";
+    document.getElementById("tobaySetFeaturedFee").value = Number(settings.featured_listing_fee_ngn || 0) > 0 ? settings.featured_listing_fee_ngn : "";
     document.getElementById("tobaySetAdsEnabled").checked = settings.advertising_enabled === true;
-    document.getElementById("tobaySetAdsFee").value = settings.advertising_fee_ngn ?? "";
+    document.getElementById("tobaySetAdsFee").value = Number(settings.advertising_fee_ngn || 0) > 0 ? settings.advertising_fee_ngn : "";
     settingsMessage.textContent = "Saved preferences loaded. Paid features are not live yet.";
   }
 
