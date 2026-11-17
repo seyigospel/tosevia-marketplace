@@ -1566,6 +1566,12 @@ summary.innerHTML = `
       order.listing?.title || "Marketplace listing";
 
     const reference = document.createElement("p");
+    const orderDate = document.createElement("p");
+orderDate.textContent =
+  "Order Date: " + new Date(order.created_at).toLocaleString("en-NG", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
     reference.textContent = "Order reference: " + order.id.slice(0, 8);
 
     const details = document.createElement("p");
@@ -1579,7 +1585,7 @@ summary.innerHTML = `
     notice.textContent =
       "Payment has not been collected or verified.";
 
-    card.append(title, reference, details, notice);
+    card.append(title, reference, orderDate, details, notice);
 
     if (order.order_status === "pending") {
       ["accepted", "rejected"].forEach(status => {
