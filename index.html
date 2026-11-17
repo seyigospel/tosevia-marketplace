@@ -1713,6 +1713,101 @@ uploadImagesButton.addEventListener("click", async () => {
   await loadMyListings();
   await loadTobaySellerOrders();
 };
+  async function loadTobayBuyerOrders(user) {
+  let panel = document.getElementById("tobayBuyerOrders");
+
+  if (!panel) {
+    panel = document.createElement("section");
+    panel.id = "tobayBuyerOrders";
+    panel.style.cssText =
+      "display:none;margin:25px auto;padding:20px;" +
+      "background:#fff;border:1px solid #ddd;" +
+      "border-radius:12px;max-width:1000px;";
+
+    document.getElementById("tobayAccountForm").after(panel);
+  }
+
+  panel.style.display = "block";
+  panel.innerHTML = `
+    <h2>My Orders</h2>
+    <div id="tobayBuyerOrdersList">Loading your orders...</div>
+  `;
+
+  const container = document.getElementById("tobayBuyerOrdersList");
+
+  const { data: orders, error } = await supabase
+    .from("easybuy_orders")
+    .select("id,total_amount,currency,payment_option,order_status,created_at")
+    .eq("buyer_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent = "Could not load your orders: " + error.message;
+    return;
+  }
+
+  if (!orders || orders.length === 0) {
+    container.textContent = "You have not placed any orders yet.";
+    return;
+  }
+
+  for (const order of orders) {
+    const card = document.createElement("div");
+    card.style.cssText =
+      "padding:15px;margin:15px 0;border:1px solid #ddd;" +
+      "border-radius:8px;";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "Order: " + order.id.slice(0, 8);
+
+    const details = document.createElement("p");
+    details.textContent =
+      "Amount: " + order.currency + " " + order.total_amount +
+      " | Payment: " +
+      (order.payment_option === "easybuy"
+        ? "EasyBuy Instalments"
+        : "Buy Now") +
+      " | Status: " + order.order_status;
+
+    card.append(heading, details);
+
+    const { data: installments, error: installmentError } =
+      await supabase
+        .from("easybuy_installments")
+        .select("installment_number,percentage,amount,due_date,payment_status")
+        .eq("order_id", order.id)
+        .order("installment_number", { ascending: true });
+
+    if (installmentError) {
+      const errorText = document.createElement("p");
+      errorText.textContent =
+        "Could not load payment schedule: " + installmentError.message;
+      card.appendChild(errorText);
+    } else if (installments && installments.length > 0) {
+      const subheading = document.createElement("h4");
+      subheading.textContent = "Payment Schedule";
+      card.appendChild(subheading);
+
+      installments.forEach(item => {
+        const line = document.createElement("p");
+        line.textContent =
+          item.percentage + "% — " +
+          order.currency + " " + item.amount +
+          " | Due: " + new Date(item.due_date).toLocaleDateString() +
+          " | Payment status: " + item.payment_status;
+
+        card.appendChild(line);
+      });
+    }
+
+    const notice = document.createElement("p");
+    notice.textContent =
+      "Payments are not collected or verified through TOBAY yet.";
+
+    card.appendChild(notice);
+    container.appendChild(card);
+  }
+}
 async function loadTobayAdminDashboard(user) {
   const message = document.getElementById("tobayAccountMessage");
 
