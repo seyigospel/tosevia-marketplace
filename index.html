@@ -1553,7 +1553,17 @@ summary.innerHTML = `
     });
   });
 
-  orders.forEach(order => {
+ orders.forEach(async order => {
+   const { data: buyerName, error: buyerNameError } = await supabase.rpc(
+  "get_tobay_order_buyer_name",
+  {
+    p_order_id: order.id
+  }
+);
+
+const buyerInfo = document.createElement("p");
+buyerInfo.textContent =
+  "Buyer: " + (buyerNameError ? "Name unavailable" : buyerName || "Buyer");
     const card = document.createElement("div");
     card.dataset.sellerOrder = "true";
     card.dataset.orderStatus = order.order_status;
@@ -1585,7 +1595,7 @@ orderDate.textContent =
     notice.textContent =
       "Payment has not been collected or verified.";
 
-    card.append(title, reference, orderDate, details, notice);
+    card.append(title, reference, buyerInfo, orderDate, details, notice);
 
     if (order.order_status === "pending") {
       ["accepted", "rejected"].forEach(status => {
