@@ -2658,6 +2658,9 @@ async function loadTobayAdminEarnings(panel) {
       moveButton.type = "button";
       moveButton.textContent = "Move to Verification Queue";
       moveButton.style.cssText = "margin-top:8px;padding:10px 14px;background:#19477f;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer;";
+      // Only accepted orders may be sent for payment verification.
+      // The database function enforces the same rule independently.
+      moveButton.hidden = order.order_status !== "accepted";
 
       const resultMessage = document.createElement("p");
       resultMessage.style.cssText = "font-size:12px;margin-top:7px;";
