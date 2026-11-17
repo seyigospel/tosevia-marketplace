@@ -1446,91 +1446,151 @@ uploadImagesButton.addEventListener("click", async () => {
   uploadImagesButton.textContent = "Upload Logo and Profile Photo";
 });
  
-  async function loadTobaySellerOrders() {
-    const container = document.getElementById("tobaySellerOrders");
-    container.textContent = "Loading your orders...";
 
-    const { data: orders, error } = await supabase
-      .from("easybuy_orders")
-      .select("id,total_amount,currency,payment_option,order_status,created_at,listing:listings(title)")
-      .eq("seller_id", user.id)
-      .order("created_at", { ascending: false });
+async function loadTobaySellerOrders() {
+  const container = document.getElementById("tobaySellerOrders");
 
-    if (error) {
-      container.textContent = "Could not load orders: " + error.message;
-      return;
-    }
+  container.innerHTML = `
+    <input
+      type="text"
+      id="tobaySellerOrderSearch"
+      placeholder="Search order reference or product..."
+      style="width:100%;padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;"
+    >
 
-    container.replaceChildren();
+    <div id="tobaySellerOrderFilters" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;">
+      <button type="button" data-status="all">All Orders</button>
+      <button type="button" data-status="pending">Pending</button>
+      <button type="button" data-status="accepted">Accepted</button>
+      <button type="button" data-status="rejected">Rejected</button>
+      <button type="button" data-status="cancelled">Cancelled</button>
+    </div>
 
-    if (!orders || orders.length === 0) {
-      container.textContent = "You have no incoming orders yet.";
-      return;
-    }
+    <div id="tobaySellerOrderList">Loading your orders...</div>
+  `;
 
-    orders.forEach(order => {
-      const card = document.createElement("div");
-      card.style.cssText =
-        "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+  const list = document.getElementById("tobaySellerOrderList");
+  const search = document.getElementById("tobaySellerOrderSearch");
+  const filters = document.getElementById("tobaySellerOrderFilters");
 
-      const title = document.createElement("h4");
-      title.textContent =
-        order.listing?.title || "Marketplace listing";
+  const { data: orders, error } = await supabase
+    .from("easybuy_orders")
+    .select("id,total_amount,currency,payment_option,order_status,created_at,listing:listings(title)")
+    .eq("seller_id", user.id)
+    .order("created_at", { ascending: false });
 
-      const details = document.createElement("p");
-      details.textContent =
-        "Amount: " + order.currency + " " + order.total_amount +
-        " | Payment option: " +
-        (order.payment_option === "easybuy" ? "EasyBuy Instalments" : "Buy Now") +
-        " | Status: " + order.order_status;
+  if (error) {
+    list.textContent = "Could not load orders: " + error.message;
+    return;
+  }
 
-      const notice = document.createElement("p");
-      notice.textContent =
-        "Payment has not been collected or verified.";
+  if (!orders || orders.length === 0) {
+    list.textContent = "You have no incoming orders yet.";
+    return;
+  }
 
-      card.append(title, details, notice);
+  let selectedStatus = "all";
 
-      if (order.order_status === "pending") {
-        ["accepted", "rejected"].forEach(status => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.textContent =
-            status === "accepted" ? "Accept Order" : "Reject Order";
+  function applySellerOrderFilters() {
+    const searchText = search.value.toLowerCase().trim();
 
-          button.style.cssText =
-            "margin:8px 8px 0 0;padding:10px 16px;" +
-            "cursor:pointer;border:0;border-radius:6px;" +
-            (status === "accepted"
-              ? "background:#168b48;color:white;"
-              : "background:#b42318;color:white;");
+    list.querySelectorAll("[data-seller-order]").forEach(card => {
+      const statusMatches =
+        selectedStatus === "all" ||
+        card.dataset.orderStatus === selectedStatus;
 
-          button.addEventListener("click", async () => {
-            button.disabled = true;
+      const searchMatches =
+        card.textContent.toLowerCase().includes(searchText);
 
-            const { error: reviewError } = await supabase.rpc(
-              "review_tobay_easybuy_order",
-              {
-                p_order_id: order.id,
-                p_new_status: status
-              }
-            );
-
-            if (reviewError) {
-              alert("Could not update order: " + reviewError.message);
-              button.disabled = false;
-              return;
-            }
-
-            await loadTobaySellerOrders();
-          });
-
-          card.appendChild(button);
-        });
-      }
-
-      container.appendChild(card);
+      card.style.display =
+        statusMatches && searchMatches ? "block" : "none";
     });
   }
+
+  search.addEventListener("input", applySellerOrderFilters);
+
+  filters.querySelectorAll("button").forEach(button => {
+    button.style.cssText =
+      "padding:10px 15px;border:1px solid #123b75;" +
+      "border-radius:7px;background:#123b75;color:white;" +
+      "cursor:pointer;font-weight:bold;";
+
+    button.addEventListener("click", function () {
+      selectedStatus = this.dataset.status;
+      applySellerOrderFilters();
+    });
+  });
+
+  orders.forEach(order => {
+    const card = document.createElement("div");
+    card.dataset.sellerOrder = "true";
+    card.dataset.orderStatus = order.order_status;
+
+    card.style.cssText =
+      "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+    const title = document.createElement("h4");
+    title.textContent =
+      order.listing?.title || "Marketplace listing";
+
+    const reference = document.createElement("p");
+    reference.textContent = "Order reference: " + order.id.slice(0, 8);
+
+    const details = document.createElement("p");
+    details.textContent =
+      "Amount: " + order.currency + " " + order.total_amount +
+      " | Payment option: " +
+      (order.payment_option === "easybuy" ? "EasyBuy Instalments" : "Buy Now") +
+      " | Status: " + order.order_status;
+
+    const notice = document.createElement("p");
+    notice.textContent =
+      "Payment has not been collected or verified.";
+
+    card.append(title, reference, details, notice);
+
+    if (order.order_status === "pending") {
+      ["accepted", "rejected"].forEach(status => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent =
+          status === "accepted" ? "Accept Order" : "Reject Order";
+
+        button.style.cssText =
+          "margin:8px 8px 0 0;padding:10px 16px;" +
+          "cursor:pointer;border:0;border-radius:6px;" +
+          (status === "accepted"
+            ? "background:#168b48;color:white;"
+            : "background:#b42318;color:white;");
+
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+
+          const { error: reviewError } = await supabase.rpc(
+            "review_tobay_easybuy_order",
+            {
+              p_order_id: order.id,
+              p_new_status: status
+            }
+          );
+
+          if (reviewError) {
+            alert("Could not update order: " + reviewError.message);
+            button.disabled = false;
+            return;
+          }
+
+          await loadTobaySellerOrders();
+        });
+
+        card.appendChild(button);
+      });
+    }
+
+    list.appendChild(card);
+  });
+}
+
 
    
   const form = document.getElementById("tobayListingForm");
