@@ -2376,6 +2376,12 @@ async function loadTobayAdminEarnings(panel) {
       </p>
       <div id="tobayUnpaidOrdersQueue" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading unpaid orders...</div>
 
+      <h3 style="margin:26px 0 10px;color:#102b55;">EasyBuy instalment management</h3>
+      <p style="font-size:12px;color:#718096;margin-bottom:8px;">
+        Review every instalment attached to an EasyBuy order, including its amount, due date and recorded status. This overview does not collect payments or change instalment statuses.
+      </p>
+      <div id="tobayAdminEasyBuyInstallments" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading EasyBuy instalments...</div>
+
       <h3 style="margin:26px 0 10px;color:#102b55;">Payment verification queue</h3>
       <p style="font-size:12px;color:#718096;margin-bottom:8px;">
         Only orders marked “pending verification” appear here. Verify a payment only after independently confirming that the money was actually received.
@@ -2696,6 +2702,156 @@ async function loadTobayAdminEarnings(panel) {
       card.append(heading, details, moveButton, resultMessage);
       unpaidQueue.appendChild(card);
     });
+  }
+
+  // Admin-only, read-only EasyBuy instalment overview.
+  // Payment statuses are displayed exactly as stored; this UI does not alter them.
+  const instalmentContainer = document.getElementById("tobayAdminEasyBuyInstallments");
+  instalmentContainer.textContent = "Loading EasyBuy instalments...";
+
+  const { data: easyBuyOrders, error: easyBuyOrdersError } = await supabase
+    .from("easybuy_orders")
+    .select("id,buyer_id,seller_id,total_amount,currency,order_status,payment_status,created_at")
+    .eq("payment_option", "easybuy")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  instalmentContainer.replaceChildren();
+
+  if (easyBuyOrdersError) {
+    instalmentContainer.textContent =
+      "Could not load EasyBuy orders: " + easyBuyOrdersError.message;
+  } else if (!easyBuyOrders || easyBuyOrders.length === 0) {
+    instalmentContainer.textContent = "No EasyBuy orders have been placed yet.";
+  } else {
+    const easyBuyOrderIds = easyBuyOrders.map(order => order.id);
+    const { data: allInstallments, error: installmentsError } = await supabase
+      .from("easybuy_installments")
+      .select("id,order_id,installment_number,percentage,amount,due_date,payment_status,payment_reference,created_at")
+      .in("order_id", easyBuyOrderIds)
+      .order("installment_number", { ascending: true });
+
+    if (installmentsError) {
+      instalmentContainer.textContent =
+        "Could not load instalment records: " + installmentsError.message +
+        " Check that the admin has permission to read EasyBuy instalments.";
+    } else {
+      const installmentsByOrder = new Map();
+      (allInstallments || []).forEach(item => {
+        if (!installmentsByOrder.has(item.order_id)) {
+          installmentsByOrder.set(item.order_id, []);
+        }
+        installmentsByOrder.get(item.order_id).push(item);
+      });
+
+      let totalInstalments = 0;
+      let verifiedInstalments = 0;
+      let submittedInstalments = 0;
+      let pendingInstalments = 0;
+      let rejectedInstalments = 0;
+
+      (allInstallments || []).forEach(item => {
+        totalInstalments++;
+        if (item.payment_status === "verified") verifiedInstalments++;
+        else if (item.payment_status === "submitted") submittedInstalments++;
+        else if (item.payment_status === "rejected") rejectedInstalments++;
+        else pendingInstalments++;
+      });
+
+      const summary = document.createElement("p");
+      summary.style.cssText =
+        "font-size:12px;color:#59677c;padding:10px;background:#f5f8fc;border-radius:7px;margin-bottom:12px;";
+      summary.textContent =
+        "Orders: " + easyBuyOrders.length +
+        " · Instalments: " + totalInstalments +
+        " · Verified: " + verifiedInstalments +
+        " · Submitted: " + submittedInstalments +
+        " · Pending: " + pendingInstalments +
+        " · Rejected: " + rejectedInstalments;
+      instalmentContainer.appendChild(summary);
+
+      easyBuyOrders.forEach(order => {
+        const orderCard = document.createElement("div");
+        orderCard.style.cssText =
+          "padding:13px 0;border-bottom:1px solid #edf0f5;";
+
+        const orderTitle = document.createElement("strong");
+        orderTitle.textContent =
+          "Order " + order.id.slice(0, 8) + " · " +
+          (order.currency || "NGN") + " " +
+          Number(order.total_amount || 0).toLocaleString();
+
+        const orderDetails = document.createElement("p");
+        orderDetails.style.cssText =
+          "font-size:11px;color:#718096;margin:5px 0 9px;overflow-wrap:anywhere;";
+        orderDetails.textContent =
+          "Buyer ID: " + order.buyer_id +
+          " · Seller ID: " + order.seller_id +
+          " · Order: " + order.order_status +
+          " · Overall payment: " + order.payment_status;
+
+        orderCard.append(orderTitle, orderDetails);
+
+        const orderInstallments = installmentsByOrder.get(order.id) || [];
+        if (orderInstallments.length === 0) {
+          const noSchedule = document.createElement("p");
+          noSchedule.style.cssText = "font-size:12px;color:#9a6700;";
+          noSchedule.textContent =
+            "No instalment schedule is currently recorded for this order.";
+          orderCard.appendChild(noSchedule);
+        } else {
+          orderInstallments.forEach(item => {
+            const installmentRow = document.createElement("div");
+            installmentRow.style.cssText =
+              "margin:8px 0;padding:10px;background:#f8faff;border:1px solid #e7ebf2;border-radius:7px;";
+
+            const installmentTitle = document.createElement("strong");
+            installmentTitle.style.cssText = "display:block;font-size:13px;color:#102b55;";
+            installmentTitle.textContent =
+              "Instalment " + item.installment_number +
+              " · " + Number(item.percentage || 0) + "% · " +
+              (order.currency || "NGN") + " " +
+              Number(item.amount || 0).toLocaleString();
+
+            const dueDate = document.createElement("p");
+            dueDate.style.cssText = "font-size:12px;color:#59677c;margin-top:4px;";
+            dueDate.textContent =
+              "Due: " + (item.due_date
+                ? new Date(item.due_date).toLocaleDateString()
+                : "Not set");
+
+            const status = document.createElement("p");
+            status.style.cssText =
+              "font-size:12px;font-weight:bold;margin-top:3px;color:" +
+              (item.payment_status === "verified" ? "#168b48" :
+               item.payment_status === "rejected" ? "#b42318" :
+               item.payment_status === "submitted" ? "#9a6700" : "#59677c") + ";";
+            status.textContent =
+              "Payment status: " + (item.payment_status || "unknown");
+
+            installmentRow.append(installmentTitle, dueDate, status);
+
+            if (item.payment_reference) {
+              const reference = document.createElement("p");
+              reference.style.cssText =
+                "font-size:11px;color:#718096;margin-top:3px;overflow-wrap:anywhere;";
+              reference.textContent = "Payment reference: " + item.payment_reference;
+              installmentRow.appendChild(reference);
+            }
+
+            orderCard.appendChild(installmentRow);
+          });
+        }
+
+        instalmentContainer.appendChild(orderCard);
+      });
+
+      const note = document.createElement("p");
+      note.style.cssText = "font-size:11px;color:#718096;margin-top:12px;";
+      note.textContent =
+        "Read-only overview. A status of “submitted” is not proof of receipt. Verify money independently before recording any payment.";
+      instalmentContainer.appendChild(note);
+    }
   }
 
   // Admin-only payment verification queue. The database RPC performs the
