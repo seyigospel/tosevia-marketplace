@@ -1447,6 +1447,7 @@ uploadImagesButton.addEventListener("click", async () => {
 });
  
 
+
 async function loadTobaySellerOrders() {
   const container = document.getElementById("tobaySellerOrders");
 
@@ -1468,13 +1469,15 @@ async function loadTobaySellerOrders() {
 
     <div id="tobaySellerOrderList">Loading your orders...</div>
   `;
-const summary = document.createElement("div");
-summary.id = "tobaySellerOrderSummary";
-summary.style.cssText =
-  "display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));" +
-  "gap:10px;margin:15px 0;";
 
-container.insertBefore(summary, container.firstChild);
+  const summary = document.createElement("div");
+  summary.id = "tobaySellerOrderSummary";
+  summary.style.cssText =
+    "display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));" +
+    "gap:10px;margin:15px 0;";
+
+  container.insertBefore(summary, container.firstChild);
+
   const list = document.getElementById("tobaySellerOrderList");
   const search = document.getElementById("tobaySellerOrderSearch");
   const filters = document.getElementById("tobaySellerOrderFilters");
@@ -1490,33 +1493,33 @@ container.insertBefore(summary, container.firstChild);
     return;
   }
 
-const orderList = orders || [];
+  const orderList = orders || [];
 
-const totalOrders = orderList.length;
-const pendingOrders = orderList.filter(order => order.order_status === "pending").length;
-const acceptedOrders = orderList.filter(order => order.order_status === "accepted").length;
-const rejectedOrders = orderList.filter(order => order.order_status === "rejected").length;
+  const totalOrders = orderList.length;
+  const pendingOrders = orderList.filter(order => order.order_status === "pending").length;
+  const acceptedOrders = orderList.filter(order => order.order_status === "accepted").length;
+  const rejectedOrders = orderList.filter(order => order.order_status === "rejected").length;
 
-summary.innerHTML = `
-  <div style="padding:15px;background:#eaf1ff;border-radius:8px;">
-    <strong>Total Orders</strong>
-    <h2>${totalOrders}</h2>
-  </div>
-  <div style="padding:15px;background:#fff4d6;border-radius:8px;">
-    <strong>Pending</strong>
-    <h2>${pendingOrders}</h2>
-  </div>
-  <div style="padding:15px;background:#e2f7e9;border-radius:8px;">
-    <strong>Accepted</strong>
-    <h2>${acceptedOrders}</h2>
-  </div>
-  <div style="padding:15px;background:#ffe8e8;border-radius:8px;">
-    <strong>Rejected</strong>
-    <h2>${rejectedOrders}</h2>
-  </div>
-`;
+  summary.innerHTML = `
+    <div style="padding:15px;background:#eaf1ff;border-radius:8px;">
+      <strong>Total Orders</strong>
+      <h2>${totalOrders}</h2>
+    </div>
+    <div style="padding:15px;background:#fff4d6;border-radius:8px;">
+      <strong>Pending</strong>
+      <h2>${pendingOrders}</h2>
+    </div>
+    <div style="padding:15px;background:#e2f7e9;border-radius:8px;">
+      <strong>Accepted</strong>
+      <h2>${acceptedOrders}</h2>
+    </div>
+    <div style="padding:15px;background:#ffe8e8;border-radius:8px;">
+      <strong>Rejected</strong>
+      <h2>${rejectedOrders}</h2>
+    </div>
+  `;
 
-  if (!orders || orders.length === 0) {
+  if (orderList.length === 0) {
     list.textContent = "You have no incoming orders yet.";
     return;
   }
@@ -1553,17 +1556,7 @@ summary.innerHTML = `
     });
   });
 
- orders.forEach(order => {
-   const { data: buyerName, error: buyerNameError } = await supabase.rpc(
-  "get_tobay_order_buyer_name",
-  {
-    p_order_id: order.id
-  }
-);
-
-const buyerInfo = document.createElement("p");
-buyerInfo.textContent =
-  "Buyer: " + (buyerNameError ? "Name unavailable" : buyerName || "Buyer");
+  orders.forEach(order => {
     const card = document.createElement("div");
     card.dataset.sellerOrder = "true";
     card.dataset.orderStatus = order.order_status;
@@ -1576,13 +1569,18 @@ buyerInfo.textContent =
       order.listing?.title || "Marketplace listing";
 
     const reference = document.createElement("p");
+    reference.textContent =
+      "Order reference: " + order.id.slice(0, 8);
+
+    const buyerInfo = document.createElement("p");
+    buyerInfo.textContent = "Buyer: Loading...";
+
     const orderDate = document.createElement("p");
-orderDate.textContent =
-  "Order Date: " + new Date(order.created_at).toLocaleString("en-NG", {
-    dateStyle: "medium",
-    timeStyle: "short"
-  });
-    reference.textContent = "Order reference: " + order.id.slice(0, 8);
+    orderDate.textContent =
+      "Order Date: " + new Date(order.created_at).toLocaleString("en-NG", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
 
     const details = document.createElement("p");
     details.textContent =
@@ -1636,113 +1634,112 @@ orderDate.textContent =
     }
 
     list.appendChild(card);
-   
-supabase.rpc("get_tobay_order_buyer_name", {
-  p_order_id: order.id
-}).then(({ data: buyerName, error }) => {
-  buyerInfo.textContent =
-    "Buyer: " + (error ? "Name unavailable" : buyerName || "Buyer");
-});
 
+    supabase.rpc("get_tobay_order_buyer_name", {
+      p_order_id: order.id
+    }).then(({ data: buyerName, error: buyerError }) => {
+      buyerInfo.textContent =
+        "Buyer: " + (buyerError ? "Name unavailablseen
+                     e" : buyerName || "Buyer");
+    });
   });
 }
 
 
-   
-  const form = document.getElementById("tobayListingForm");
-  const listingMessage = document.getElementById("tobayListingMessage");
-  const submitButton = form.querySelector('button[type="submit"]');
+const form = document.getElementById("tobayListingForm");
+const listingMessage = document.getElementById("tobayListingMessage");
+const submitButton = form.querySelector('button[type="submit"]');
 
-  async function loadMyListings() {
-    const container = document.getElementById("tobayMyListings");
-    container.textContent = "Loading your listings...";
+async function loadMyListings() {
+  const container = document.getElementById("tobayMyListings");
+  container.textContent = "Loading your listings...";
 
-    const { data: listings, error } = await supabase
-      .from("listings")
-      .select("id,title,description,category,price,currency,status,image_urls,listing_type")
-      .eq("seller_id", user.id)
-      .order("created_at", { ascending: false });
+  const { data: listings, error } = await supabase
+    .from("listings")
+    .select("id,title,description,category,price,currency,status,image_urls,listing_type")
+    .eq("seller_id", user.id)
+    .order("created_at", { ascending: false });
 
-    if (error) {
-      container.textContent = "Could not load listings: " + error.message;
-      return;
-    }
-
-    container.replaceChildren();
-
-    if (!listings || listings.length === 0) {
-      container.textContent = "You have not added any listings yet.";
-      return;
-    }
-
-    listings.forEach(listing => {
-      const card = document.createElement("div");
-      card.style.cssText =
-        "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
-
-      const title = document.createElement("h4");
-      title.textContent = listing.title;
-
-      const details = document.createElement("p");
-      details.textContent =
-        listing.listing_type + " | " +
-        listing.category + " | " +
-        listing.currency + " " + listing.price +
-        " | Status: " + listing.status;
-
-      const description = document.createElement("p");
-      description.textContent = listing.description;
-
-      card.append(title, details, description);
-
-      (listing.image_urls || []).forEach(path => {
-        const { data } = supabase.storage
-          .from("tobay-listings")
-          .getPublicUrl(path);
-
-        const image = document.createElement("img");
-        image.src = data.publicUrl;
-        image.alt = listing.title;
-        image.style.cssText =
-          "width:110px;height:100px;object-fit:cover;margin:5px;border-radius:6px;";
-        card.appendChild(image);
-      });
-
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete Listing";
-      deleteButton.style.cssText =
-        "display:block;margin-top:12px;padding:9px 15px;cursor:pointer;";
-
-      deleteButton.addEventListener("click", async () => {
-        if (!confirm("Are you sure you want to delete this listing?")) return;
-
-        deleteButton.disabled = true;
-
-        const { error: deleteError } = await supabase
-          .from("listings")
-          .delete()
-          .eq("id", listing.id)
-          .eq("seller_id", user.id);
-
-        if (deleteError) {
-          alert("Could not delete listing: " + deleteError.message);
-          deleteButton.disabled = false;
-          return;
-        }
-
-        if (listing.image_urls && listing.image_urls.length > 0) {
-          await supabase.storage
-            .from("tobay-listings")
-            .remove(listing.image_urls);
-        }
-
-        await loadMyListings();
-      });
-
-      card.appendChild(deleteButton);
-      container.appendChild(card);
-    });
+  if (error) {
+    container.textContent = "Could not load listings: " + error.message;
+    return;
   }
+
+  container.replaceChildren();
+
+  if (!listings || listings.length === 0) {
+    container.textContent = "You have not added any listings yet.";
+    return;
+  }
+
+  listings.forEach(listing => {
+    const card = document.createElement("div");
+    card.style.cssText =
+      "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+    const title = document.createElement("h4");
+    title.textContent = listing.title;
+
+    const details = document.createElement("p");
+    details.textContent =
+      listing.listing_type + " | " +
+      listing.category + " | " +
+      listing.currency + " " + listing.price +
+      " | Status: " + listing.status;
+
+    const description = document.createElement("p");
+    description.textContent = listing.description;
+
+    card.append(title, details, description);
+
+    (listing.image_urls || []).forEach(path => {
+      const { data } = supabase.storage
+        .from("tobay-listings")
+        .getPublicUrl(path);
+
+      const image = document.createElement("img");
+      image.src = data.publicUrl;
+      image.alt = listing.title;
+      image.style.cssText =
+        "width:110px;height:100px;object-fit:cover;margin:5px;border-radius:6px;";
+      card.appendChild(image);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete Listing";
+    deleteButton.style.cssText =
+      "display:block;margin-top:12px;padding:9px 15px;cursor:pointer;";
+
+    deleteButton.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete this listing?")) return;
+
+      deleteButton.disabled = true;
+
+      const { error: deleteError } = await supabase
+        .from("listings")
+        .delete()
+        .eq("id", listing.id)
+        .eq("seller_id", user.id);
+
+      if (deleteError) {
+        alert("Could not delete listing: " + deleteError.message);
+        deleteButton.disabled = false;
+        return;
+      }
+
+      if (listing.image_urls && listing.image_urls.length > 0) {
+        await supabase.storage
+          .from("tobay-listings")
+          .remove(listing.image_urls);
+      }
+
+      await loadMyListings();
+    });
+
+    card.appendChild(deleteButton);
+    container.appendChild(card);
+  });
+}
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
