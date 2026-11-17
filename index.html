@@ -2370,6 +2370,12 @@ async function loadTobayAdminEarnings(panel) {
       <h3 style="margin:26px 0 10px;color:#102b55;">Paid-feature requests</h3>
       <div id="tobayPaidFeatureRequests" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading requests...</div>
 
+      <h3 style="margin:26px 0 10px;color:#102b55;">Payment verification queue</h3>
+      <p style="font-size:12px;color:#718096;margin-bottom:8px;">
+        Only orders marked “pending verification” appear here. Verify a payment only after independently confirming that the money was actually received.
+      </p>
+      <div id="tobayPaymentVerificationQueue" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading payment verification queue...</div>
+
       <h3 style="margin:26px 0 10px;color:#102b55;">Recent earnings ledger</h3>
       <div id="tobayRecentEarnings" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading ledger...</div>
     `;
@@ -2603,6 +2609,84 @@ async function loadTobayAdminEarnings(panel) {
     note.style.cssText = "color:#718096;font-size:11px;margin-top:10px;";
     note.textContent = "Requests are shown for admin review. They cannot be activated until the payment has been verified.";
     requestsContainer.appendChild(note);
+  }
+
+  // Admin-only payment verification queue. The database RPC performs the
+  // final admin check, changes payment_status, and records commission once.
+  const paymentQueue = document.getElementById("tobayPaymentVerificationQueue");
+  paymentQueue.textContent = "Loading orders awaiting payment verification...";
+
+  const { data: verificationOrders, error: verificationError } = await supabase
+    .from("easybuy_orders")
+    .select("id,buyer_id,seller_id,total_amount,currency,payment_option,order_status,payment_status,created_at")
+    .eq("payment_status", "pending_verification")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  paymentQueue.replaceChildren();
+
+  if (verificationError) {
+    paymentQueue.textContent = "Could not load payment queue: " + verificationError.message;
+  } else if (!verificationOrders || verificationOrders.length === 0) {
+    paymentQueue.textContent = "No orders are currently awaiting payment verification. Orders remain unpaid until independently confirmed.";
+  } else {
+    verificationOrders.forEach(order => {
+      const card = document.createElement("div");
+      card.style.cssText = "padding:14px 0;border-bottom:1px solid #edf0f5;";
+
+      const heading = document.createElement("strong");
+      heading.textContent = "Order " + order.id.slice(0, 8) + " · " +
+        (order.currency || "NGN") + " " + Number(order.total_amount).toLocaleString();
+
+      const details = document.createElement("p");
+      details.style.cssText = "font-size:12px;color:#59677c;margin:5px 0;";
+      details.textContent =
+        "Buyer ID: " + order.buyer_id +
+        " · Seller ID: " + order.seller_id +
+        " · " + (order.payment_option === "easybuy" ? "EasyBuy instalments" : "Buy Now") +
+        " · Order: " + order.order_status +
+        " · Payment: " + order.payment_status +
+        " · " + new Date(order.created_at).toLocaleString();
+
+      const verifyButton = document.createElement("button");
+      verifyButton.type = "button";
+      verifyButton.textContent = "Verify received payment & record commission";
+      verifyButton.style.cssText = "margin-top:8px;padding:10px 14px;background:#168b48;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer;";
+
+      const resultMessage = document.createElement("p");
+      resultMessage.style.cssText = "font-size:12px;margin-top:7px;";
+
+      verifyButton.addEventListener("click", async () => {
+        const confirmed = confirm(
+          "Have you independently confirmed that the full payment for this order was actually received? Only continue if the payment is verified in your payment provider or bank records."
+        );
+        if (!confirmed) return;
+
+        verifyButton.disabled = true;
+        verifyButton.textContent = "Verifying...";
+        resultMessage.textContent = "";
+
+        const { data: verifyResult, error: verifyError } = await supabase.rpc(
+          "verify_tobay_order_payment",
+          { p_order_id: order.id }
+        );
+
+        if (verifyError) {
+          resultMessage.textContent = "Verification failed: " + verifyError.message;
+          resultMessage.style.color = "#b42318";
+          verifyButton.disabled = false;
+          verifyButton.textContent = "Verify received payment & record commission";
+          return;
+        }
+
+        resultMessage.textContent = verifyResult || "Payment verification completed.";
+        resultMessage.style.color = "#168b48";
+        await loadTobayAdminEarnings(panel);
+      });
+
+      card.append(heading, details, verifyButton, resultMessage);
+      paymentQueue.appendChild(card);
+    });
   }
 }
 
