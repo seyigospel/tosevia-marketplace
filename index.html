@@ -1730,6 +1730,12 @@ uploadImagesButton.addEventListener("click", async () => {
   panel.style.display = "block";
   panel.innerHTML = `
     <h2>My Orders</h2>
+   <input
+  type="text"
+  id="tobayOrderSearch"
+  placeholder="Search order reference..."
+  style="width:100%;padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;"
+> 
 <div id="tobayOrderFilters" style="display:flex;flex-wrap:wrap;gap:8px;margin:15px 0;">
   <button type="button" data-status="all">All Orders</button>
   <button type="button" data-status="pending">Pending</button>
@@ -1743,6 +1749,25 @@ uploadImagesButton.addEventListener("click", async () => {
   `;
 
   const container = document.getElementById("tobayBuyerOrdersList");
+ const orderSearch = document.getElementById("tobayOrderSearch");
+
+let selectedOrderStatus = "all";
+
+orderSearch.addEventListener("input", function () {
+  const searchText = this.value.toLowerCase().trim();
+
+  container.querySelectorAll("[data-order-status]").forEach(card => {
+    const statusMatches =
+      selectedOrderStatus === "all" ||
+      card.dataset.orderStatus === selectedOrderStatus;
+
+    const searchMatches =
+      card.textContent.toLowerCase().includes(searchText);
+
+    card.style.display =
+      statusMatches && searchMatches ? "block" : "none";
+  });
+});
 const orderFilters = document.getElementById("tobayOrderFilters");
 
 orderFilters.querySelectorAll("button").forEach(button => {
@@ -1752,17 +1777,23 @@ orderFilters.querySelectorAll("button").forEach(button => {
     "cursor:pointer;font-weight:bold;";
 
   button.addEventListener("click", function () {
-    const selectedStatus = this.dataset.status;
+  selectedOrderStatus = this.dataset.status;
+const selectedStatus = selectedOrderStatus;
+    const searchText = orderSearch.value.toLowerCase().trim();
 
     container.querySelectorAll("[data-order-status]").forEach(card => {
-      card.style.display =
+      const statusMatches =
         selectedStatus === "all" ||
-        card.dataset.orderStatus === selectedStatus
-          ? "block"
-          : "none";
+        card.dataset.orderStatus === selectedStatus;
+
+      const searchMatches =
+        card.textContent.toLowerCase().includes(searchText);
+
+      card.style.display =
+        statusMatches && searchMatches ? "block" : "none";
     });
   });
-});    
+});
 
   const { data: orders, error } = await supabase
     .from("easybuy_orders")
