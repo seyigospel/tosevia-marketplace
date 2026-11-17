@@ -1774,6 +1774,12 @@ statusBadge.style.cssText =
    "#dbeafe") +
   ";color:#222;";
 
+statusBadge.style.marginLeft = "0";
+statusBadge.style.marginTop = "8px";
+heading.style.display = "flex";
+heading.style.alignItems = "center";
+heading.style.flexWrap = "wrap";
+heading.style.gap = "10px";
 heading.appendChild(statusBadge);
     const details = document.createElement("p");
     details.textContent =
