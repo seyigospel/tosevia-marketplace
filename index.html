@@ -1639,8 +1639,7 @@ async function loadTobaySellerOrders() {
       p_order_id: order.id
     }).then(({ data: buyerName, error: buyerError }) => {
       buyerInfo.textContent =
-        "Buyer: " + (buyerError ? "Name unavailablseen
-                     e" : buyerName || "Buyer");
+        "Buyer: " + (buyerError ? "Name unavailable" : buyerName || "Buyer");
     });
   });
 }
