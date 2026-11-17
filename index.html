@@ -2153,12 +2153,11 @@ async function loadTobayAdminDashboard(user) {
 
   if (!applications || applications.length === 0) {
     list.textContent = "No seller applications yet.";
-    return;
+  } else {
+    list.replaceChildren();
   }
 
-  list.replaceChildren();
-
-  applications.forEach(application => {
+  (applications || []).forEach(application => {
     const card = document.createElement("div");
     card.style.cssText =
       "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
@@ -2304,6 +2303,307 @@ async function loadTobayAdminDashboard(user) {
     listingsContainer.appendChild(card);
   });
 
+  await loadTobayAdminEarnings(panel);
+}
+
+async function loadTobayAdminEarnings(panel) {
+  let section = document.getElementById("tobayAdminEarnings");
+
+  if (!section) {
+    section = document.createElement("section");
+    section.id = "tobayAdminEarnings";
+    section.style.cssText =
+      "margin-top:35px;padding:22px;border:1px solid #d9e2ef;" +
+      "border-radius:12px;background:#f8faff;";
+
+    section.innerHTML = `
+      <h2 style="color:#102b55;">TOBAY Earnings & Revenue</h2>
+      <p style="color:#59677c;margin:6px 0 18px;">
+        Manage planned income streams and review recorded revenue.
+      </p>
+      <div style="padding:13px;background:#fff4e5;border:1px solid #f2d2a9;border-radius:8px;margin-bottom:20px;color:#75470b;">
+        <strong>Payment gateway not connected.</strong>
+        These settings save your planned prices and preferences only. They do not collect money,
+        activate paid promotions, or mark any order as paid. Keep charges disabled until payment
+        verification is connected and tested.
+      </div>
+
+      <h3 style="margin:20px 0 10px;color:#102b55;">Income settings</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
+        <div style="background:#fff;padding:15px;border:1px solid #e1e7f0;border-radius:9px;">
+          <label style="display:flex;gap:8px;align-items:center;font-weight:bold;">
+            <input id="tobaySetCommissionEnabled" type="checkbox"> Sales commission preference
+          </label>
+          <label for="tobaySetCommissionRate" style="display:block;margin-top:10px;">Commission percentage (%)</label>
+          <input id="tobaySetCommissionRate" type="number" min="0" max="100" step="0.1" placeholder="e.g. 5" style="width:100%;padding:10px;margin-top:5px;border:1px solid #ccd5e2;border-radius:6px;">
+          <small style="color:#718096;">Only calculated after a sale is successfully paid and verified.</small>
+        </div>
+        <div style="background:#fff;padding:15px;border:1px solid #e1e7f0;border-radius:9px;">
+          <label style="display:flex;gap:8px;align-items:center;font-weight:bold;">
+            <input id="tobaySetSubscriptionEnabled" type="checkbox"> Premium subscriptions preference
+          </label>
+          <label for="tobaySetPremiumPrice" style="display:block;margin-top:10px;">Premium monthly price (NGN)</label>
+          <input id="tobaySetPremiumPrice" type="number" min="0" step="1" placeholder="Enter planned price" style="width:100%;padding:10px;margin-top:5px;border:1px solid #ccd5e2;border-radius:6px;">
+        </div>
+        <div style="background:#fff;padding:15px;border:1px solid #e1e7f0;border-radius:9px;">
+          <label style="display:flex;gap:8px;align-items:center;font-weight:bold;">
+            <input id="tobaySetFeaturedEnabled" type="checkbox"> Featured products preference
+          </label>
+          <label for="tobaySetFeaturedFee" style="display:block;margin-top:10px;">Featured listing fee (NGN)</label>
+          <input id="tobaySetFeaturedFee" type="number" min="0" step="1" placeholder="Enter planned fee" style="width:100%;padding:10px;margin-top:5px;border:1px solid #ccd5e2;border-radius:6px;">
+        </div>
+        <div style="background:#fff;padding:15px;border:1px solid #e1e7f0;border-radius:9px;">
+          <label style="display:flex;gap:8px;align-items:center;font-weight:bold;">
+            <input id="tobaySetAdsEnabled" type="checkbox"> Advertising preference
+          </label>
+          <label for="tobaySetAdsFee" style="display:block;margin-top:10px;">Base advertising fee (NGN)</label>
+          <input id="tobaySetAdsFee" type="number" min="0" step="1" placeholder="Enter planned fee" style="width:100%;padding:10px;margin-top:5px;border:1px solid #ccd5e2;border-radius:6px;">
+        </div>
+      </div>
+      <button id="tobaySaveEarningsSettings" type="button" style="margin-top:15px;padding:12px 20px;background:#102b55;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer;">Save Income Settings</button>
+      <p id="tobayEarningsSettingsMessage" role="status" style="margin-top:9px;"></p>
+
+      <h3 style="margin:28px 0 10px;color:#102b55;">Revenue recorded</h3>
+      <div id="tobayEarningsSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;"></div>
+      <p style="color:#718096;font-size:12px;margin-top:8px;">Only verified entries in the TOBAY earnings ledger are included. No revenue is assumed or estimated.</p>
+
+      <h3 style="margin:26px 0 10px;color:#102b55;">Paid-feature requests</h3>
+      <div id="tobayPaidFeatureRequests" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading requests...</div>
+
+      <h3 style="margin:26px 0 10px;color:#102b55;">Recent earnings ledger</h3>
+      <div id="tobayRecentEarnings" style="background:white;border:1px solid #e1e7f0;border-radius:8px;padding:12px;">Loading ledger...</div>
+    `;
+
+    panel.appendChild(section);
+
+    document.getElementById("tobaySaveEarningsSettings").addEventListener("click", async () => {
+      const saveButton = document.getElementById("tobaySaveEarningsSettings");
+      const message = document.getElementById("tobayEarningsSettingsMessage");
+      const commissionEnabled = document.getElementById("tobaySetCommissionEnabled").checked;
+      const commissionRate = Number(document.getElementById("tobaySetCommissionRate").value || 0);
+      const subscriptionsEnabled = document.getElementById("tobaySetSubscriptionEnabled").checked;
+      const premiumPriceRaw = document.getElementById("tobaySetPremiumPrice").value;
+      const featuredEnabled = document.getElementById("tobaySetFeaturedEnabled").checked;
+      const featuredFeeRaw = document.getElementById("tobaySetFeaturedFee").value;
+      const adsEnabled = document.getElementById("tobaySetAdsEnabled").checked;
+      const adsFeeRaw = document.getElementById("tobaySetAdsFee").value;
+
+      const premiumPrice = premiumPriceRaw === "" ? null : Number(premiumPriceRaw);
+      const featuredFee = featuredFeeRaw === "" ? null : Number(featuredFeeRaw);
+      const adsFee = adsFeeRaw === "" ? null : Number(adsFeeRaw);
+
+      if (!Number.isFinite(commissionRate) || commissionRate < 0 || commissionRate > 100) {
+        message.textContent = "Commission must be between 0 and 100 percent.";
+        return;
+      }
+      if (subscriptionsEnabled && (!Number.isFinite(premiumPrice) || premiumPrice <= 0)) {
+        message.textContent = "Enter a premium monthly price greater than zero, or leave subscriptions disabled.";
+        return;
+      }
+      if (featuredEnabled && (!Number.isFinite(featuredFee) || featuredFee <= 0)) {
+        message.textContent = "Enter a featured listing fee greater than zero, or leave featured products disabled.";
+        return;
+      }
+      if (adsEnabled && (!Number.isFinite(adsFee) || adsFee <= 0)) {
+        message.textContent = "Enter an advertising fee greater than zero, or leave advertising disabled.";
+        return;
+      }
+      if ([premiumPrice, featuredFee, adsFee].some(value => value !== null && (!Number.isFinite(value) || value < 0))) {
+        message.textContent = "Prices must be valid non-negative numbers.";
+        return;
+      }
+
+      saveButton.disabled = true;
+      message.textContent = "Saving your settings...";
+
+      const rows = [
+        { setting_key: "commission_enabled", setting_value: commissionEnabled },
+        { setting_key: "commission_rate_percent", setting_value: commissionRate },
+        { setting_key: "subscriptions_enabled", setting_value: subscriptionsEnabled },
+        { setting_key: "premium_subscription_price_ngn", setting_value: premiumPrice },
+        { setting_key: "featured_listings_enabled", setting_value: featuredEnabled },
+        { setting_key: "featured_listing_fee_ngn", setting_value: featuredFee },
+        { setting_key: "advertising_enabled", setting_value: adsEnabled },
+        { setting_key: "advertising_fee_ngn", setting_value: adsFee }
+      ];
+
+      const { error: settingsError } = await supabase
+        .from("tobay_platform_settings")
+        .upsert(rows, { onConflict: "setting_key" });
+
+      if (settingsError) {
+        message.textContent = "Could not save settings: " + settingsError.message;
+        saveButton.disabled = false;
+        return;
+      }
+
+      const { error: planError } = await supabase
+        .from("tobay_seller_plans")
+        .update({
+          price: premiumPrice,
+          currency: "NGN",
+          is_active: subscriptionsEnabled
+        })
+        .eq("plan_code", "premium");
+
+      if (planError) {
+        message.textContent = "Settings were saved, but the premium plan price could not be updated: " + planError.message;
+      } else {
+        message.textContent = "Income settings saved. Real charges remain inactive until payment verification is connected.";
+      }
+
+      saveButton.disabled = false;
+    });
+  }
+
+  const settingsMessage = document.getElementById("tobayEarningsSettingsMessage");
+  settingsMessage.textContent = "Loading saved income settings...";
+
+  const { data: settingRows, error: settingsLoadError } = await supabase
+    .from("tobay_platform_settings")
+    .select("setting_key,setting_value");
+
+  if (settingsLoadError) {
+    settingsMessage.textContent = "Could not load income settings: " + settingsLoadError.message;
+  } else {
+    const settings = Object.fromEntries((settingRows || []).map(row => [row.setting_key, row.setting_value]));
+    document.getElementById("tobaySetCommissionEnabled").checked = settings.commission_enabled === true;
+    document.getElementById("tobaySetCommissionRate").value = settings.commission_rate_percent ?? "";
+    document.getElementById("tobaySetSubscriptionEnabled").checked = settings.subscriptions_enabled === true;
+    document.getElementById("tobaySetPremiumPrice").value = settings.premium_subscription_price_ngn ?? "";
+    document.getElementById("tobaySetFeaturedEnabled").checked = settings.featured_listings_enabled === true;
+    document.getElementById("tobaySetFeaturedFee").value = settings.featured_listing_fee_ngn ?? "";
+    document.getElementById("tobaySetAdsEnabled").checked = settings.advertising_enabled === true;
+    document.getElementById("tobaySetAdsFee").value = settings.advertising_fee_ngn ?? "";
+    settingsMessage.textContent = "Saved preferences loaded. Paid features are not live yet.";
+  }
+
+  const summary = document.getElementById("tobayEarningsSummary");
+  const ledgerContainer = document.getElementById("tobayRecentEarnings");
+  const { data: ledger, error: ledgerError } = await supabase
+    .from("tobay_earnings_ledger")
+    .select("id,earning_type,amount,currency,status,description,created_at")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  summary.replaceChildren();
+  if (ledgerError) {
+    summary.textContent = "Could not load earnings summary: " + ledgerError.message;
+    ledgerContainer.textContent = "Could not load ledger.";
+  } else {
+    const confirmedTotals = {};
+    let pendingCount = 0;
+    (ledger || []).forEach(entry => {
+      if (entry.status === "confirmed") {
+        confirmedTotals[entry.currency || "NGN"] =
+          (confirmedTotals[entry.currency || "NGN"] || 0) + Number(entry.amount || 0);
+      } else if (entry.status === "pending") {
+        pendingCount++;
+      }
+    });
+
+    const currencyNames = Object.keys(confirmedTotals);
+    if (currencyNames.length === 0) {
+      const empty = document.createElement("div");
+      empty.style.cssText = "padding:14px;background:white;border:1px solid #e1e7f0;border-radius:8px;";
+      empty.textContent = "No confirmed earnings have been recorded yet.";
+      summary.appendChild(empty);
+    } else {
+      currencyNames.forEach(currency => {
+        const tile = document.createElement("div");
+        tile.style.cssText = "padding:14px;background:white;border:1px solid #e1e7f0;border-radius:8px;";
+        const label = document.createElement("small");
+        label.textContent = "Confirmed revenue · " + currency;
+        const amount = document.createElement("strong");
+        amount.style.cssText = "display:block;font-size:20px;color:#102b55;margin-top:4px;";
+        amount.textContent = confirmedTotals[currency].toLocaleString(undefined, { maximumFractionDigits: 2 });
+        tile.append(label, amount);
+        summary.appendChild(tile);
+      });
+    }
+    const pendingTile = document.createElement("div");
+    pendingTile.style.cssText = "padding:14px;background:white;border:1px solid #e1e7f0;border-radius:8px;";
+    pendingTile.textContent = "Pending ledger entries: " + pendingCount;
+    summary.appendChild(pendingTile);
+
+    ledgerContainer.replaceChildren();
+    if (!ledger || ledger.length === 0) {
+      ledgerContainer.textContent = "The earnings ledger is empty. Verified income will appear here after payment processing is connected.";
+    } else {
+      ledger.forEach(entry => {
+        const row = document.createElement("div");
+        row.style.cssText = "padding:10px 0;border-bottom:1px solid #edf0f5;";
+        const title = document.createElement("strong");
+        title.textContent = entry.earning_type.replaceAll("_", " ") + " · " +
+          (entry.currency || "NGN") + " " + Number(entry.amount).toLocaleString();
+        const detail = document.createElement("p");
+        detail.style.cssText = "font-size:12px;color:#718096;margin-top:3px;";
+        detail.textContent = (entry.description || "No description") + " · " +
+          entry.status + " · " + new Date(entry.created_at).toLocaleString();
+        row.append(title, detail);
+        ledgerContainer.appendChild(row);
+      });
+    }
+  }
+
+  const requestsContainer = document.getElementById("tobayPaidFeatureRequests");
+  requestsContainer.textContent = "Loading paid-feature requests...";
+  const [subscriptionsResult, featuredResult, adsResult] = await Promise.all([
+    supabase.from("tobay_seller_subscriptions")
+      .select("id,seller_id,status,created_at", { count: "exact" })
+      .order("created_at", { ascending: false }).limit(10),
+    supabase.from("tobay_featured_listings")
+      .select("id,seller_id,listing_id,fee_amount,currency,status,created_at", { count: "exact" })
+      .order("created_at", { ascending: false }).limit(10),
+    supabase.from("tobay_advertisements")
+      .select("id,advertiser_id,title,placement,fee_amount,currency,status,created_at", { count: "exact" })
+      .order("created_at", { ascending: false }).limit(10)
+  ]);
+
+  requestsContainer.replaceChildren();
+  const requestGroups = [
+    { label: "Subscriptions", result: subscriptionsResult },
+    { label: "Featured products", result: featuredResult },
+    { label: "Advertisements", result: adsResult }
+  ];
+  let requestErrors = false;
+  requestGroups.forEach(group => {
+    const heading = document.createElement("h4");
+    heading.style.cssText = "margin:12px 0 5px;color:#102b55;";
+    heading.textContent = group.label + " · " + (group.result.count ?? (group.result.data || []).length);
+    requestsContainer.appendChild(heading);
+    if (group.result.error) {
+      requestErrors = true;
+      const errorLine = document.createElement("p");
+      errorLine.textContent = "Unable to load: " + group.result.error.message;
+      requestsContainer.appendChild(errorLine);
+      return;
+    }
+    if (!group.result.data || group.result.data.length === 0) {
+      const emptyLine = document.createElement("p");
+      emptyLine.style.color = "#718096";
+      emptyLine.textContent = "No requests yet.";
+      requestsContainer.appendChild(emptyLine);
+      return;
+    }
+    group.result.data.forEach(request => {
+      const line = document.createElement("p");
+      line.style.cssText = "font-size:12px;padding:7px 0;border-bottom:1px solid #edf0f5;overflow-wrap:anywhere;";
+      const charge = request.fee_amount == null ? "Fee not set" :
+        (request.currency || "NGN") + " " + Number(request.fee_amount).toLocaleString();
+      line.textContent = "Ref: " + request.id.slice(0, 8) + " · " +
+        (request.title || request.plan_id || request.listing_id || "Request") +
+        " · " + charge + " · " + request.status +
+        " · " + new Date(request.created_at).toLocaleDateString();
+      requestsContainer.appendChild(line);
+    });
+  });
+  if (!requestErrors) {
+    const note = document.createElement("p");
+    note.style.cssText = "color:#718096;font-size:11px;margin-top:10px;";
+    note.textContent = "Requests are shown for admin review. They cannot be activated until the payment has been verified.";
+    requestsContainer.appendChild(note);
+  }
 }
 
 document.getElementById("tobayAccountForm").addEventListener("submit", async function(event) {
