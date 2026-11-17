@@ -1468,7 +1468,13 @@ async function loadTobaySellerOrders() {
 
     <div id="tobaySellerOrderList">Loading your orders...</div>
   `;
+const summary = document.createElement("div");
+summary.id = "tobaySellerOrderSummary";
+summary.style.cssText =
+  "display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));" +
+  "gap:10px;margin:15px 0;";
 
+container.insertBefore(summary, container.firstChild);
   const list = document.getElementById("tobaySellerOrderList");
   const search = document.getElementById("tobaySellerOrderSearch");
   const filters = document.getElementById("tobaySellerOrderFilters");
@@ -1483,6 +1489,32 @@ async function loadTobaySellerOrders() {
     list.textContent = "Could not load orders: " + error.message;
     return;
   }
+
+const orderList = orders || [];
+
+const totalOrders = orderList.length;
+const pendingOrders = orderList.filter(order => order.order_status === "pending").length;
+const acceptedOrders = orderList.filter(order => order.order_status === "accepted").length;
+const rejectedOrders = orderList.filter(order => order.order_status === "rejected").length;
+
+summary.innerHTML = `
+  <div style="padding:15px;background:#eaf1ff;border-radius:8px;">
+    <strong>Total Orders</strong>
+    <h2>${totalOrders}</h2>
+  </div>
+  <div style="padding:15px;background:#fff4d6;border-radius:8px;">
+    <strong>Pending</strong>
+    <h2>${pendingOrders}</h2>
+  </div>
+  <div style="padding:15px;background:#e2f7e9;border-radius:8px;">
+    <strong>Accepted</strong>
+    <h2>${acceptedOrders}</h2>
+  </div>
+  <div style="padding:15px;background:#ffe8e8;border-radius:8px;">
+    <strong>Rejected</strong>
+    <h2>${rejectedOrders}</h2>
+  </div>
+`;
 
   if (!orders || orders.length === 0) {
     list.textContent = "You have no incoming orders yet.";
