@@ -2035,7 +2035,33 @@ whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
     submit.disabled = false;
   }
 });
+// TOBAY LOG OUT BUTTON
+const tobayLogoutButton = document.createElement("button");
 
+tobayLogoutButton.textContent = "Log Out";
+tobayLogoutButton.style.cssText =
+  "display:none;margin:15px;padding:12px 25px;" +
+  "background:#b42318;color:white;border:0;" +
+  "border-radius:8px;cursor:pointer;font-weight:bold;";
+
+document.getElementById("tobayAccountForm").after(tobayLogoutButton);
+
+supabase.auth.onAuthStateChange((event, session) => {
+  tobayLogoutButton.style.display =
+    session ? "inline-block" : "none";
+});
+
+tobayLogoutButton.addEventListener("click", async () => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    alert("Could not log out: " + error.message);
+    return;
+  }
+
+  alert("You have logged out successfully.");
+  window.location.reload();
+});
 </script>
 </body>
 </html>
