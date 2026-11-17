@@ -86,6 +86,20 @@ header{background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid 
 .benefit h3{color:var(--navy);font-size:16px;margin-bottom:5px}
 .benefit p{font-size:13px;color:var(--muted)}
 .notice{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 19px;color:var(--muted);font-size:12px;margin-top:25px}
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.about-card,.admin-contact-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:24px}
+.about-card h3,.admin-contact-card h3{color:var(--navy);font-size:17px;margin:0 0 8px}
+.about-card p,.admin-contact-card p{color:var(--muted);font-size:14px}
+.contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:stretch}
+.admin-contact-card{box-shadow:0 8px 24px #1c35500a}
+.admin-contact-item{display:flex;align-items:flex-start;gap:13px;padding:15px 0;border-bottom:1px solid var(--line)}
+.admin-contact-item:last-child{border-bottom:0}
+.admin-contact-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:10px;background:#fff2e5;font-size:19px}
+.admin-contact-item small{display:block;color:var(--muted);font-size:11px;margin-bottom:2px}
+.admin-contact-item a{color:var(--navy);font-weight:700;overflow-wrap:anywhere}
+.admin-contact-item a:hover{color:#d87516}
+.contact-note{background:#f5f8fc;border:1px solid #e2eaf4;border-radius:9px;padding:13px;color:var(--muted);font-size:12px;margin-top:16px}
+@media(max-width:800px){.about-grid{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}}
 footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 .footer-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;padding-bottom:30px}
 .footer-brand p{color:#c3d0e1;font-size:13px;margin-top:12px}
@@ -128,7 +142,9 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
    <a href="#home">Home</a>
    <a href="#categories">Categories</a>
    <a href="#explore">Explore</a>
+   <a href="#about">About</a>
    <a href="#sell">Sell with us</a>
+   <a href="#contact-admin">Contact Admin</a>
    <a class="btn btn-orange" href="#sell">Get Started</a>
   </nav>
  </div>
@@ -228,6 +244,61 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
   </div>
  </div>
 </section>
+
+<section class="section" id="about" style="background:#fff">
+ <div class="container">
+  <div class="section-head">
+   <div><h2>About TOBAY</h2><p>Your World. Your Marketplace.</p></div>
+  </div>
+  <p style="max-width:850px;color:var(--muted);font-size:15px;margin:-8px 0 25px;">TOBAY Global Marketplace is a platform designed to bring product discovery, services and seller connections together. Our aim is to make it easier for customers to find what they need and for businesses and independent professionals to present what they offer.</p>
+  <div class="about-grid">
+   <article class="about-card">
+    <div class="benefit-icon">🛍️</div>
+    <h3>For Buyers</h3>
+    <p>Browse published products and services, explore seller profiles, read customer reviews and send order requests to sellers.</p>
+   </article>
+   <article class="about-card">
+    <div class="benefit-icon">🏪</div>
+    <h3>For Sellers</h3>
+    <p>Create a seller account, submit products or services for approval, and manage your business profile and marketplace listings.</p>
+   </article>
+   <article class="about-card">
+    <div class="benefit-icon">🤝</div>
+    <h3>Our Approach</h3>
+    <p>We want to make it easier for buyers and sellers to discover one another and communicate clearly about products, services and orders.</p>
+   </article>
+  </div>
+  <div class="notice">Order requests made through Buy Now or EasyBuy are sent for seller review. Live online payment collection is not currently enabled on TOBAY.</div>
+ </div>
+</section>
+
+<section class="section" id="contact-admin">
+ <div class="container">
+  <div class="section-head">
+   <div><h2>Contact TOBAY Admin</h2><p>Need assistance with your account, a listing or an order? Contact the marketplace administrator.</p></div>
+  </div>
+  <div class="contact-grid">
+   <div class="admin-contact-card">
+    <h3>Admin Support</h3>
+    <p>Use the official contact details below for TOBAY marketplace enquiries and support.</p>
+    <div class="admin-contact-item">
+     <div class="admin-contact-icon" aria-hidden="true">✉️</div>
+     <div><small>Email the Admin</small><a href="mailto:oluwatobiadegbe@gmail.com">oluwatobiadegbe@gmail.com</a></div>
+    </div>
+    <div class="admin-contact-item">
+     <div class="admin-contact-icon" aria-hidden="true">📞</div>
+     <div><small>Call the Admin</small><a href="tel:+2347040965250">07040965250</a></div>
+    </div>
+   </div>
+   <div class="admin-contact-card" style="background:linear-gradient(145deg,#102b55,#19477f);color:#fff;border-color:#19477f">
+    <div class="benefit-icon">💬</div>
+    <h3 style="color:#fff">How We Can Help</h3>
+    <p style="color:#e0e9f5">Contact the Admin for help with buyer or seller accounts, seller applications, product and service listings, order enquiries, or general questions about using TOBAY.</p>
+    <p style="color:#ffc27c;font-size:12px;margin-top:18px">Please do not send your password, one-time passcodes or private banking information by email or phone.</p>
+   </div>
+  </div>
+ </div>
+</section>
 </main>
 
 <footer>
@@ -236,7 +307,7 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 <div class="footer-brand"><a class="logo" href="#home" style="color:white">TOBAY</a><p>Your World. Your Marketplace.<br>Products. Services. Opportunities.</p></div>   <div class="footer-links">
     <div><strong>Marketplace</strong><a href="#categories">Categories</a><a href="#explore">Explore</a></div>
     <div><strong>Join TOBAY</strong><a href="#sell">Become a Seller</a><a href="#home">For Buyers</a></div>
-    <div><strong>Information</strong><a href="#home">About TOBAY</a><a href="#home">Contact — coming soon</a></div>
+    <div><strong>Information</strong><a href="#about">About TOBAY</a><a href="#contact-admin">Contact Admin</a><a href="mailto:oluwatobiadegbe@gmail.com">Email Admin</a></div>
    </div>
   </div>
   <div class="copyright">© <span id="year"></span> TOBAY Global Marketplace. All rights reserved.</div>
