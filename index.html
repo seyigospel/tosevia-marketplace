@@ -1759,7 +1759,22 @@ uploadImagesButton.addEventListener("click", async () => {
 
     const heading = document.createElement("h3");
     heading.textContent = "Order: " + order.id.slice(0, 8);
+const statusBadge = document.createElement("span");
 
+statusBadge.textContent = order.order_status.toUpperCase();
+
+statusBadge.style.cssText =
+  "display:inline-block;margin-left:10px;padding:6px 12px;" +
+  "border-radius:20px;font-size:12px;font-weight:bold;" +
+  "background:" +
+  (order.order_status === "accepted" ? "#dcfce7" :
+   order.order_status === "pending" ? "#fef3c7" :
+   order.order_status === "rejected" ? "#fee2e2" :
+   order.order_status === "cancelled" ? "#e5e7eb" :
+   "#dbeafe") +
+  ";color:#222;";
+
+heading.appendChild(statusBadge);
     const details = document.createElement("p");
     details.textContent =
       "Amount: " + order.currency + " " + order.total_amount +
