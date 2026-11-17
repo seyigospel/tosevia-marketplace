@@ -1730,11 +1730,32 @@ uploadImagesButton.addEventListener("click", async () => {
   panel.style.display = "block";
   panel.innerHTML = `
     <h2>My Orders</h2>
-    <div id="tobayBuyerOrdersList">Loading your orders...</div>
+    <select id="tobayOrderFilter" style="width:100%;padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;">
+  <option value="all">All Orders</option>
+  <option value="pending">Pending</option>
+  <option value="accepted">Accepted</option>
+  <option value="rejected">Rejected</option>
+  <option value="cancelled">Cancelled</option>
+  <option value="completed">Completed</option>
+</select>
+<div id="tobayBuyerOrdersList">Loading your orders...</div>
   `;
 
   const container = document.getElementById("tobayBuyerOrdersList");
+const orderFilter = document.getElementById("tobayOrderFilter");
 
+orderFilter.addEventListener("change", function () {
+  const selectedStatus = this.value;
+  const orderCards = container.querySelectorAll("[data-order-status]");
+
+  orderCards.forEach(card => {
+    card.style.display =
+      selectedStatus === "all" ||
+      card.dataset.orderStatus === selectedStatus
+        ? "block"
+        : "none";
+  });
+});
   const { data: orders, error } = await supabase
     .from("easybuy_orders")
     .select("id,total_amount,currency,payment_option,order_status,created_at")
@@ -1752,7 +1773,8 @@ uploadImagesButton.addEventListener("click", async () => {
   }
 
   for (const order of orders) {
-    const card = document.createElement("div");
+const card = document.createElement("div");
+card.dataset.orderStatus = order.order_status;
     card.style.cssText =
       "padding:15px;margin:15px 0;border:1px solid #ddd;" +
       "border-radius:8px;";
