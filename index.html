@@ -1553,7 +1553,7 @@ summary.innerHTML = `
     });
   });
 
- orders.forEach(async order => {
+ orders.forEach(order => {
    const { data: buyerName, error: buyerNameError } = await supabase.rpc(
   "get_tobay_order_buyer_name",
   {
@@ -1636,6 +1636,14 @@ orderDate.textContent =
     }
 
     list.appendChild(card);
+   
+supabase.rpc("get_tobay_order_buyer_name", {
+  p_order_id: order.id
+}).then(({ data: buyerName, error }) => {
+  buyerInfo.textContent =
+    "Buyer: " + (error ? "Name unavailable" : buyerName || "Buyer");
+});
+
   });
 }
 
