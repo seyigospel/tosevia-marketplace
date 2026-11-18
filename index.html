@@ -711,6 +711,44 @@ easyBuyButton.style.cssText =
   "background:#168b48;color:white;border:0;" +
   "border-radius:8px;font-weight:bold;cursor:pointer;";
 
+const deliveryDetails = document.createElement("div");
+deliveryDetails.style.cssText =
+  "margin:16px 0;padding:16px;background:#fff;border:1px solid #dce5f0;border-radius:11px;";
+
+const deliveryDetailsHeading = document.createElement("h4");
+deliveryDetailsHeading.textContent = "Buy Now — Your Delivery Details";
+deliveryDetailsHeading.style.cssText = "margin:0 0 5px;color:#102b55;font-size:15px;";
+
+const deliveryDetailsNote = document.createElement("p");
+deliveryDetailsNote.textContent = "Enter your correct details so the seller can contact you about your order.";
+deliveryDetailsNote.style.cssText = "margin:0 0 13px;color:#66758a;font-size:12px;line-height:1.5;";
+
+function makeDeliveryField(labelText, placeholder, type, autocomplete) {
+  const wrapper = document.createElement("label");
+  wrapper.style.cssText = "display:block;margin:11px 0;color:#30445e;font-size:12px;font-weight:700;";
+  wrapper.textContent = labelText;
+  const field = document.createElement("input");
+  field.type = type;
+  field.placeholder = placeholder;
+  field.autocomplete = autocomplete;
+  field.required = true;
+  field.style.cssText = "display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:12px 13px;border:1px solid #dce5ef;border-radius:8px;background:#fff;color:#17324f;font:inherit;font-size:13px;";
+  wrapper.appendChild(field);
+  return { wrapper, field };
+}
+
+const buyerNameField = makeDeliveryField("Full Name", "Enter the name for delivery", "text", "name");
+const buyerPhoneField = makeDeliveryField("Phone Number", "Enter a reachable phone number", "tel", "tel");
+const deliveryAddressField = makeDeliveryField("Delivery Address", "Enter your full delivery address", "text", "street-address");
+
+deliveryDetails.append(
+  deliveryDetailsHeading,
+  deliveryDetailsNote,
+  buyerNameField.wrapper,
+  buyerPhoneField.wrapper,
+  deliveryAddressField.wrapper
+);
+
 const purchaseMessage = document.createElement("p");
 purchaseMessage.style.cssText =
   "font-size:14px;line-height:1.5;color:#123b70;";
@@ -721,13 +759,34 @@ async function placeTobayOrder(paymentOption, button) {
   purchaseMessage.textContent = "Submitting your order request...";
 
   try {
-    const { data, error } = await window.tobaySupabase.rpc(
-      "create_tobay_easybuy_order",
-      {
-        p_listing_id: item.id,
-        p_payment_option: paymentOption
+    let result;
+
+    if (paymentOption === "buy_now") {
+      const buyerName = buyerNameField.field.value.trim();
+      const buyerPhone = buyerPhoneField.field.value.trim();
+      const deliveryAddress = deliveryAddressField.field.value.trim();
+
+      if (!buyerName || !buyerPhone || !deliveryAddress) {
+        throw new Error("Please complete your full name, phone number, and delivery address.");
       }
-    );
+
+      result = await window.tobaySupabase.rpc("create_tobay_order", {
+        p_listing_id: item.id,
+        p_buyer_name: buyerName,
+        p_buyer_phone: buyerPhone,
+        p_delivery_address: deliveryAddress
+      });
+    } else {
+      result = await window.tobaySupabase.rpc(
+        "create_tobay_easybuy_order",
+        {
+          p_listing_id: item.id,
+          p_payment_option: paymentOption
+        }
+      );
+    }
+
+    const { data, error } = result;
 
     if (error) throw error;
 
@@ -759,6 +818,7 @@ purchaseArea.append(
   paymentMethods,
   purchaseHeading,
   easyBuyInfo,
+  deliveryDetails,
   buyNowButton,
   easyBuyButton,
   purchaseMessage
