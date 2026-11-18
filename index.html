@@ -187,6 +187,31 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 @media(max-width:700px){.discover-banner{padding:29px 25px;min-height:unset}.discover-art{flex-basis:125px;width:125px;height:125px}.discover-art span{font-size:55px}.marketplace-tools{grid-template-columns:1fr}.discover-heading{align-items:flex-start;flex-direction:column}.discover-live{align-self:flex-start}}
 @media(max-width:480px){.discover-section{padding-top:35px}.discover-banner{padding:25px 21px;margin-bottom:35px;border-radius:17px}.discover-art{display:none}.discover-banner h2{font-size:29px}.discover-highlights{gap:10px;font-size:10px}.marketplace-panel{padding:14px 12px 12px}.marketplace-filter-row{align-items:flex-start}.marketplace-filter-row .type-tabs{gap:6px}.marketplace-filter-row .tab{padding:8px 11px;font-size:10px}.marketplace-browse-note{display:none}.listing-grid{gap:15px}.listing-art{height:185px}}
 
+
+/* TOBAY Explore Categories premium refresh */
+.categories-section{position:relative;overflow:hidden;padding-top:76px;padding-bottom:78px;background:radial-gradient(ellipse at 8% 12%,#e8f1fc 0%,transparent 36%),linear-gradient(180deg,#f8faff 0%,#fff 100%)}
+.categories-heading{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-bottom:30px;padding:0 2px}
+.categories-kicker{display:inline-flex;align-items:center;gap:8px;color:#d87516;font-size:10px;font-weight:900;letter-spacing:2.1px}
+.categories-heading h2{margin:8px 0 7px;color:#102b55;font-size:clamp(29px,4vw,39px);line-height:1.12;letter-spacing:-1px}
+.categories-heading h2 span{color:#2369a6}
+.categories-heading p{max-width:650px;color:#718096;font-size:13px;line-height:1.8}
+.categories-heading-mark{display:flex;align-items:center;justify-content:center;gap:8px;flex:0 0 116px;height:72px;border:1px solid #dce8f5;border-radius:18px;background:linear-gradient(145deg,#fff,#f1f6fc);color:#e28a31;font-size:25px;box-shadow:0 8px 22px #102b550b;transform:rotate(2deg)}
+.categories-heading-mark b{color:#173d6b;font-size:11px;letter-spacing:2px}
+.categories-section .category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.categories-section .category{position:relative;isolation:isolate;min-height:166px;padding:22px 19px 20px;border:1px solid #e3eaf3;border-radius:17px;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);box-shadow:0 7px 22px #102b5508;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.categories-section .category:before{content:"";position:absolute;z-index:-1;width:110px;height:110px;right:-47px;top:-48px;border-radius:50%;background:#edf4fc;transition:transform .3s,background .3s}
+.categories-section .category:hover{transform:translateY(-7px);border-color:#b9d0e8;box-shadow:0 17px 34px #102b5516}
+.categories-section .category:hover:before{transform:scale(1.45);background:#e4effb}
+.categories-section .category-icon{width:53px;height:53px;margin-bottom:17px;border:1px solid #e5edf7;border-radius:15px;background:linear-gradient(145deg,#edf4fc,#fff);box-shadow:0 5px 12px #102b550b;font-size:26px}
+.categories-section .category h3{margin:0 25px 5px 0;color:#15375f;font-size:14px;line-height:1.4}
+.categories-section .category p{max-width:230px;color:#7a899c;font-size:11px;line-height:1.6}
+.category-arrow{position:absolute;right:17px;bottom:17px;display:grid;place-items:center;width:27px;height:27px;border-radius:50%;background:#f1f6fc;color:#28669f;font-size:15px;transition:transform .2s,background .2s,color .2s}
+.categories-section .category:hover .category-arrow{transform:translate(2px,-2px);background:#19477f;color:#fff}
+.categories-section .category-featured{border-color:#d9e5f2;background:linear-gradient(135deg,#f4f8fd,#fff)}
+.categories-section .category-featured .category-icon{background:linear-gradient(145deg,#e2effd,#fff)}
+@media(max-width:800px){.categories-section .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.categories-section{padding-top:49px;padding-bottom:52px}.categories-heading{align-items:flex-start;margin-bottom:22px}.categories-heading-mark{display:none}.categories-heading h2{font-size:29px}.categories-heading p{font-size:12px}.categories-section .category-grid{gap:11px}.categories-section .category{min-height:155px;padding:17px 14px;border-radius:14px}.categories-section .category-icon{width:46px;height:46px;margin-bottom:13px;font-size:23px}.categories-section .category h3{font-size:12px}.categories-section .category p{font-size:10px}.category-arrow{right:11px;bottom:11px;width:23px;height:23px}}
+
 </style>
 </head>
 <body>
@@ -227,20 +252,25 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
  </div>
 </div>
 
-<section class="section" id="categories">
+<section class="section categories-section" id="categories">
  <div class="container">
-  <div class="section-head">
-   <div><h2>Explore Categories</h2><p>Find what you need, or discover something new.</p></div>
+  <div class="categories-heading">
+   <div>
+    <span class="categories-kicker">SHOP • DISCOVER • CONNECT</span>
+    <h2>Explore <span>Categories</span></h2>
+    <p>Browse our marketplace by interest and find products, services and talented professionals in just a few clicks.</p>
+   </div>
+   <div class="categories-heading-mark" aria-hidden="true">✦ <b>TOBAY</b></div>
   </div>
   <div class="category-grid">
-   <a class="category" href="#explore" onclick="chooseCategory('fashion')"><div class="category-icon">👕</div><h3>Fashion & Clothing</h3><p>Clothing, footwear and accessories</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('electronics')"><div class="category-icon">📱</div><h3>Electronics</h3><p>Devices, gadgets and accessories</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('home')"><div class="category-icon">🏡</div><h3>Home & Living</h3><p>Furniture and everyday essentials</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('professional')"><div class="category-icon">💼</div><h3>Professional Services</h3><p>Business and expert support</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('creative')"><div class="category-icon">🎨</div><h3>Creative Services</h3><p>Design, photography and media</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('food')"><div class="category-icon">🍲</div><h3>Food & Catering</h3><p>Food businesses and catering</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('repairs')"><div class="category-icon">🔧</div><h3>Repairs & Trades</h3><p>Repairs and skilled trades</p></a>
-   <a class="category" href="#explore" onclick="chooseCategory('all')"><div class="category-icon">🌍</div><h3>Explore Everything</h3><p>Discover more possibilities</p></a>
+   <a class="category" href="#explore" onclick="chooseCategory('fashion')"><div class="category-icon">👕</div><h3>Fashion & Clothing</h3><p>Clothing, footwear and accessories</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category" href="#explore" onclick="chooseCategory('electronics')"><div class="category-icon">📱</div><h3>Electronics</h3><p>Devices, gadgets and accessories</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category" href="#explore" onclick="chooseCategory('home')"><div class="category-icon">🏡</div><h3>Home & Living</h3><p>Furniture and everyday essentials</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category" href="#explore" onclick="chooseCategory('professional')"><div class="category-icon">💼</div><h3>Professional Services</h3><p>Business and expert support</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category" href="#explore" onclick="chooseCategory('creative')"><div class="category-icon">🎨</div><h3>Creative Services</h3><p>Design, photography and media</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category" href="#explore" onclick="chooseCategory('food')"><div class="category-icon">🍲</div><h3>Food & Catering</h3><p>Food businesses and catering</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category" href="#explore" onclick="chooseCategory('repairs')"><div class="category-icon">🔧</div><h3>Repairs & Trades</h3><p>Repairs and skilled trades</p><span class="category-arrow" aria-hidden="true">↗</span></a>
+   <a class="category category-featured" href="#explore" onclick="chooseCategory('all')"><div class="category-icon">🌍</div><h3>Explore Everything</h3><p>Discover more possibilities across TOBAY</p><span class="category-arrow" aria-hidden="true">↗</span></a>
   </div>
  </div>
 </section>
