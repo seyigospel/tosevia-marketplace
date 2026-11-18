@@ -1985,7 +1985,7 @@ async function loadTobayNormalSellerOrders() {
 
   const { data: orders, error } = await supabase
     .from("tobay_orders")
-    .select("id,buyer_name,buyer_phone,delivery_address,total_amount,currency,order_status,payment_status,created_at,listing:listings(title)")
+    .select("id,buyer_name,buyer_phone,delivery_address,total_amount,currency,order_status,payment_status,payment_method,seller_payment_instructions,created_at,listing:listings(title)")
     .eq("seller_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -2020,27 +2020,97 @@ async function loadTobayNormalSellerOrders() {
     date.textContent = "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
     card.append(heading, details, buyer, phone, address, status, date);
 
+    if (order.order_status === "accepted") {
+      const method = document.createElement("p");
+      method.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : "Not specified");
+      card.appendChild(method);
+      if (order.seller_payment_instructions) {
+        const instructions = document.createElement("p");
+        instructions.textContent = "Buyer instructions: " + order.seller_payment_instructions;
+        card.appendChild(instructions);
+      }
+    }
+
     if (order.order_status === "pending") {
-      ["accepted", "rejected"].forEach(nextStatus => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = nextStatus === "accepted" ? "Accept Buy Now Order" : "Reject Buy Now Order";
-        button.style.cssText = "margin:8px 8px 0 0;padding:10px 15px;border:0;border-radius:6px;cursor:pointer;color:white;background:" + (nextStatus === "accepted" ? "#168b48" : "#b42318") + ";";
-        button.addEventListener("click", async () => {
-          button.disabled = true;
-          const { error: reviewError } = await supabase.rpc("review_tobay_order", {
-            p_order_id: order.id,
-            p_new_status: nextStatus
-          });
-          if (reviewError) {
-            alert("Could not update order: " + reviewError.message);
-            button.disabled = false;
-            return;
-          }
-          await loadTobayNormalSellerOrders();
-        });
-        card.appendChild(button);
+      const acceptButton = document.createElement("button");
+      acceptButton.type = "button";
+      acceptButton.textContent = "Accept Buy Now Order";
+      acceptButton.style.cssText = "margin:8px 8px 0 0;padding:10px 15px;border:0;border-radius:6px;cursor:pointer;color:white;background:#168b48;";
+
+      const rejectButton = document.createElement("button");
+      rejectButton.type = "button";
+      rejectButton.textContent = "Reject Buy Now Order";
+      rejectButton.style.cssText = "margin:8px 8px 0 0;padding:10px 15px;border:0;border-radius:6px;cursor:pointer;color:white;background:#b42318;";
+
+      const paymentPanel = document.createElement("div");
+      paymentPanel.style.cssText = "display:none;margin-top:12px;padding:14px;background:#f4f7fb;border:1px solid #d5deeb;border-radius:8px;";
+      const methodLabel = document.createElement("label");
+      methodLabel.textContent = "Choose payment method";
+      const methodSelect = document.createElement("select");
+      methodSelect.style.cssText = "display:block;width:100%;padding:10px;margin:6px 0 12px;";
+      methodSelect.innerHTML = '<option value="pay_on_delivery">Pay on Delivery</option><option value="bank_transfer">Bank Transfer</option>';
+      const instructionsLabel = document.createElement("label");
+      instructionsLabel.textContent = "Payment / delivery instructions for the buyer";
+      const instructionsInput = document.createElement("textarea");
+      instructionsInput.placeholder = "For bank transfer, enter account name, bank name, account number and any payment reference. For Pay on Delivery, you may add delivery details.";
+      instructionsInput.maxLength = 1000;
+      instructionsInput.style.cssText = "display:block;width:100%;min-height:90px;padding:10px;margin:6px 0 12px;box-sizing:border-box;";
+      const saveAcceptButton = document.createElement("button");
+      saveAcceptButton.type = "button";
+      saveAcceptButton.textContent = "Confirm and Accept Order";
+      saveAcceptButton.style.cssText = "padding:10px 15px;border:0;border-radius:6px;background:#168b48;color:white;cursor:pointer;";
+      const cancelButton = document.createElement("button");
+      cancelButton.type = "button";
+      cancelButton.textContent = "Cancel";
+      cancelButton.style.cssText = "margin-left:8px;padding:10px 15px;border:1px solid #999;border-radius:6px;background:white;cursor:pointer;";
+      paymentPanel.append(methodLabel, methodSelect, instructionsLabel, instructionsInput, saveAcceptButton, cancelButton);
+
+      methodSelect.addEventListener("change", () => {
+        instructionsInput.placeholder = methodSelect.value === "bank_transfer"
+          ? "Enter account name, bank name, account number and any payment reference."
+          : "Optional delivery or payment-on-delivery details for the buyer.";
       });
+      acceptButton.addEventListener("click", () => {
+        paymentPanel.style.display = paymentPanel.style.display === "none" ? "block" : "none";
+      });
+      cancelButton.addEventListener("click", () => { paymentPanel.style.display = "none"; });
+      saveAcceptButton.addEventListener("click", async () => {
+        const paymentMethod = methodSelect.value;
+        const paymentInstructions = instructionsInput.value.trim();
+        if (paymentMethod === "bank_transfer" && !paymentInstructions) {
+          alert("Please enter the bank transfer instructions for the buyer.");
+          return;
+        }
+        saveAcceptButton.disabled = true;
+        const { error: reviewError } = await supabase.rpc("review_tobay_order", {
+          p_order_id: order.id,
+          p_new_status: "accepted",
+          p_payment_method: paymentMethod,
+          p_payment_instructions: paymentInstructions || null
+        });
+        if (reviewError) {
+          alert("Could not accept order: " + reviewError.message);
+          saveAcceptButton.disabled = false;
+          return;
+        }
+        await loadTobayNormalSellerOrders();
+      });
+      rejectButton.addEventListener("click", async () => {
+        rejectButton.disabled = true;
+        const { error: reviewError } = await supabase.rpc("review_tobay_order", {
+          p_order_id: order.id,
+          p_new_status: "rejected",
+          p_payment_method: null,
+          p_payment_instructions: null
+        });
+        if (reviewError) {
+          alert("Could not reject order: " + reviewError.message);
+          rejectButton.disabled = false;
+          return;
+        }
+        await loadTobayNormalSellerOrders();
+      });
+      card.append(acceptButton, rejectButton, paymentPanel);
     }
     container.appendChild(card);
   });
@@ -2447,7 +2517,7 @@ async function loadTobayNormalBuyerOrders(user) {
 
   const { data: orders, error } = await supabase
     .from("tobay_orders")
-    .select("id,total_amount,currency,order_status,payment_status,created_at,listing:listings(title)")
+    .select("id,total_amount,currency,order_status,payment_status,payment_method,seller_payment_instructions,created_at,listing:listings(title)")
     .eq("buyer_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -2490,6 +2560,16 @@ async function loadTobayNormalBuyerOrders(user) {
       notice.textContent = "Your order status is " + order.order_status + ". Payment status: " + order.payment_status + ".";
     }
     card.append(heading, reference, amount, status, date, notice);
+    if (order.order_status === "accepted") {
+      const paymentMethod = document.createElement("p");
+      paymentMethod.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : "To be confirmed by seller");
+      card.appendChild(paymentMethod);
+      if (order.seller_payment_instructions) {
+        const instructions = document.createElement("p");
+        instructions.textContent = "Seller's instructions: " + order.seller_payment_instructions;
+        card.appendChild(instructions);
+      }
+    }
     container.appendChild(card);
   });
 }
