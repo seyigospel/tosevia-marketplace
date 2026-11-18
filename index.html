@@ -2476,7 +2476,19 @@ async function loadTobayNormalBuyerOrders(user) {
     const date = document.createElement("p");
     date.textContent = "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
     const notice = document.createElement("p");
-    notice.textContent = "No payment has been collected yet. Please wait for the seller to review your order.";
+    if (order.order_status === "pending") {
+      notice.textContent = "Your order request has been received. Please wait for the seller to review your order. No payment has been collected yet.";
+    } else if (order.order_status === "accepted") {
+      notice.textContent = "Your order has been accepted! Please follow the seller's payment and delivery instructions. Payment status: " + order.payment_status + ".";
+    } else if (order.order_status === "rejected") {
+      notice.textContent = "Unfortunately, the seller could not accept your order. Payment status: " + order.payment_status + ". If you need clarification, please contact the seller.";
+    } else if (order.order_status === "cancelled") {
+      notice.textContent = "This order has been cancelled. Payment status: " + order.payment_status + ".";
+    } else if (order.order_status === "completed") {
+      notice.textContent = "This order is marked as completed. Payment status: " + order.payment_status + ".";
+    } else {
+      notice.textContent = "Your order status is " + order.order_status + ". Payment status: " + order.payment_status + ".";
+    }
     card.append(heading, reference, amount, status, date, notice);
     container.appendChild(card);
   });
