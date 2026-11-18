@@ -644,8 +644,48 @@ purchaseArea.style.cssText =
   "margin-top:20px;padding:15px;background:#f5f8fc;" +
   "border-radius:10px;border:1px solid #dce5f0;";
 
+const checkoutIntro = document.createElement("div");
+checkoutIntro.style.cssText =
+  "padding:16px;margin-bottom:14px;background:linear-gradient(135deg,#f5f9ff,#eef4fc);" +
+  "border:1px solid #dce7f5;border-radius:12px;";
+
+const checkoutTitle = document.createElement("h3");
+checkoutTitle.textContent = "TOBAY Checkout";
+checkoutTitle.style.cssText = "margin:0 0 6px;color:#102b55;font-size:19px;";
+
+const checkoutSubtitle = document.createElement("p");
+checkoutSubtitle.textContent =
+  "Choose your purchase plan. Payment arrangements are confirmed with the seller after order review.";
+checkoutSubtitle.style.cssText = "margin:0;color:#53657d;font-size:13px;line-height:1.55;";
+checkoutIntro.append(checkoutTitle, checkoutSubtitle);
+
+const paymentMethods = document.createElement("div");
+paymentMethods.style.cssText =
+  "display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:12px 0 18px;";
+
+const onlineCard = document.createElement("div");
+onlineCard.style.cssText =
+  "padding:14px;border:1px solid #dce5f0;border-radius:11px;background:#fff;";
+onlineCard.innerHTML =
+  '<div style="font-size:21px;margin-bottom:5px">💳</div>' +
+  '<strong style="display:block;color:#102b55">Pay Online</strong>' +
+  '<span style="display:inline-block;margin:7px 0 4px;padding:3px 8px;border-radius:20px;background:#fff1d9;color:#925400;font-size:11px;font-weight:700">COMING SOON</span>' +
+  '<p style="margin:0;color:#66758a;font-size:12px;line-height:1.5">Card and bank-transfer checkout will be enabled after Paystack approval and integration.</p>';
+
+const deliveryCard = document.createElement("div");
+deliveryCard.style.cssText =
+  "padding:14px;border:1px solid #dce5f0;border-radius:11px;background:#fff;";
+deliveryCard.innerHTML =
+  '<div style="font-size:21px;margin-bottom:5px">🚚</div>' +
+  '<strong style="display:block;color:#102b55">Pay on Delivery</strong>' +
+  '<span style="display:inline-block;margin:7px 0 4px;padding:3px 8px;border-radius:20px;background:#e8f6ee;color:#187443;font-size:11px;font-weight:700">SUBJECT TO SELLER CONFIRMATION</span>' +
+  '<p style="margin:0;color:#66758a;font-size:12px;line-height:1.5">Ask the seller to confirm delivery availability and accepted payment arrangements before dispatch.</p>';
+
+paymentMethods.append(onlineCard, deliveryCard);
+
 const purchaseHeading = document.createElement("h3");
-purchaseHeading.textContent = "Choose How to Buy";
+purchaseHeading.textContent = "Choose Your Purchase Plan";
+purchaseHeading.style.cssText = "margin:0 0 8px;color:#102b55;";
 
 const easyBuyInfo = document.createElement("p");
 easyBuyInfo.textContent =
@@ -715,6 +755,8 @@ easyBuyButton.addEventListener("click", () => {
 });
 
 purchaseArea.append(
+  checkoutIntro,
+  paymentMethods,
   purchaseHeading,
   easyBuyInfo,
   buyNowButton,
