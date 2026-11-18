@@ -132,6 +132,35 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
  .category{padding:18px 12px}
  .footer-links{gap:25px}
 }
+
+/* TOBAY account area refresh */
+.tobay-account-section{padding:76px 20px;background:linear-gradient(180deg,#f3f7fc 0%,#fff 100%)}
+.tobay-account-shell{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;background:#fff;border:1px solid #e3eaf3;border-radius:24px;overflow:hidden;box-shadow:0 22px 65px rgba(13,39,76,.12)}
+.tobay-account-welcome{position:relative;isolation:isolate;overflow:hidden;padding:48px 42px;background:linear-gradient(145deg,#0b1f3d 0%,#123d70 62%,#1760a7 100%);color:#fff;min-height:570px}
+.tobay-account-brand{font-size:27px;font-weight:900;letter-spacing:1.5px}.tobay-account-brand span{display:block;font-size:9px;letter-spacing:3px;color:#c8d8ed;margin-top:3px}
+.tobay-account-kicker{display:inline-block;margin-top:74px;padding:8px 12px;border:1px solid #ffffff45;border-radius:30px;color:#d9e9ff;font-size:10px;font-weight:800;letter-spacing:1.5px}
+.tobay-account-welcome h2{font-size:39px;line-height:1.13;margin:20px 0 14px;color:#fff}.tobay-account-welcome h2 span{color:#ffb45d}
+.tobay-account-welcome>p{max-width:340px;color:#d7e4f4;line-height:1.75;font-size:14px}
+.tobay-account-benefits{display:grid;gap:17px;margin-top:38px}.tobay-account-benefits div{display:flex;align-items:center;gap:12px;color:#edf5ff;font-size:13px}.tobay-account-benefits b{display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#ffffff20;color:#ffc078}
+.tobay-account-decoration{position:absolute;z-index:-1;right:-35px;bottom:-110px;font-size:330px;line-height:1;font-weight:900;color:#ffffff09;transform:rotate(-12deg)}
+.tobay-account-main{padding:48px 46px}.tobay-account-heading{text-align:left}.tobay-account-eyebrow{font-size:10px;font-weight:800;letter-spacing:2px;color:#d87516}.tobay-account-heading h2{font-size:29px;color:#102b55;margin:9px 0}.tobay-account-heading p{font-size:13px;color:#718096;margin:0}
+.tobay-account-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:27px 0 22px}
+.tobay-choice{display:flex;align-items:center;gap:9px;text-align:left;padding:13px 10px;border:1px solid #e2eaf4;border-radius:13px;background:#fff;color:#183657;cursor:pointer;transition:.2s;min-width:0}
+.tobay-choice:hover{border-color:#1b5b9c;background:#f5f9ff;transform:translateY(-2px)}.tobay-choice-login{background:#fff8ef;border-color:#f4dfc6}
+.tobay-choice-icon{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:10px;background:#edf4fc;font-size:17px}.tobay-choice-login .tobay-choice-icon{background:#ffecd7;color:#b65c0d;font-weight:800}
+.tobay-choice strong,.tobay-choice small{display:block}.tobay-choice strong{font-size:12px}.tobay-choice small{font-size:9px;color:#77869a;margin-top:3px;line-height:1.3}
+.tobay-account-form{padding:23px;background:#f9fbfe;border:1px solid #e5edf6;border-radius:16px}
+.tobay-account-form h3{font-size:21px;color:#102b55;margin:0 0 5px}.tobay-form-intro{font-size:12px;color:#78879a;margin:0 0 19px}
+.tobay-account-form>label,.tobay-account-form #tobayBusinessField>label{display:block;font-size:11px;font-weight:700;color:#30445e;margin:0 0 7px}
+.tobay-account-form input:not([type=checkbox]),.tobay-account-form textarea{display:block;width:100%;box-sizing:border-box;padding:12px 13px;margin:0 0 15px;border:1px solid #dce5ef;border-radius:9px;background:#fff;color:#17324f;font:inherit;font-size:13px;outline:none;transition:border-color .2s,box-shadow .2s}
+.tobay-account-form input:focus,.tobay-account-form textarea:focus{border-color:#2b70b5;box-shadow:0 0 0 3px #2b70b51a}.tobay-account-form textarea{resize:vertical;min-height:90px}
+.tobay-password-options{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-3px 0 17px}.tobay-show-password{display:flex;align-items:center;gap:7px;font-size:11px;color:#5d6e82;cursor:pointer}.tobay-show-password input{accent-color:#174f87}
+#tobayForgotPassword{border:0;background:transparent;color:#175b9b;font-size:11px;font-weight:700;cursor:pointer;padding:5px 0}#tobayForgotPassword:hover{text-decoration:underline}
+.tobay-submit{width:100%;padding:14px 18px;border:0;border-radius:10px;background:linear-gradient(100deg,#174f87,#2477bb);color:#fff;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 7px 16px #174f8728;transition:.2s}.tobay-submit:hover{filter:brightness(1.08);transform:translateY(-1px)}.tobay-submit:disabled{opacity:.65;cursor:wait;transform:none}
+#tobayAccountMessage{font-size:12px;line-height:1.6;color:#34516e;margin:12px 0 0;overflow-wrap:anywhere}.tobay-account-footnote{text-align:center;color:#98a4b3;font-size:10px;margin:22px 0 0}
+@media(max-width:850px){.tobay-account-shell{grid-template-columns:1fr}.tobay-account-welcome{min-height:auto;padding:34px}.tobay-account-kicker{margin-top:35px}.tobay-account-decoration{font-size:230px;bottom:-85px}.tobay-account-main{padding:35px}}
+@media(max-width:540px){.tobay-account-section{padding:38px 12px}.tobay-account-welcome{padding:28px 23px}.tobay-account-welcome h2{font-size:32px}.tobay-account-main{padding:27px 18px}.tobay-account-heading h2{font-size:25px}.tobay-account-choices{grid-template-columns:1fr}.tobay-choice{padding:11px 13px}.tobay-account-form{padding:18px 14px}}
+
 </style>
 </head>
 <body>
@@ -1170,50 +1199,66 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
 <!-- TOBAY Supabase connection -->
 
 <!-- TOBAY ACCOUNT REGISTRATION -->
-<section id="account" style="padding:50px 20px;max-width:650px;margin:30px auto;text-align:center;">
-  <h2>Join TOBAY</h2>
-  <p>Create an account to explore the marketplace or apply to become a seller.</p>
+<section id="account" class="tobay-account-section">
+  <div class="tobay-account-shell">
+    <aside class="tobay-account-welcome">
+      <div class="tobay-account-brand">TOBAY <span>GLOBAL MARKETPLACE</span></div>
+      <div class="tobay-account-kicker">YOUR WORLD. YOUR MARKETPLACE.</div>
+      <h2>Discover more.<br><span>Connect better.</span></h2>
+      <p>Join a growing marketplace for products, services and new opportunities.</p>
+      <div class="tobay-account-benefits">
+        <div><b>✓</b><span>Explore products and services</span></div>
+        <div><b>✓</b><span>Connect with sellers and buyers</span></div>
+        <div><b>✓</b><span>Showcase your business to more people</span></div>
+      </div>
+      <div class="tobay-account-decoration" aria-hidden="true">T</div>
+    </aside>
 
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:25px 0;">
-    <button type="button" onclick="showTobayForm('buyer')">Register as Buyer</button>
-    <button type="button" onclick="showTobayForm('seller')">Register as Seller</button>
-    <button type="button" onclick="showTobayForm('login')">Login</button>
+    <div class="tobay-account-main">
+      <div class="tobay-account-heading">
+        <span class="tobay-account-eyebrow">GET STARTED</span>
+        <h2>Welcome to TOBAY</h2>
+        <p>Choose how you would like to continue.</p>
+      </div>
+
+      <div class="tobay-account-choices" aria-label="Choose account type">
+        <button class="tobay-choice" type="button" onclick="showTobayForm('buyer')"><span class="tobay-choice-icon">🛍️</span><span><strong>Buyer</strong><small>Shop and explore</small></span></button>
+        <button class="tobay-choice" type="button" onclick="showTobayForm('seller')"><span class="tobay-choice-icon">🏪</span><span><strong>Seller</strong><small>Showcase your business</small></span></button>
+        <button class="tobay-choice tobay-choice-login" type="button" onclick="showTobayForm('login')"><span class="tobay-choice-icon">↗</span><span><strong>Login</strong><small>Welcome back</small></span></button>
+      </div>
+
+      <form id="tobayAccountForm" class="tobay-account-form" style="display:none;text-align:left;">
+        <h3 id="tobayFormTitle">Create your account</h3>
+        <p class="tobay-form-intro">Enter your details below to continue.</p>
+
+        <label for="tobayName">Full name</label>
+        <input id="tobayName" type="text" autocomplete="name" placeholder="Enter your full name">
+
+        <div id="tobayBusinessField" style="display:none;">
+          <label for="tobayBusiness">Business or professional name</label>
+          <input id="tobayBusiness" type="text" placeholder="Enter business name">
+          <label for="tobayDescription">What products or services do you offer?</label>
+          <textarea id="tobayDescription" placeholder="Describe your business or services" rows="4"></textarea>
+          <label for="tobayLocation">Business location</label>
+          <input id="tobayLocation" type="text" placeholder="City and country">
+          <label for="tobayWhatsApp">WhatsApp number (include country code)</label>
+          <input id="tobayWhatsApp" type="tel" placeholder="Example: +2348012345678">
+        </div>
+
+        <label for="tobayEmail">Email address</label>
+        <input id="tobayEmail" type="email" autocomplete="email" required placeholder="Enter your email">
+        <label for="tobayPassword">Password</label>
+        <input id="tobayPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
+        <div class="tobay-password-options">
+          <label class="tobay-show-password"><input id="tobayShowPassword" type="checkbox"> Show password</label>
+          <button id="tobayForgotPassword" type="button" style="display:none;">Forgot password?</button>
+        </div>
+        <button id="tobaySubmit" class="tobay-submit" type="submit">Create Account</button>
+        <p id="tobayAccountMessage" role="status" aria-live="polite"></p>
+      </form>
+      <p class="tobay-account-footnote">By continuing, you agree to use TOBAY respectfully and responsibly.</p>
+    </div>
   </div>
-
-  <form id="tobayAccountForm" style="display:none;text-align:left;padding:25px;border:1px solid #ddd;border-radius:12px;">
-    <h3 id="tobayFormTitle">Create your account</h3>
-
-    <label for="tobayName">Full name</label>
-    <input id="tobayName" type="text" autocomplete="name" placeholder="Enter your full name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
-
-  
-<div id="tobayBusinessField" style="display:none;">
-  <label for="tobayBusiness">Business or professional name</label>
-  <input id="tobayBusiness" type="text" placeholder="Enter business name" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
-
-  <label for="tobayDescription">What products or services do you offer?</label>
-  <textarea id="tobayDescription" placeholder="Describe your business or services" rows="4" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;"></textarea>
-
-  <label for="tobayLocation">Business location</label>
-  <input id="tobayLocation" type="text" placeholder="City and country" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
-
-  <label for="tobayWhatsApp">WhatsApp number (include country code)</label>
-  <input id="tobayWhatsApp" type="tel" placeholder="Example: +2348012345678" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
-</div>
-
-    <label for="tobayEmail">Email address</label>
-    <input id="tobayEmail" type="email" autocomplete="email" required placeholder="Enter your email" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
-
-    <label for="tobayPassword">Password</label>
-    <input id="tobayPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" style="display:block;width:100%;padding:12px;margin:8px 0 8px;box-sizing:border-box;">
-    <label style="display:flex;align-items:center;gap:8px;margin:0 0 16px;font-weight:normal;cursor:pointer;">
-      <input id="tobayShowPassword" type="checkbox" style="width:auto;margin:0;"> Show password
-    </label>
-    <button id="tobayForgotPassword" type="button" style="display:none;background:transparent;color:#174ea6;border:0;padding:8px 0;cursor:pointer;text-decoration:underline;">Forgot password?</button>
-
-    <button id="tobaySubmit" type="submit">Create Account</button>
-    <p id="tobayAccountMessage" role="status" aria-live="polite"></p>
-  </form>
 </section>
 <!-- END TOBAY ACCOUNT REGISTRATION -->
 
