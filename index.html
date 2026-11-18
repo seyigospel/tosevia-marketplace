@@ -1205,7 +1205,11 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
     <input id="tobayEmail" type="email" autocomplete="email" required placeholder="Enter your email" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
 
     <label for="tobayPassword">Password</label>
-    <input id="tobayPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" style="display:block;width:100%;padding:12px;margin:8px 0 18px;box-sizing:border-box;">
+    <input id="tobayPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" style="display:block;width:100%;padding:12px;margin:8px 0 8px;box-sizing:border-box;">
+    <label style="display:flex;align-items:center;gap:8px;margin:0 0 16px;font-weight:normal;cursor:pointer;">
+      <input id="tobayShowPassword" type="checkbox" style="width:auto;margin:0;"> Show password
+    </label>
+    <button id="tobayForgotPassword" type="button" style="display:none;background:transparent;color:#174ea6;border:0;padding:8px 0;cursor:pointer;text-decoration:underline;">Forgot password?</button>
 
     <button id="tobaySubmit" type="submit">Create Account</button>
     <p id="tobayAccountMessage" role="status" aria-live="polite"></p>
@@ -1254,6 +1258,8 @@ window.showTobayForm = function(mode) {
   const title = document.getElementById("tobayFormTitle");
   const submit = document.getElementById("tobaySubmit");
   const message = document.getElementById("tobayAccountMessage");
+  const password = document.getElementById("tobayPassword");
+  const forgotPassword = document.getElementById("tobayForgotPassword");
 
   form.style.display = "block";
 
@@ -1273,10 +1279,42 @@ window.showTobayForm = function(mode) {
     "Buyer Registration";
 
   submit.textContent = mode === "login" ? "Login" : "Create Account";
+  password.autocomplete = mode === "login" ? "current-password" : "new-password";
+  forgotPassword.style.display = mode === "login" ? "inline-block" : "none";
   message.textContent = "";
 
   form.scrollIntoView({ behavior: "smooth", block: "center" });
 };
+
+document.getElementById("tobayShowPassword").addEventListener("change", function() {
+  document.getElementById("tobayPassword").type = this.checked ? "text" : "password";
+});
+
+document.getElementById("tobayForgotPassword").addEventListener("click", async function() {
+  const emailInput = document.getElementById("tobayEmail");
+  const message = document.getElementById("tobayAccountMessage");
+  const email = emailInput.value.trim();
+
+  if (!email) {
+    message.textContent = "Please enter your email address first, then select Forgot password.";
+    emailInput.focus();
+    return;
+  }
+
+  this.disabled = true;
+  message.textContent = "Sending password reset email...";
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.href.split("#")[0]
+    });
+    if (error) throw error;
+    message.textContent = "If an account exists for this email, a password reset link has been sent. Please check your inbox and spam folder.";
+  } catch (error) {
+    message.textContent = "Could not send the reset email: " + error.message;
+  } finally {
+    this.disabled = false;
+  }
+});
 
   window.loadTobaySellerDashboard = async function(user) {
   const message = document.getElementById("tobayAccountMessage");
