@@ -1672,6 +1672,9 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
     <hr style="margin:25px 0;">
 <h3>Incoming EasyBuy Orders</h3>
 <div id="tobaySellerOrders">Loading your orders...</div>
+<hr style="margin:25px 0;">
+<h3>Incoming Buy Now Orders</h3>
+<div id="tobaySellerBuyNowOrders">Loading Buy Now orders...</div>
   `;
 const saveBusinessButton = document.getElementById("tobaySaveBusinessProfile");
 const businessMessage = document.getElementById("tobayBusinessProfileMessage");
@@ -1974,6 +1977,75 @@ async function loadTobaySellerOrders() {
 }
 
 
+// Normal Buy Now orders are loaded separately from EasyBuy orders.
+async function loadTobayNormalSellerOrders() {
+  const container = document.getElementById("tobaySellerBuyNowOrders");
+  if (!container) return;
+  container.textContent = "Loading Buy Now orders...";
+
+  const { data: orders, error } = await supabase
+    .from("tobay_orders")
+    .select("id,buyer_name,buyer_phone,delivery_address,total_amount,currency,order_status,payment_status,created_at,listing:listings(title)")
+    .eq("seller_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent = "Could not load Buy Now orders: " + error.message;
+    return;
+  }
+
+  container.replaceChildren();
+  if (!orders || orders.length === 0) {
+    container.textContent = "You have no incoming Buy Now orders yet.";
+    return;
+  }
+
+  orders.forEach(order => {
+    const card = document.createElement("div");
+    card.style.cssText = "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+
+    const heading = document.createElement("h4");
+    heading.textContent = order.listing?.title || "Marketplace product";
+    const details = document.createElement("p");
+    details.textContent = "Order reference: " + order.id + " | Amount: " + order.currency + " " + order.total_amount;
+    const buyer = document.createElement("p");
+    buyer.textContent = "Buyer: " + order.buyer_name;
+    const phone = document.createElement("p");
+    phone.textContent = "Phone: " + order.buyer_phone;
+    const address = document.createElement("p");
+    address.textContent = "Delivery address: " + order.delivery_address;
+    const status = document.createElement("p");
+    status.textContent = "Order status: " + order.order_status + " | Payment status: " + order.payment_status;
+    const date = document.createElement("p");
+    date.textContent = "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
+    card.append(heading, details, buyer, phone, address, status, date);
+
+    if (order.order_status === "pending") {
+      ["accepted", "rejected"].forEach(nextStatus => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = nextStatus === "accepted" ? "Accept Buy Now Order" : "Reject Buy Now Order";
+        button.style.cssText = "margin:8px 8px 0 0;padding:10px 15px;border:0;border-radius:6px;cursor:pointer;color:white;background:" + (nextStatus === "accepted" ? "#168b48" : "#b42318") + ";";
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+          const { error: reviewError } = await supabase.rpc("review_tobay_order", {
+            p_order_id: order.id,
+            p_new_status: nextStatus
+          });
+          if (reviewError) {
+            alert("Could not update order: " + reviewError.message);
+            button.disabled = false;
+            return;
+          }
+          await loadTobayNormalSellerOrders();
+        });
+        card.appendChild(button);
+      });
+    }
+    container.appendChild(card);
+  });
+}
+
 const form = document.getElementById("tobayListingForm");
 const listingMessage = document.getElementById("tobayListingMessage");
 const submitButton = form.querySelector('button[type="submit"]');
@@ -2153,6 +2225,7 @@ async function loadMyListings() {
 
   await loadMyListings();
   await loadTobaySellerOrders();
+  await loadTobayNormalSellerOrders();
 };
   async function loadTobayBuyerOrders(user) {
   let panel = document.getElementById("tobayBuyerOrders");
@@ -2186,7 +2259,10 @@ async function loadMyListings() {
   <button type="button" data-status="completed">Completed</button>
 </div>
 
-<div id="tobayBuyerOrdersList">Loading your orders...</div>
+<div id="tobayBuyerOrdersList">Loading your EasyBuy orders...</div>
+<hr style="margin:25px 0;">
+<h3>My Buy Now Orders</h3>
+<div id="tobayBuyerBuyNowOrders">Loading Buy Now orders...</div>
   `;
 
   const container = document.getElementById("tobayBuyerOrdersList");
@@ -2364,6 +2440,48 @@ if (order.order_status === "pending") {
     container.appendChild(card);
   }
 }
+async function loadTobayNormalBuyerOrders(user) {
+  const container = document.getElementById("tobayBuyerBuyNowOrders");
+  if (!container) return;
+  container.textContent = "Loading Buy Now orders...";
+
+  const { data: orders, error } = await supabase
+    .from("tobay_orders")
+    .select("id,total_amount,currency,order_status,payment_status,created_at,listing:listings(title)")
+    .eq("buyer_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent = "Could not load Buy Now orders: " + error.message;
+    return;
+  }
+
+  container.replaceChildren();
+  if (!orders || orders.length === 0) {
+    container.textContent = "You have not placed any Buy Now orders yet.";
+    return;
+  }
+
+  orders.forEach(order => {
+    const card = document.createElement("div");
+    card.style.cssText = "padding:15px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
+    const heading = document.createElement("h4");
+    heading.textContent = order.listing?.title || "Marketplace product";
+    const reference = document.createElement("p");
+    reference.textContent = "Order reference: " + order.id;
+    const amount = document.createElement("p");
+    amount.textContent = "Amount: " + order.currency + " " + order.total_amount;
+    const status = document.createElement("p");
+    status.textContent = "Order status: " + order.order_status + " | Payment status: " + order.payment_status;
+    const date = document.createElement("p");
+    date.textContent = "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
+    const notice = document.createElement("p");
+    notice.textContent = "No payment has been collected yet. Please wait for the seller to review your order.";
+    card.append(heading, reference, amount, status, date, notice);
+    container.appendChild(card);
+  });
+}
+
 async function loadTobayAdminDashboard(user) {
   const message = document.getElementById("tobayAccountMessage");
 
@@ -3238,6 +3356,7 @@ if (adminCheckError) throw adminCheckError;
 
 if (!metadata.business_name && !adminRecord) {
   await loadTobayBuyerOrders(user);
+  await loadTobayNormalBuyerOrders(user);
 } 
       if (metadata.business_name) {
         const { data: existing, error: checkError } = await supabase
