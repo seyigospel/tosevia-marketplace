@@ -161,6 +161,32 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 @media(max-width:850px){.tobay-account-shell{grid-template-columns:1fr}.tobay-account-welcome{min-height:auto;padding:34px}.tobay-account-kicker{margin-top:35px}.tobay-account-decoration{font-size:230px;bottom:-85px}.tobay-account-main{padding:35px}}
 @media(max-width:540px){.tobay-account-section{padding:38px 12px}.tobay-account-welcome{padding:28px 23px}.tobay-account-welcome h2{font-size:32px}.tobay-account-main{padding:27px 18px}.tobay-account-heading h2{font-size:25px}.tobay-account-choices{grid-template-columns:1fr}.tobay-choice{padding:11px 13px}.tobay-account-form{padding:18px 14px}}
 
+
+/* TOBAY Discover Marketplace refresh */
+.discover-section{position:relative;overflow:hidden;background:linear-gradient(180deg,#f3f7fc 0%,#fff 46%,#f7f9fc 100%);padding-top:58px}
+.discover-banner{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;gap:28px;min-height:245px;padding:38px 48px;margin-bottom:48px;overflow:hidden;border-radius:22px;background:linear-gradient(115deg,#0b1f3d 0%,#123d70 58%,#1c65a5 100%);box-shadow:0 18px 42px #102b5526;color:#fff}
+.discover-banner:after{content:"";position:absolute;z-index:-1;width:330px;height:330px;border:1px solid #ffffff20;border-radius:50%;right:90px;top:-180px;box-shadow:0 0 0 35px #ffffff08,0 0 0 75px #ffffff06}
+.discover-banner-content{max-width:650px}.discover-kicker,.discover-overline{display:block;font-size:10px;font-weight:900;letter-spacing:2.2px;color:#ffc27c}
+.discover-banner h2{font-size:clamp(28px,4vw,43px);line-height:1.12;letter-spacing:-1px;color:#fff;margin:12px 0}
+.discover-banner h2 span{color:#ffb45d}.discover-banner p{max-width:560px;color:#d9e6f5;font-size:14px;line-height:1.8}
+.discover-highlights{display:flex;gap:18px;flex-wrap:wrap;margin-top:21px;color:#f3f7fc;font-size:11px;font-weight:700}
+.discover-art{position:relative;flex:0 0 180px;width:180px;height:160px;display:grid;place-items:center;border:1px solid #ffffff30;border-radius:26px;background:linear-gradient(145deg,#ffffff20,#ffffff08);transform:rotate(3deg)}
+.discover-art span{font-size:76px;filter:drop-shadow(0 12px 12px #071a3640)}.discover-art i{position:absolute;right:20px;top:15px;color:#ffc27c;font-size:25px;font-style:normal}.discover-art b{position:absolute;bottom:10px;right:15px;font-size:10px;letter-spacing:3px;color:#dce9f8}
+.discover-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}.discover-overline{color:#d87516;font-size:9px;margin-bottom:5px}.discover-heading h2{color:var(--navy);font-size:clamp(25px,3vw,32px);letter-spacing:-.7px}.discover-heading p{color:var(--muted);font-size:13px;margin-top:4px}
+.discover-live{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 12px;border:1px solid #dce8f5;border-radius:30px;background:#fff;color:#47617e;font-size:10px;font-weight:800}.discover-live i{width:7px;height:7px;border-radius:50%;background:#27a56b;box-shadow:0 0 0 4px #27a56b18}
+.marketplace-panel{padding:20px 21px 13px;margin-bottom:23px;border:1px solid #e3eaf3;border-radius:17px;background:#fff;box-shadow:0 9px 28px #102b5509}
+.marketplace-tools{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(210px,.8fr);gap:12px;margin-bottom:17px}
+.marketplace-search-wrap,.marketplace-category-wrap{display:flex;align-items:center;gap:10px;min-width:0;padding:0 14px;border:1px solid #dfe7f1;border-radius:11px;background:#f9fbfe;color:#7a8ca2;transition:.2s}
+.marketplace-search-wrap:focus-within,.marketplace-category-wrap:focus-within{border-color:#3479b8;box-shadow:0 0 0 3px #3479b817;background:#fff}
+.marketplace-search-wrap>span,.marketplace-category-wrap>span{font-size:22px;color:#2b649d;line-height:1}
+.marketplace-search-wrap input,.marketplace-category-wrap select{width:100%;min-width:0;height:48px;border:0;outline:0;background:transparent;color:#233b58;font-size:12px}
+.marketplace-category-wrap select{cursor:pointer}.marketplace-search-wrap input::placeholder{color:#9aa8b8}
+.marketplace-filter-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.marketplace-filter-row .type-tabs{margin:0}.marketplace-filter-row .tab{padding:8px 15px;font-size:11px;border-radius:8px;background:#f5f8fc}.marketplace-filter-row .tab.active,.marketplace-filter-row .tab:hover{background:linear-gradient(100deg,#123d70,#2469a6);border-color:#19477f;color:#fff;box-shadow:0 5px 12px #123d7020}.marketplace-browse-note{font-size:10px;font-weight:700;color:#8a99aa;letter-spacing:.3px}
+.listing-grid{gap:21px}.listing{border:1px solid #e5ebf3;border-radius:16px;box-shadow:0 5px 18px #102b5508;transition:transform .25s,box-shadow .25s,border-color .25s}.listing:hover{transform:translateY(-6px);border-color:#cbdced;box-shadow:0 16px 32px #102b5518}.listing-art{height:195px;overflow:hidden;background:linear-gradient(135deg,#eaf1fa,#f7f9fc)}.listing-art img{transition:transform .45s}.listing:hover .listing-art img{transform:scale(1.045)}.listing-body{padding:18px 18px 19px}.listing .tag{display:inline-block;padding:5px 9px;border-radius:30px;background:#fff2e5;color:#b65f11;font-size:9px;letter-spacing:1px}.listing h3{font-size:16px;line-height:1.4;margin:9px 0 6px}.listing-body>p{font-size:11px;line-height:1.6;margin:5px 0;color:#718096}.listing-body>strong{display:block;margin-top:11px;color:#123d70;font-size:18px;letter-spacing:-.3px}.listing-body button{transition:.2s}.listing-body button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+#emptyMessage{padding:28px 20px;border:1px dashed #cbd8e7;border-radius:13px;background:#fff;text-align:center}
+@media(max-width:700px){.discover-banner{padding:29px 25px;min-height:unset}.discover-art{flex-basis:125px;width:125px;height:125px}.discover-art span{font-size:55px}.marketplace-tools{grid-template-columns:1fr}.discover-heading{align-items:flex-start;flex-direction:column}.discover-live{align-self:flex-start}}
+@media(max-width:480px){.discover-section{padding-top:35px}.discover-banner{padding:25px 21px;margin-bottom:35px;border-radius:17px}.discover-art{display:none}.discover-banner h2{font-size:29px}.discover-highlights{gap:10px;font-size:10px}.marketplace-panel{padding:14px 12px 12px}.marketplace-filter-row{align-items:flex-start}.marketplace-filter-row .type-tabs{gap:6px}.marketplace-filter-row .tab{padding:8px 11px;font-size:10px}.marketplace-browse-note{display:none}.listing-grid{gap:15px}.listing-art{height:185px}}
+
 </style>
 </head>
 <body>
@@ -220,28 +246,43 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 </section>
 
 
-<section class="section" id="explore" style="background:#fff">
+<section class="section discover-section" id="explore">
   <div class="container">
-    <div class="section-head">
+    <div class="discover-banner">
+      <div class="discover-banner-content">
+        <span class="discover-kicker">THE TOBAY MARKETPLACE</span>
+        <h2>Discover something <span>amazing.</span></h2>
+        <p>Find products, explore useful services and connect with sellers — all in one place.</p>
+        <div class="discover-highlights">
+          <span>✦ Products</span><span>✦ Services</span><span>✦ New opportunities</span>
+        </div>
+      </div>
+      <div class="discover-art" aria-hidden="true"><span>🛍️</span><i>✦</i><b>TOBAY</b></div>
+    </div>
+
+    <div class="discover-heading">
       <div>
+        <span class="discover-overline">FIND YOUR NEXT FAVOURITE</span>
         <h2>Discover the Marketplace</h2>
         <p>Explore products and services from sellers around the world.</p>
       </div>
+      <span class="discover-live"><i></i> Explore listings</span>
     </div>
 
-    <div class="marketplace-tools">
-      <input type="search" id="marketplaceSearch"
-        placeholder="Search products and services...">
+    <div class="marketplace-panel">
+      <div class="marketplace-tools">
+        <label class="marketplace-search-wrap" for="marketplaceSearch"><span aria-hidden="true">⌕</span><input type="search" id="marketplaceSearch" placeholder="Search products, services or keywords..."></label>
+        <label class="marketplace-category-wrap" for="marketplaceCategory"><span aria-hidden="true">▦</span><select id="marketplaceCategory"><option value="">All Categories</option></select></label>
+      </div>
 
-      <select id="marketplaceCategory">
-        <option value="">All Categories</option>
-      </select>
-    </div>
-
-    <div class="type-tabs">
-      <button class="tab active" data-type="all">All</button>
-      <button class="tab" data-type="product">Products</button>
-      <button class="tab" data-type="service">Services</button>
+      <div class="marketplace-filter-row">
+        <div class="type-tabs" aria-label="Filter marketplace listings">
+          <button class="tab active" data-type="all" type="button">All Listings</button>
+          <button class="tab" data-type="product" type="button">Products</button>
+          <button class="tab" data-type="service" type="button">Services</button>
+        </div>
+        <span class="marketplace-browse-note">Browse. Discover. Connect.</span>
+      </div>
     </div>
 
     <div class="listing-grid" id="listingGrid">
@@ -249,7 +290,7 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
     </div>
 
     <p class="empty-message" id="emptyMessage" hidden>
-      No published listings found.
+      No published listings found. Try another search or category.
     </p>
   </div>
 </section>
