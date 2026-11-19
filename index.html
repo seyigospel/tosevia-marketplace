@@ -286,6 +286,34 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 @media(max-width:700px){#account{padding:35px 0 45px}.tobay-account-shell{width:94%;border-radius:18px}.tobay-account-main{padding:25px 18px}.tobay-account-form{padding:18px!important}#tobaySellerDashboard{width:94%;padding:18px!important;border-radius:18px!important}#tobaySellerDashboard>h2{padding:19px;font-size:23px}#tobaySellerDashboard>h3{font-size:17px}#tobaySellerDashboard #tobayListingForm{padding:16px}}
 @media(max-width:420px){#tobaySellerDashboard{padding:13px!important}#tobaySellerDashboard>h2{font-size:21px}#tobaySellerDashboard button{max-width:100%;white-space:normal}}
 
+
+/* TOBAY seller toolkit: performance, customers, workflow, alerts and storefront preview */
+.tobay-toolkit{margin:24px 0;padding:22px;border:1px solid #e2eaf3;border-radius:18px;background:#fff;box-shadow:0 8px 24px #102b5508}
+.tobay-toolkit-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:15px}
+.tobay-toolkit h3{margin:0 0 5px;color:#15375f;font-size:19px}
+.tobay-toolkit p.tobay-sub{margin:0;color:#718096;font-size:12px}
+.tobay-toolkit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:11px}
+.tobay-toolkit-stat{padding:15px;border:1px solid #e5ebf3;border-radius:13px;background:linear-gradient(145deg,#fff,#f7faff)}
+.tobay-toolkit-stat span{display:block;color:#718096;font-size:11px;font-weight:700}
+.tobay-toolkit-stat strong{display:block;margin-top:5px;color:#15375f;font-size:23px;overflow-wrap:anywhere}
+.tobay-toolkit-actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.tobay-toolkit button{padding:10px 14px;border:0;border-radius:9px;background:#19477f;color:white;font-weight:750}
+.tobay-toolkit button.secondary{background:#fff;color:#19477f;border:1px solid #d8e2ee}
+.tobay-toolkit input,.tobay-toolkit select{min-height:42px;padding:10px 12px;border:1px solid #dce4ee;border-radius:9px;background:#fff;color:#24364d;max-width:100%}
+.tobay-customer-table{width:100%;border-collapse:collapse;font-size:12px}
+.tobay-customer-table th,.tobay-customer-table td{padding:11px 9px;border-bottom:1px solid #edf1f6;text-align:left;vertical-align:top}
+.tobay-customer-table th{color:#52657d;background:#f7f9fc}
+.tobay-preview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px}
+.tobay-preview-card{border:1px solid #e4eaf2;border-radius:13px;overflow:hidden;background:#fff}
+.tobay-preview-card img{width:100%;height:145px;object-fit:cover;background:#f1f4f8}
+.tobay-preview-card div{padding:12px}
+.tobay-preview-card strong{display:block;color:#15375f}
+.tobay-preview-card small{color:#718096}
+.tobay-notice{display:none;margin:12px 0;padding:12px 14px;border:1px solid #f2d3a9;border-radius:10px;background:#fff8ed;color:#8a541a;font-size:12px}
+.tobay-modal-backdrop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;background:#071a36b8}
+.tobay-modal{width:min(760px,100%);max-height:85vh;overflow:auto;padding:22px;border-radius:18px;background:#fff}
+@media(max-width:620px){.tobay-toolkit{padding:16px}.tobay-toolkit-head{display:block}.tobay-customer-table{font-size:11px}.tobay-customer-table th,.tobay-customer-table td{padding:8px 5px}}
+
 </style>
 </head>
 <body>
@@ -1743,6 +1771,36 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
     <hr style="margin:25px 0;">
     <h3>My Listings</h3>
     <div id="tobayMyListings">Loading your listings...</div>
+    <section class="tobay-toolkit" id="tobaySellerPerformance">
+      <div class="tobay-toolkit-head"><div><h3>Sales Performance</h3><p class="tobay-sub">Order activity and order value across both sales channels. These figures are not confirmed revenue.</p></div><button type="button" id="tobayRefreshPerformance">Refresh</button></div>
+      <div id="tobayPerformanceStats" class="tobay-toolkit-grid"><div class="tobay-overview-loading">Loading performance...</div></div>
+      <div id="tobayPerformanceCurrencies" class="tobay-sub" style="margin-top:12px"></div>
+    </section>
+
+    <section class="tobay-toolkit" id="tobayCustomerManagement">
+      <div class="tobay-toolkit-head"><div><h3>Customer Management</h3><p class="tobay-sub">Customers who have placed orders with your store.</p></div><button type="button" id="tobayRefreshCustomers">Refresh customers</button></div>
+      <input id="tobayCustomerSearch" type="search" placeholder="Search customer name or phone" style="width:100%;margin:4px 0 12px">
+      <div id="tobayCustomerList">Loading customer records...</div>
+      <p class="tobay-sub" style="margin-top:10px">Customer information is shown only from orders belonging to your seller account.</p>
+    </section>
+
+    <section class="tobay-toolkit" id="tobayOrderWorkspace">
+      <div class="tobay-toolkit-head"><div><h3>Order Management Centre</h3><p class="tobay-sub">Search and filter both EasyBuy and Buy Now orders in one place.</p></div><button type="button" class="secondary" id="tobayRefreshAllOrders">Refresh orders</button></div>
+      <div class="tobay-toolkit-actions"><input id="tobayAllOrderSearch" type="search" placeholder="Search order, product or buyer" style="flex:1;min-width:190px"><select id="tobayAllOrderStatus"><option value="all">All statuses</option><option value="pending">Pending</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option><option value="completed">Completed</option></select></div>
+      <div id="tobayOrderWorkspaceCount" class="tobay-sub">Use the controls above to filter incoming orders below.</div>
+    </section>
+
+    <section class="tobay-toolkit" id="tobaySellerNotifications">
+      <div class="tobay-toolkit-head"><div><h3>New Order Notifications</h3><p class="tobay-sub">Check for new orders automatically while this seller dashboard is open.</p></div><button type="button" id="tobayEnableNotifications">Enable browser alerts</button></div>
+      <div id="tobayNotificationMessage" class="tobay-notice" role="status"></div>
+      <p class="tobay-sub" id="tobayNotificationStatus">Automatic order checks are active while this page remains open.</p>
+    </section>
+
+    <section class="tobay-toolkit" id="tobayStorePreview">
+      <div class="tobay-toolkit-head"><div><h3>Store Preview</h3><p class="tobay-sub">Preview how your currently published products and services may appear to shoppers.</p></div><button type="button" id="tobayOpenStorePreview">Preview my store</button></div>
+      <div id="tobayStorePreviewContent" class="tobay-sub">Your published listings will appear in the preview.</div>
+    </section>
+
     <section class="tobay-seller-overview-panel">
   <div class="tobay-seller-overview-heading">
     <div>
@@ -1868,6 +1926,141 @@ uploadImagesButton.addEventListener("click", async () => {
 });
  
 
+
+
+// Seller toolkit uses only the existing seller-scoped orders and listings.
+async function loadTobaySellerPerformance() {
+  const target = document.getElementById("tobayPerformanceStats");
+  const currencyTarget = document.getElementById("tobayPerformanceCurrencies");
+  if (!target) return;
+  target.textContent = "Loading performance...";
+  const [easy, normal] = await Promise.all([
+    supabase.from("easybuy_orders").select("id,total_amount,currency,order_status,created_at").eq("seller_id", user.id),
+    supabase.from("tobay_orders").select("id,total_amount,currency,order_status,created_at").eq("seller_id", user.id)
+  ]);
+  if (easy.error || normal.error) {
+    target.textContent = "Could not load performance: " + ((easy.error || normal.error).message || "Unknown error");
+    return;
+  }
+  const orders = [...(easy.data || []), ...(normal.data || [])];
+  const statusCount = key => orders.filter(o => String(o.order_status || "").toLowerCase() === key).length;
+  const sums = {};
+  orders.forEach(o => { const c = o.currency || "NGN"; sums[c] = (sums[c] || 0) + Number(o.total_amount || 0); });
+  const thisMonth = new Date(); thisMonth.setDate(1); thisMonth.setHours(0,0,0,0);
+  const recent = orders.filter(o => o.created_at && new Date(o.created_at) >= thisMonth).length;
+  const stats = [
+    ["All-time orders", orders.length], ["Orders this month", recent],
+    ["Pending", statusCount("pending")], ["Accepted", statusCount("accepted")],
+    ["Completed", statusCount("completed")], ["Rejected / cancelled", statusCount("rejected") + statusCount("cancelled")]
+  ];
+  target.innerHTML = stats.map(([label,value]) => `<div class="tobay-toolkit-stat"><span>${label}</span><strong>${value}</strong></div>`).join("");
+  currencyTarget.textContent = Object.keys(sums).length
+    ? "Order value by currency (includes unpaid orders): " + Object.entries(sums).map(([c,v]) => c + " " + v.toLocaleString(undefined,{maximumFractionDigits:2})).join(" · ")
+    : "No order value recorded yet.";
+}
+
+async function loadTobaySellerCustomers() {
+  const target = document.getElementById("tobayCustomerList");
+  if (!target) return;
+  target.textContent = "Loading customer records...";
+  const [easy, normal] = await Promise.all([
+    supabase.from("easybuy_orders").select("id,buyer_id,total_amount,currency,order_status,created_at").eq("seller_id", user.id).order("created_at",{ascending:false}),
+    supabase.from("tobay_orders").select("id,buyer_name,buyer_phone,total_amount,currency,order_status,created_at").eq("seller_id", user.id).order("created_at",{ascending:false})
+  ]);
+  if (easy.error || normal.error) { target.textContent = "Could not load customers: " + ((easy.error || normal.error).message || "Unknown error"); return; }
+  const map = new Map();
+  (normal.data || []).forEach(o => {
+    const key = String(o.buyer_phone || o.buyer_name || "buy-now-"+o.id);
+    const row = map.get(key) || {name:o.buyer_name || "Customer",phone:o.buyer_phone || "Not provided",orders:0,last:o.created_at};
+    row.orders++; if (o.created_at && (!row.last || o.created_at > row.last)) row.last=o.created_at;
+    map.set(key,row);
+  });
+  // Resolve EasyBuy customer names using the existing seller-authorized RPC.
+  for (const o of (easy.data || [])) {
+    let name = "EasyBuy customer";
+    try { const result = await supabase.rpc("get_tobay_order_buyer_name", {p_order_id:o.id}); if (!result.error && result.data) name=String(result.data); } catch (_) {}
+    const key = "easy:" + String(o.buyer_id || name);
+    const row = map.get(key) || {name,phone:"Not available for this order",orders:0,last:o.created_at};
+    row.orders++; if (o.created_at && (!row.last || o.created_at > row.last)) row.last=o.created_at;
+    map.set(key,row);
+  }
+  const rows = [...map.values()].sort((a,b)=>String(b.last).localeCompare(String(a.last)));
+  target.replaceChildren();
+  if (!rows.length) { target.textContent="No customers yet. Customer records will appear when orders arrive."; return; }
+  const table=document.createElement("table"); table.className="tobay-customer-table";
+  table.innerHTML="<thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Latest order</th></tr></thead><tbody></tbody>";
+  rows.forEach(row=>{const tr=document.createElement("tr"); [row.name,row.phone,String(row.orders),row.last?new Date(row.last).toLocaleDateString("en-NG"):"—"].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td)});table.querySelector("tbody").appendChild(tr)});
+  target.appendChild(table);
+  const search=document.getElementById("tobayCustomerSearch");
+  if(search && !search.dataset.bound){search.dataset.bound="1";search.addEventListener("input",()=>{const q=search.value.toLowerCase();table.querySelectorAll("tbody tr").forEach(tr=>tr.style.display=tr.textContent.toLowerCase().includes(q)?"":"none")})}
+}
+
+function applyTobayCombinedOrderFilters() {
+  const q=(document.getElementById("tobayAllOrderSearch")?.value || "").toLowerCase().trim();
+  const status=document.getElementById("tobayAllOrderStatus")?.value || "all";
+  let shown=0, total=0;
+  document.querySelectorAll("#tobaySellerOrderList [data-seller-order],#tobaySellerBuyNowOrders [data-tobay-buy-now-order]").forEach(card=>{
+    total++;
+    const statusMatch=status==="all" || card.dataset.orderStatus===status;
+    const searchMatch=card.textContent.toLowerCase().includes(q);
+    const visible=statusMatch && searchMatch;
+    card.style.display=visible?"block":"none";
+    if(visible) shown++;
+  });
+  const count=document.getElementById("tobayOrderWorkspaceCount");
+  if(count) count.textContent=`Showing ${shown} of ${total} orders.`;
+}
+
+async function loadTobayStorePreview() {
+  const target=document.getElementById("tobayStorePreviewContent");
+  if(!target) return;
+  target.textContent="Loading your published listings...";
+  const {data,error}=await supabase.from("listings").select("id,title,description,category,price,currency,image_urls,listing_type,status").eq("seller_id",user.id).eq("status","published").order("created_at",{ascending:false});
+  if(error){target.textContent="Could not load store preview: "+error.message;return;}
+  target.replaceChildren();
+  if(!data || !data.length){target.textContent="You do not have published listings to preview yet. Approved listings will appear here.";return;}
+  const grid=document.createElement("div");grid.className="tobay-preview-grid";
+  data.forEach(item=>{
+    const card=document.createElement("article");card.className="tobay-preview-card";
+    if(item.image_urls && item.image_urls[0]){const img=document.createElement("img");img.alt=item.title || "Product image";img.src=supabase.storage.from("tobay-listings").getPublicUrl(item.image_urls[0]).data.publicUrl;card.appendChild(img)}
+    const body=document.createElement("div");const title=document.createElement("strong");title.textContent=item.title || "Untitled listing";
+    const category=document.createElement("small");category.textContent=(item.listing_type || "listing")+" · "+(item.category || "Uncategorised");
+    const price=document.createElement("p");price.style.cssText="margin-top:7px;color:#19477f;font-weight:800";price.textContent=(item.currency || "NGN")+" "+Number(item.price || 0).toLocaleString();
+    const desc=document.createElement("p");desc.style.cssText="margin-top:5px;color:#718096;font-size:11px";desc.textContent=(item.description || "").slice(0,115);
+    body.append(title,category,price,desc);card.appendChild(body);grid.appendChild(card);
+  });
+  target.appendChild(grid);
+}
+
+function startTobaySellerOrderAlerts() {
+  const message=document.getElementById("tobayNotificationMessage");
+  const status=document.getElementById("tobayNotificationStatus");
+  if(!message || window.tobaySellerAlertTimer) return;
+  const storageKey="tobay_seller_last_check_"+user.id;
+  let lastCheck=localStorage.getItem(storageKey);
+  if(!lastCheck){lastCheck=new Date().toISOString();localStorage.setItem(storageKey,lastCheck)}
+  async function check(){
+    const since=lastCheck;
+    const [easy,normal]=await Promise.all([
+      supabase.from("easybuy_orders").select("id,created_at").eq("seller_id",user.id).gt("created_at",since),
+      supabase.from("tobay_orders").select("id,created_at").eq("seller_id",user.id).gt("created_at",since)
+    ]);
+    if(easy.error || normal.error){if(status)status.textContent="Automatic checks are temporarily unavailable. You can refresh orders manually.";return}
+    const found=[...(easy.data||[]),...(normal.data||[])];
+    const newest=found.reduce((v,o)=>o.created_at && o.created_at>v?o.created_at:v,since);
+    if(newest!==since){lastCheck=newest;localStorage.setItem(storageKey,lastCheck);message.textContent=`You have ${found.length} new order${found.length===1?"":"s"}. Refresh the order lists to review them.`;message.style.display="block";
+      if("Notification" in window && Notification.permission==="granted") new Notification("New TOBAY order",{body:`You have ${found.length} new seller order${found.length===1?"":"s"}.`});
+      await Promise.all([loadTobaySellerPerformance(),loadTobaySellerOrderOverview()]);
+    }
+  }
+  window.tobaySellerAlertTimer=window.setInterval(check,60000);
+  const enable=document.getElementById("tobayEnableNotifications");
+  if(enable) enable.addEventListener("click",async()=>{
+    if(!("Notification" in window)){status.textContent="This browser does not support desktop notifications. In-dashboard checks still work.";return}
+    const permission=await Notification.requestPermission();
+    status.textContent=permission==="granted"?"Browser alerts enabled. Keep this dashboard open to receive new-order alerts.":"Browser alerts were not enabled. In-dashboard checks will continue while this page is open.";
+  });
+}
 
 async function loadTobaySellerOrderOverview() {
   const container = document.getElementById("tobaySellerOrderOverview");
@@ -2164,6 +2357,8 @@ async function loadTobayNormalSellerOrders() {
 
   orders.forEach(order => {
     const card = document.createElement("div");
+    card.dataset.tobayBuyNowOrder = "true";
+    card.dataset.orderStatus = order.order_status || "";
     card.style.cssText = "padding:16px;margin:15px 0;border:1px solid #ddd;border-radius:8px;";
 
     const heading = document.createElement("h4");
@@ -2276,6 +2471,7 @@ async function loadTobayNormalSellerOrders() {
     }
     container.appendChild(card);
   });
+  if (typeof applyTobayCombinedOrderFilters === "function") applyTobayCombinedOrderFilters();
 }
 
 const form = document.getElementById("tobayListingForm");
@@ -2459,6 +2655,18 @@ async function loadMyListings() {
   await loadTobaySellerOrderOverview();
   await loadTobaySellerOrders();
   await loadTobayNormalSellerOrders();
+  await Promise.all([loadTobaySellerPerformance(), loadTobaySellerCustomers(), loadTobayStorePreview()]);
+  startTobaySellerOrderAlerts();
+  document.getElementById("tobayRefreshPerformance")?.addEventListener("click", loadTobaySellerPerformance);
+  document.getElementById("tobayRefreshCustomers")?.addEventListener("click", loadTobaySellerCustomers);
+  document.getElementById("tobayOpenStorePreview")?.addEventListener("click", loadTobayStorePreview);
+  document.getElementById("tobayRefreshAllOrders")?.addEventListener("click", async () => {
+    await Promise.all([loadTobaySellerOrders(), loadTobayNormalSellerOrders()]);
+    applyTobayCombinedOrderFilters();
+  });
+  document.getElementById("tobayAllOrderSearch")?.addEventListener("input", applyTobayCombinedOrderFilters);
+  document.getElementById("tobayAllOrderStatus")?.addEventListener("change", applyTobayCombinedOrderFilters);
+  applyTobayCombinedOrderFilters();
 };
   async function loadTobayBuyerOrders(user) {
   let panel = document.getElementById("tobayBuyerOrders");
