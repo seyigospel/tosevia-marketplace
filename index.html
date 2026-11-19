@@ -1670,8 +1670,15 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
     <h3>My Listings</h3>
     <div id="tobayMyListings">Loading your listings...</div>
     <hr style="margin:25px 0;">
+<h3>Order Overview</h3>
+<div id="tobaySellerOrderOverview">
+  Loading your order statistics...
+</div>
+
+<hr style="margin:25px 0;">
 <h3>Incoming EasyBuy Orders</h3>
 <div id="tobaySellerOrders">Loading your orders...</div>
+
 <hr style="margin:25px 0;">
 <h3>Incoming Buy Now Orders</h3>
 <div id="tobaySellerBuyNowOrders">Loading Buy Now orders...</div>
@@ -1779,6 +1786,78 @@ uploadImagesButton.addEventListener("click", async () => {
 });
  
 
+
+async function loadTobaySellerOrderOverview() {
+  const container = document.getElementById("tobaySellerOrderOverview");
+  if (!container) return;
+
+  container.textContent = "Loading your order statistics...";
+
+  const [easyBuyResult, buyNowResult] = await Promise.all([
+    supabase
+      .from("easybuy_orders")
+      .select("order_status")
+      .eq("seller_id", user.id),
+    supabase
+      .from("tobay_orders")
+      .select("order_status")
+      .eq("seller_id", user.id)
+  ]);
+
+  if (easyBuyResult.error || buyNowResult.error) {
+    const message =
+      (easyBuyResult.error && easyBuyResult.error.message) ||
+      (buyNowResult.error && buyNowResult.error.message) ||
+      "Unknown error";
+
+    container.textContent = "Could not load combined order statistics: " + message;
+    return;
+  }
+
+  const allOrders = [
+    ...(easyBuyResult.data || []),
+    ...(buyNowResult.data || [])
+  ];
+
+  const counts = {
+    total: allOrders.length,
+    pending: 0,
+    accepted: 0,
+    rejected: 0,
+    cancelled: 0,
+    completed: 0
+  };
+
+  allOrders.forEach(order => {
+    const status = String(order.order_status || "").toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(counts, status)) {
+      counts[status] += 1;
+    }
+  });
+
+  const cards = [
+    { label: "Total Orders", value: counts.total, background: "#eaf1ff" },
+    { label: "Pending", value: counts.pending, background: "#fff4d6" },
+    { label: "Accepted", value: counts.accepted, background: "#e2f7e9" },
+    { label: "Rejected", value: counts.rejected, background: "#ffe8e8" },
+    { label: "Cancelled", value: counts.cancelled, background: "#f1f1f1" },
+    { label: "Completed", value: counts.completed, background: "#e8e4ff" }
+  ];
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:15px 0;">
+      ${cards.map(card => `
+        <div style="padding:16px;background:${card.background};border:1px solid #e1e5eb;border-radius:10px;">
+          <div style="font-size:13px;font-weight:600;color:#42526b;">${card.label}</div>
+          <div style="font-size:28px;font-weight:800;color:#123b75;margin-top:6px;">${card.value}</div>
+        </div>
+      `).join("")}
+    </div>
+    <p style="margin:8px 0;color:#667085;font-size:13px;">
+      Combined counts from EasyBuy and Buy Now orders. Order acceptance does not mean payment has been received or verified.
+    </p>
+  `;
+}
 
 async function loadTobaySellerOrders() {
   const container = document.getElementById("tobaySellerOrders");
@@ -2294,6 +2373,7 @@ async function loadMyListings() {
   });
 
   await loadMyListings();
+  await loadTobaySellerOrderOverview();
   await loadTobaySellerOrders();
   await loadTobayNormalSellerOrders();
 };
