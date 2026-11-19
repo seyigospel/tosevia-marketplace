@@ -4320,34 +4320,139 @@ async function loadTobayWishlist(user) {
 window.loadTobayWishlist = loadTobayWishlist;
 
 async function openTobayProductReviews(item) {
-  const { data: auth } = await supabase.auth.getUser();
-  const modal = document.createElement("div"); modal.className = "tobay-review-modal";
-  const panel = document.createElement("div"); panel.className = "tobay-review-panel";
-  const close = document.createElement("button"); close.type="button"; close.textContent="✕ Close"; close.style.cssText="float:right;border:0;background:#eef2f7;padding:8px 12px;border-radius:7px;cursor:pointer;"; close.onclick=()=>modal.remove();
-  const heading = document.createElement("h2"); heading.textContent = "Reviews: " + (item.title || "Marketplace listing");
-  const list = document.createElement("div"); list.textContent = "Loading customer reviews...";
-  const formTitle = document.createElement("h3"); formTitle.textContent = "Share your experience";
-  const hint = document.createElement("p"); hint.style.cssText="font-size:12px;color:#64748b;"; hint.textContent = "Only signed-in buyers with an accepted or completed order for this listing can submit a review.";
-  const rating = document.createElement("select"); rating.style.cssText="padding:10px;border:1px solid #cbd5e1;border-radius:8px;margin:8px 0;"; [5,4,3,2,1].forEach(n=>{const o=document.createElement("option");o.value=String(n);o.textContent="⭐".repeat(n)+" ("+n+"/5)";rating.appendChild(o)});
-  const review = document.createElement("textarea"); review.maxLength=1200; review.placeholder="Write your product or service review (at least 5 characters)...";
-  const submit = document.createElement("button"); submit.type="button"; submit.textContent="Submit review"; submit.style.cssText="margin-top:10px;padding:11px 16px;background:#173d70;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;";
-  const message = document.createElement("p"); message.setAttribute("role","status");
-  if (!auth.user) { hint.textContent="Sign in and place an order before submitting a review."; submit.disabled=true; }
-  submit.addEventListener("click", async()=>{
-    if (!auth.user) { message.textContent="Please sign in first."; return; }
-    const textValue=review.value.trim(); if(textValue.length<5){message.textContent="Please write at least 5 characters.";return;}
-    submit.disabled=true; message.textContent="Submitting review...";
-    const {error}=await supabase.from("tobay_product_reviews").insert({listing_id:item.id,buyer_id:auth.user.id,rating:Number(rating.value),review:textValue});
-    if(error){message.textContent=error.message.includes("duplicate")?"You have already reviewed this listing.":"Review could not be submitted. Reviews require an accepted or completed order. " + error.message;submit.disabled=false;return;}
-    message.textContent="Thank you. Your review has been published."; review.value=""; await loadReviews();
-  });
-  async function loadReviews(){
-    const {data,error}=await supabase.from("tobay_product_reviews").select("rating,review,created_at").eq("listing_id",item.id).order("created_at",{ascending:false}).limit(30);
-    list.replaceChildren(); if(error){list.textContent="Reviews are not available yet. Run the supplied SQL upgrade. " + error.message;return;}
-    if(!data?.length){list.textContent="No product reviews yet.";return;}
-    data.forEach(r=>{const card=document.createElement("article");card.style.cssText="padding:11px;margin:8px 0;border:1px solid #e2e8f0;border-radius:9px;";const stars=document.createElement("strong");stars.textContent="⭐".repeat(Number(r.rating||0));const content=document.createElement("p");content.textContent=r.review;const date=document.createElement("small");date.style.color="#64748b";date.textContent=new Date(r.created_at).toLocaleDateString();card.append(stars,content,date);list.appendChild(card)});
+  const client = window.tobaySupabase;
+  if (!client) {
+    alert("TOBAY is still connecting. Please refresh the page and try again.");
+    return;
   }
-  panel.append(close,heading,list,formTitle,hint,rating,review,submit,message); modal.appendChild(panel); document.body.appendChild(modal); await loadReviews();
+
+  let currentUser = null;
+  let authMessage = "";
+  try {
+    const { data, error } = await client.auth.getUser();
+    if (error) throw error;
+    currentUser = data?.user || null;
+  } catch (error) {
+    console.error("TOBAY review sign-in check failed:", error);
+    authMessage = "We could not verify your sign-in. Please refresh the page and sign in again.";
+  }
+
+  const modal = document.createElement("div");
+  modal.className = "tobay-review-modal";
+  const panel = document.createElement("div");
+  panel.className = "tobay-review-panel";
+  const close = document.createElement("button");
+  close.type = "button";
+  close.textContent = "✕ Close";
+  close.style.cssText = "float:right;border:0;background:#eef2f7;padding:8px 12px;border-radius:7px;cursor:pointer;";
+  close.onclick = () => modal.remove();
+  const heading = document.createElement("h2");
+  heading.textContent = "Reviews: " + (item.title || "Marketplace listing");
+  const list = document.createElement("div");
+  list.textContent = "Loading customer reviews...";
+  const formTitle = document.createElement("h3");
+  formTitle.textContent = "Share your experience";
+  const hint = document.createElement("p");
+  hint.style.cssText = "font-size:12px;color:#64748b;";
+  hint.textContent = "Only signed-in buyers with an accepted or completed order for this listing can submit a review.";
+  const rating = document.createElement("select");
+  rating.setAttribute("aria-label", "Choose a rating");
+  rating.style.cssText = "padding:10px;border:1px solid #cbd5e1;border-radius:8px;margin:8px 0;";
+  [5, 4, 3, 2, 1].forEach(n => {
+    const option = document.createElement("option");
+    option.value = String(n);
+    option.textContent = "⭐".repeat(n) + " (" + n + "/5)";
+    rating.appendChild(option);
+  });
+  const review = document.createElement("textarea");
+  review.maxLength = 1200;
+  review.placeholder = "Write your product or service review (at least 5 characters)...";
+  review.style.cssText = "display:block;width:100%;min-height:100px;box-sizing:border-box;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;";
+  const submit = document.createElement("button");
+  submit.type = "button";
+  submit.textContent = "Submit review";
+  submit.style.cssText = "margin-top:10px;padding:11px 16px;background:#173d70;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;";
+  const message = document.createElement("p");
+  message.setAttribute("role", "status");
+  message.setAttribute("aria-live", "polite");
+
+  if (!currentUser) {
+    hint.textContent = authMessage || "Sign in and place an order before submitting a review.";
+    submit.disabled = true;
+  }
+
+  async function loadReviews() {
+    list.textContent = "Loading customer reviews...";
+    try {
+      const { data, error } = await client
+        .from("tobay_product_reviews")
+        .select("rating,review,created_at")
+        .eq("listing_id", item.id)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      if (error) throw error;
+      list.replaceChildren();
+      if (!data || data.length === 0) {
+        list.textContent = "No product reviews yet.";
+        return;
+      }
+      data.forEach(row => {
+        const card = document.createElement("article");
+        card.style.cssText = "padding:11px;margin:8px 0;border:1px solid #e2e8f0;border-radius:9px;";
+        const stars = document.createElement("strong");
+        stars.textContent = "⭐".repeat(Number(row.rating || 0));
+        const content = document.createElement("p");
+        content.textContent = row.review || "";
+        const date = document.createElement("small");
+        date.style.color = "#64748b";
+        date.textContent = row.created_at ? new Date(row.created_at).toLocaleDateString() : "";
+        card.append(stars, content, date);
+        list.appendChild(card);
+      });
+    } catch (error) {
+      console.error("TOBAY product reviews could not load:", error);
+      list.textContent = "Could not load reviews: " + (error?.message || "Please refresh and try again.");
+    }
+  }
+
+  submit.addEventListener("click", async () => {
+    if (!currentUser) {
+      message.textContent = "Please sign in first.";
+      return;
+    }
+    const textValue = review.value.trim();
+    if (textValue.length < 5) {
+      message.textContent = "Please write at least 5 characters.";
+      return;
+    }
+    submit.disabled = true;
+    message.textContent = "Submitting review...";
+    try {
+      const { error } = await client.from("tobay_product_reviews").insert({
+        listing_id: item.id,
+        buyer_id: currentUser.id,
+        rating: Number(rating.value),
+        review: textValue
+      });
+      if (error) throw error;
+      message.textContent = "Thank you. Your review has been published.";
+      review.value = "";
+      await loadReviews();
+      submit.textContent = "Review submitted";
+    } catch (error) {
+      console.error("TOBAY product review submission failed:", error);
+      const detail = error?.message || "Please try again.";
+      message.textContent = detail.toLowerCase().includes("duplicate")
+        ? "You have already reviewed this listing."
+        : "Review could not be submitted. You must have an accepted or completed order for this listing. " + detail;
+      submit.disabled = false;
+    }
+  });
+
+  panel.append(close, heading, list, formTitle, hint, rating, review, submit, message);
+  modal.appendChild(panel);
+  document.body.appendChild(modal);
+  await loadReviews();
 }
 
 async function loadTobayNotifications(user) {
