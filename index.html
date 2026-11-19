@@ -212,6 +212,80 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 @media(max-width:800px){.categories-section .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.categories-section{padding-top:49px;padding-bottom:52px}.categories-heading{align-items:flex-start;margin-bottom:22px}.categories-heading-mark{display:none}.categories-heading h2{font-size:29px}.categories-heading p{font-size:12px}.categories-section .category-grid{gap:11px}.categories-section .category{min-height:155px;padding:17px 14px;border-radius:14px}.categories-section .category-icon{width:46px;height:46px;margin-bottom:13px;font-size:23px}.categories-section .category h3{font-size:12px}.categories-section .category p{font-size:10px}.category-arrow{right:11px;bottom:11px;width:23px;height:23px}}
 
+
+/* TOBAY Seller Dashboard - premium order overview */
+.tobay-seller-overview-panel{position:relative;margin:28px 0 30px;padding:25px 25px 20px;border:1px solid #e1e9f3;border-radius:20px;background:linear-gradient(145deg,#ffffff 0%,#f7faff 100%);box-shadow:0 13px 34px #102b550d;overflow:hidden}
+.tobay-seller-overview-panel:before{content:"";position:absolute;right:-95px;top:-125px;width:260px;height:260px;border:1px solid #dce9f7;border-radius:50%;box-shadow:0 0 0 25px #edf4fc80,0 0 0 52px #f3f7fc80;pointer-events:none}
+.tobay-seller-overview-heading{position:relative;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}
+.tobay-seller-overview-kicker{display:block;margin-bottom:6px;color:#d47a24;font-size:9px;font-weight:900;letter-spacing:2px}
+.tobay-seller-overview-heading h3{margin:0;color:#102b55;font-size:23px;font-weight:850;letter-spacing:-.5px}
+.tobay-seller-overview-heading p{margin:6px 0 0;color:#7b899b;font-size:12px;line-height:1.6}
+.tobay-overview-heading-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border:1px solid #dce8f5;border-radius:15px;background:linear-gradient(145deg,#fff,#edf4fc);color:#205b91;font-size:24px;box-shadow:0 7px 16px #102b550d}
+.tobay-overview-grid{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.tobay-overview-card{position:relative;display:flex;align-items:center;gap:13px;min-width:0;padding:17px 16px;border:1px solid #e5ebf3;border-radius:15px;background:#fff;box-shadow:0 5px 16px #102b5508;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.tobay-overview-card:hover{transform:translateY(-3px);border-color:#cbdced;box-shadow:0 12px 24px #102b5512}
+.tobay-overview-card-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:13px;font-size:19px}
+.tobay-overview-card-copy{min-width:0}
+.tobay-overview-card-label{display:block;color:#718096;font-size:11px;font-weight:750;line-height:1.4}
+.tobay-overview-card-value{display:block;margin-top:4px;color:#15375f;font-size:27px;font-weight:900;line-height:1.1;letter-spacing:-.7px;font-variant-numeric:tabular-nums}
+.tobay-overview-card.total{border-color:#173e6d;background:linear-gradient(120deg,#102b55,#1d5b91);box-shadow:0 9px 20px #123d7026}
+.tobay-overview-card.total .tobay-overview-card-label{color:#d4e4f5}
+.tobay-overview-card.total .tobay-overview-card-value{color:#fff}
+.tobay-overview-card.total .tobay-overview-card-icon{background:#ffffff1c;color:#fff}
+.tobay-overview-card.pending .tobay-overview-card-icon{background:#fff3d8;color:#b7791f}
+.tobay-overview-card.accepted .tobay-overview-card-icon{background:#e4f7ed;color:#198754}
+.tobay-overview-card.rejected .tobay-overview-card-icon{background:#ffebeb;color:#c24141}
+.tobay-overview-card.cancelled .tobay-overview-card-icon{background:#eef1f5;color:#667085}
+.tobay-overview-card.completed .tobay-overview-card-icon{background:#eeeaff;color:#6653b7}
+.tobay-overview-note{position:relative;display:flex;align-items:flex-start;gap:8px;margin:17px 2px 0;padding:11px 13px;border:1px solid #e4ebf4;border-radius:10px;background:#f5f8fc;color:#738196;font-size:10px;line-height:1.6}
+.tobay-overview-note span{color:#28669f;font-weight:900}
+.tobay-overview-loading{padding:20px;border:1px dashed #cbd8e7;border-radius:12px;background:#fff;color:#718096;font-size:12px;text-align:center}
+@media(max-width:760px){.tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.tobay-seller-overview-panel{padding:19px 14px 15px;border-radius:16px}.tobay-seller-overview-heading h3{font-size:20px}.tobay-overview-heading-icon{flex-basis:41px;width:41px;height:41px}.tobay-overview-grid{gap:9px}.tobay-overview-card{gap:9px;padding:13px 10px;border-radius:12px}.tobay-overview-card-icon{flex-basis:34px;width:34px;height:34px;border-radius:10px;font-size:16px}.tobay-overview-card-label{font-size:10px}.tobay-overview-card-value{font-size:23px}}
+
+
+
+/* TOBAY seller experience: complete visual refresh */
+#account{padding:58px 0 72px;background:radial-gradient(circle at 8% 10%,#e7f0fb 0,transparent 34%),linear-gradient(180deg,#f7f9fd,#eef3f9)}
+.tobay-account-shell{width:min(1120px,92%);margin:0 auto;border:1px solid #e2e9f2;border-radius:25px;background:#fff;box-shadow:0 22px 65px #102b5512;overflow:hidden}
+.tobay-account-main{padding:38px 42px}
+.tobay-account-heading h2{color:#102b55;font-size:30px;letter-spacing:-.8px}
+.tobay-account-heading p,.tobay-form-intro{color:#718096}
+.tobay-account-form{margin-top:22px!important;padding:25px!important;border:1px solid #e4eaf2;border-radius:17px;background:#fbfcfe;box-shadow:0 8px 24px #102b5508}
+.tobay-account-form h3{color:#102b55;font-size:22px;margin-bottom:5px}
+.tobay-account-form label{display:block;margin:14px 0 6px;color:#344761;font-size:12px;font-weight:800}
+.tobay-account-form input,.tobay-account-form textarea,.tobay-account-form select{width:100%;min-height:46px;padding:12px 14px!important;border:1px solid #dce4ee!important;border-radius:10px!important;background:#fff!important;color:#24364d;outline:none;transition:border-color .2s,box-shadow .2s}
+.tobay-account-form input:focus,.tobay-account-form textarea:focus,.tobay-account-form select:focus{border-color:#3479b8!important;box-shadow:0 0 0 3px #3479b81a}
+.tobay-account-form button,.tobay-account-form input[type=submit]{border-radius:10px!important;font-weight:800}
+#tobaySellerDashboard{display:none;position:relative;width:min(1120px,92%);margin:32px auto!important;padding:34px!important;border:1px solid #e0e8f2!important;border-radius:24px!important;background:linear-gradient(145deg,#fff,#fbfdff)!important;box-shadow:0 20px 55px #102b5512!important;max-width:1120px!important}
+#tobaySellerDashboard>h2{margin:0 0 27px;padding:23px 26px;border-radius:17px;background:linear-gradient(115deg,#102b55,#1d5b91);color:#fff;font-size:28px;letter-spacing:-.6px;box-shadow:0 12px 25px #123d7025}
+#tobaySellerDashboard>h3{margin:28px 0 17px;color:#15375f;font-size:19px;font-weight:850;letter-spacing:-.25px}
+#tobaySellerDashboard>p{color:#718096}
+#tobaySellerDashboard>hr{height:1px;border:0;background:linear-gradient(90deg,#dce6f1,transparent);margin:30px 0}
+#tobaySellerDashboard label{display:block;margin:13px 0 6px;color:#40536d;font-size:12px;font-weight:800}
+#tobaySellerDashboard input:not([type=file]),#tobaySellerDashboard textarea,#tobaySellerDashboard select{width:100%;min-height:46px;padding:12px 14px!important;border:1px solid #dce4ee!important;border-radius:10px!important;background:#fff!important;color:#24364d;outline:none;box-shadow:0 2px 5px #102b5505;transition:border-color .2s,box-shadow .2s}
+#tobaySellerDashboard textarea{min-height:105px}
+#tobaySellerDashboard input:focus,#tobaySellerDashboard textarea:focus,#tobaySellerDashboard select:focus{border-color:#3479b8!important;box-shadow:0 0 0 3px #3479b81a}
+#tobaySellerDashboard input[type=file]{display:block;width:100%;padding:12px!important;margin:8px 0 15px!important;border:1px dashed #c8d6e6!important;border-radius:11px;background:#f7faff;color:#64748b;font-size:12px}
+#tobaySellerDashboard button{min-height:42px;padding:11px 17px!important;border:0!important;border-radius:10px!important;background:linear-gradient(110deg,#123d70,#2469a6)!important;color:#fff!important;font-weight:800;box-shadow:0 5px 12px #123d701c;transition:transform .2s,filter .2s}
+#tobaySellerDashboard button:hover{transform:translateY(-2px);filter:brightness(1.08)}
+#tobaySellerDashboard button:disabled{opacity:.6;cursor:wait;transform:none}
+#tobaySellerDashboard #tobayUploadProfileImages{background:linear-gradient(110deg,#c77a25,#e39a3e)!important}
+#tobaySellerDashboard #tobayMyListings>div,#tobaySellerDashboard [data-seller-order],#tobaySellerDashboard #tobaySellerBuyNowOrders>div{margin:13px 0;padding:19px;border:1px solid #e3eaf2;border-radius:15px;background:#fff;box-shadow:0 6px 20px #102b5508;line-height:1.75;overflow-wrap:anywhere}
+#tobaySellerDashboard #tobayMyListings img{max-width:100%;height:auto;border-radius:12px}
+#tobaySellerDashboard #tobaySellerOrderFilters{gap:8px!important;margin:14px 0 18px!important}
+#tobaySellerDashboard #tobaySellerOrderFilters button{min-height:36px;padding:8px 13px!important;border:1px solid #dce6f1!important;background:#f3f7fc!important;color:#315477!important;box-shadow:none;font-size:11px}
+#tobaySellerDashboard #tobaySellerOrderFilters button:hover,#tobaySellerDashboard #tobaySellerOrderFilters button:focus{background:#19477f!important;color:#fff!important}
+#tobaySellerDashboard #tobaySellerOrderSummary>div{border:1px solid #e2eaf3;border-radius:13px;box-shadow:0 5px 16px #102b5508}
+#tobaySellerDashboard #tobaySellerOrderSummary strong{color:#5c6f86;font-size:11px}
+#tobaySellerDashboard #tobaySellerOrderSummary h2{color:#15375f;font-size:25px}
+#tobaySellerDashboard #tobaySellerOrderList h3,#tobaySellerDashboard #tobaySellerBuyNowOrders h3{color:#15375f}
+#tobaySellerDashboard #tobayListingForm{padding:23px;border:1px solid #e3eaf2;border-radius:17px;background:#f9fbfe}
+#tobaySellerDashboard #tobayListingForm button[type=submit]{margin-top:8px;background:linear-gradient(110deg,#c77a25,#e39a3e)!important}
+#tobaySellerDashboard #tobayBusinessProfileMessage,#tobaySellerDashboard #tobayProfileImageMessage,#tobaySellerDashboard #tobayListingMessage{font-size:12px;font-weight:700}
+@media(max-width:700px){#account{padding:35px 0 45px}.tobay-account-shell{width:94%;border-radius:18px}.tobay-account-main{padding:25px 18px}.tobay-account-form{padding:18px!important}#tobaySellerDashboard{width:94%;padding:18px!important;border-radius:18px!important}#tobaySellerDashboard>h2{padding:19px;font-size:23px}#tobaySellerDashboard>h3{font-size:17px}#tobaySellerDashboard #tobayListingForm{padding:16px}}
+@media(max-width:420px){#tobaySellerDashboard{padding:13px!important}#tobaySellerDashboard>h2{font-size:21px}#tobaySellerDashboard button{max-width:100%;white-space:normal}}
+
 </style>
 </head>
 <body>
@@ -1669,11 +1743,19 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
     <hr style="margin:25px 0;">
     <h3>My Listings</h3>
     <div id="tobayMyListings">Loading your listings...</div>
-    <hr style="margin:25px 0;">
-<h3>Order Overview</h3>
-<div id="tobaySellerOrderOverview">
-  Loading your order statistics...
-</div>
+    <section class="tobay-seller-overview-panel">
+  <div class="tobay-seller-overview-heading">
+    <div>
+      <span class="tobay-seller-overview-kicker">SELLER PERFORMANCE</span>
+      <h3>Order Overview</h3>
+      <p>A clear snapshot of your EasyBuy and Buy Now orders.</p>
+    </div>
+    <span class="tobay-overview-heading-icon" aria-hidden="true">▤</span>
+  </div>
+  <div id="tobaySellerOrderOverview">
+    <div class="tobay-overview-loading">Loading your order statistics...</div>
+  </div>
+</section>
 
 <hr style="margin:25px 0;">
 <h3>Incoming EasyBuy Orders</h3>
@@ -1836,26 +1918,27 @@ async function loadTobaySellerOrderOverview() {
   });
 
   const cards = [
-    { label: "Total Orders", value: counts.total, background: "#eaf1ff" },
-    { label: "Pending", value: counts.pending, background: "#fff4d6" },
-    { label: "Accepted", value: counts.accepted, background: "#e2f7e9" },
-    { label: "Rejected", value: counts.rejected, background: "#ffe8e8" },
-    { label: "Cancelled", value: counts.cancelled, background: "#f1f1f1" },
-    { label: "Completed", value: counts.completed, background: "#e8e4ff" }
+    { key: "total", label: "Total Orders", value: counts.total, icon: "▤" },
+    { key: "pending", label: "Pending", value: counts.pending, icon: "◷" },
+    { key: "accepted", label: "Accepted", value: counts.accepted, icon: "✓" },
+    { key: "rejected", label: "Rejected", value: counts.rejected, icon: "×" },
+    { key: "cancelled", label: "Cancelled", value: counts.cancelled, icon: "↶" },
+    { key: "completed", label: "Completed", value: counts.completed, icon: "★" }
   ];
 
   container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:15px 0;">
+    <div class="tobay-overview-grid">
       ${cards.map(card => `
-        <div style="padding:16px;background:${card.background};border:1px solid #e1e5eb;border-radius:10px;">
-          <div style="font-size:13px;font-weight:600;color:#42526b;">${card.label}</div>
-          <div style="font-size:28px;font-weight:800;color:#123b75;margin-top:6px;">${card.value}</div>
+        <div class="tobay-overview-card ${card.key}">
+          <span class="tobay-overview-card-icon" aria-hidden="true">${card.icon}</span>
+          <span class="tobay-overview-card-copy">
+            <span class="tobay-overview-card-label">${card.label}</span>
+            <strong class="tobay-overview-card-value">${card.value}</strong>
+          </span>
         </div>
       `).join("")}
     </div>
-    <p style="margin:8px 0;color:#667085;font-size:13px;">
-      Combined counts from EasyBuy and Buy Now orders. Order acceptance does not mean payment has been received or verified.
-    </p>
+    <p class="tobay-overview-note"><span>i</span> Combined counts from EasyBuy and Buy Now orders. An accepted order does not mean payment has been received or verified.</p>
   `;
 }
 
