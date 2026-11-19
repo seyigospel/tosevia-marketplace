@@ -1280,14 +1280,43 @@ document.body.appendChild(modal);
     saveButton.textContent = "♡ Save item";
     saveButton.style.cssText = "padding:9px 12px;border:1px solid #173d70;border-radius:8px;background:#fff;color:#173d70;cursor:pointer;font-weight:700;";
     saveButton.addEventListener("click", async () => {
-      const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) { alert("Please sign in as a buyer to save items."); document.getElementById("account")?.scrollIntoView({behavior:"smooth"}); return; }
+      const client = window.tobaySupabase;
+      if (!client) {
+        alert("TOBAY is still connecting. Please refresh the page and try again.");
+        return;
+      }
       saveButton.disabled = true;
-      const { error } = await supabase.from("tobay_wishlist").upsert({user_id:auth.user.id,listing_id:item.id},{onConflict:"user_id,listing_id",ignoreDuplicates:true});
-      saveButton.disabled = false;
-      if (error) { alert("Could not save this item: " + error.message); return; }
-      saveButton.textContent = "♥ Saved";
-      if (document.getElementById("tobayWishlistItems")) await loadTobayWishlist(auth.user);
+      const originalLabel = saveButton.textContent;
+      saveButton.textContent = "Saving...";
+      try {
+        const { data: auth, error: authError } = await client.auth.getUser();
+        if (authError) throw authError;
+        if (!auth || !auth.user) {
+          saveButton.disabled = false;
+          saveButton.textContent = originalLabel;
+          alert("Please sign in as a buyer to save items.");
+          document.getElementById("account")?.scrollIntoView({behavior:"smooth"});
+          return;
+        }
+        const { error } = await client
+          .from("tobay_wishlist")
+          .upsert(
+            { user_id: auth.user.id, listing_id: item.id },
+            { onConflict: "user_id,listing_id", ignoreDuplicates: true }
+          );
+        if (error) throw error;
+        saveButton.textContent = "♥ Saved";
+        if (document.getElementById("tobayWishlistItems") &&
+            typeof window.loadTobayWishlist === "function") {
+          await window.loadTobayWishlist(auth.user);
+        }
+      } catch (error) {
+        console.error("TOBAY wishlist save failed:", error);
+        saveButton.textContent = originalLabel;
+        alert("Could not save this item: " + (error?.message || "Please try again."));
+      } finally {
+        saveButton.disabled = false;
+      }
     });
     const reviewButton = document.createElement("button");
     reviewButton.type = "button";
@@ -4288,6 +4317,7 @@ async function loadTobayWishlist(user) {
   });
   if (!target.children.length) target.textContent = "Your saved items are no longer published.";
 }
+window.loadTobayWishlist = loadTobayWishlist;
 
 async function openTobayProductReviews(item) {
   const { data: auth } = await supabase.auth.getUser();
