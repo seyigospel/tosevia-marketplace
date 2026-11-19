@@ -1322,7 +1322,13 @@ document.body.appendChild(modal);
     reviewButton.type = "button";
     reviewButton.textContent = "Customer reviews";
     reviewButton.style.cssText = "padding:9px 12px;border:1px solid #d6a13a;border-radius:8px;background:#fff9eb;color:#704b08;cursor:pointer;font-weight:700;";
-    reviewButton.addEventListener("click", () => openTobayProductReviews(item));
+    reviewButton.addEventListener("click", () => {
+      if (typeof window.openTobayProductReviews === "function") {
+        window.openTobayProductReviews(item);
+      } else {
+        alert("Customer reviews are still loading. Please refresh the page and try again.");
+      }
+    });
     actionRow.append(saveButton, reviewButton);
     body.appendChild(actionRow);
 
@@ -4454,6 +4460,8 @@ async function openTobayProductReviews(item) {
   document.body.appendChild(modal);
   await loadReviews();
 }
+
+window.openTobayProductReviews = openTobayProductReviews;
 
 async function loadTobayNotifications(user) {
   if (!user) return;
