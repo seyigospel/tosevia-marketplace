@@ -314,6 +314,45 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 .tobay-modal{width:min(760px,100%);max-height:85vh;overflow:auto;padding:22px;border-radius:18px;background:#fff}
 @media(max-width:620px){.tobay-toolkit{padding:16px}.tobay-toolkit-head{display:block}.tobay-customer-table{font-size:11px}.tobay-customer-table th,.tobay-customer-table td{padding:8px 5px}}
 
+
+
+/* TOBAY final unified seller dashboard polish */
+#tobaySellerDashboard{isolation:isolate;overflow:hidden}
+#tobaySellerDashboard:before{content:"";position:absolute;z-index:-1;top:95px;right:-115px;width:290px;height:290px;border:1px solid #e6eef8;border-radius:50%;box-shadow:0 0 0 28px #f5f8fc,0 0 0 58px #f9fbfd;pointer-events:none}
+#tobaySellerDashboard>h2{display:flex;align-items:center;gap:13px;position:relative;overflow:hidden}
+#tobaySellerDashboard>h2:before{content:"TOBAY";margin-right:auto;color:#ffffff20;font-size:12px;letter-spacing:3px;font-weight:900;order:2}
+#tobaySellerDashboard>h3{display:flex;align-items:center;gap:10px}
+#tobaySellerDashboard>h3:before{content:"";display:inline-block;width:5px;height:21px;border-radius:5px;background:linear-gradient(#f2a64d,#d87516)}
+#tobaySellerDashboard .tobay-toolkit{position:relative;overflow:hidden;border-color:#e2eaf3;border-radius:18px;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);box-shadow:0 10px 28px #102b550a;transition:box-shadow .2s,border-color .2s}
+#tobaySellerDashboard .tobay-toolkit:hover{border-color:#cfdeed;box-shadow:0 14px 32px #102b5510}
+#tobaySellerDashboard .tobay-toolkit-head{align-items:center}
+#tobaySellerDashboard .tobay-toolkit-head>div{min-width:0}
+#tobaySellerDashboard .tobay-toolkit-head h3{font-size:18px;letter-spacing:-.3px}
+#tobaySellerDashboard .tobay-toolkit-head button{flex:0 0 auto}
+#tobaySellerDashboard .tobay-toolkit-stat{min-width:0;border-color:#e4ebf4;border-radius:13px;background:linear-gradient(145deg,#fff,#f6f9fd);transition:transform .2s,box-shadow .2s}
+#tobaySellerDashboard .tobay-toolkit-stat:hover{transform:translateY(-2px);box-shadow:0 9px 18px #102b550d}
+#tobaySellerDashboard .tobay-toolkit-stat strong{font-variant-numeric:tabular-nums}
+#tobaySellerDashboard #tobayListingForm{position:relative;box-shadow:0 8px 24px #102b5508}
+#tobaySellerDashboard #tobayMyListings>div,
+#tobaySellerDashboard [data-seller-order],
+#tobaySellerDashboard #tobaySellerBuyNowOrders>div{transition:border-color .2s,transform .2s,box-shadow .2s}
+#tobaySellerDashboard #tobayMyListings>div:hover,
+#tobaySellerDashboard [data-seller-order]:hover,
+#tobaySellerDashboard #tobaySellerBuyNowOrders>div:hover{border-color:#cbdced;box-shadow:0 10px 24px #102b5510}
+#tobaySellerDashboard #tobaySellerOrderOverview{position:relative}
+#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card{min-height:78px}
+#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card.total{background:linear-gradient(120deg,#102b55,#24649d)}
+#tobaySellerDashboard #tobayCustomerList{overflow-x:auto}
+#tobaySellerDashboard .tobay-customer-table{width:100%;border-collapse:collapse}
+#tobaySellerDashboard .tobay-customer-table th{background:#f3f7fc;color:#385574;text-align:left}
+#tobaySellerDashboard .tobay-customer-table th,#tobaySellerDashboard .tobay-customer-table td{padding:11px 12px;border-bottom:1px solid #e8eef5}
+#tobaySellerDashboard :focus-visible{outline:3px solid #70a9df;outline-offset:2px}
+@media(max-width:760px){#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){#tobaySellerDashboard .tobay-toolkit{padding:16px}#tobaySellerDashboard .tobay-toolkit-head{display:flex;align-items:flex-start;flex-direction:column}#tobaySellerDashboard .tobay-toolkit-head button{width:100%}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{gap:8px}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card{padding:12px 9px;gap:8px}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card-value{font-size:21px}}
+@media(prefers-reduced-motion:reduce){#tobaySellerDashboard *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
 </style>
 </head>
 <body>
