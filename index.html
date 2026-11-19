@@ -539,6 +539,23 @@ img,video,iframe{max-width:100%;}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
 
+
+/* TOBAY marketplace upgrade: saved items, review dialog, notifications, tracking and admin metrics */
+.tobay-upgrade-panel{margin:18px auto;padding:18px;background:#fff;border:1px solid #dce5f0;border-radius:14px;max-width:1000px;box-shadow:0 8px 24px #102b5508}
+.tobay-upgrade-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tobay-upgrade-metric{padding:14px;background:#fff;border:1px solid #e3eaf2;border-radius:10px}
+.tobay-upgrade-metric span{display:block;color:#64748b;font-size:12px}
+.tobay-upgrade-metric strong{display:block;color:#102b55;font-size:23px;margin-top:5px}
+.tobay-track{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:12px 0;padding:10px;background:#f6f8fb;border-radius:9px}
+.tobay-track-step{font-size:11px;padding:6px 9px;border-radius:20px;background:#e8edf4;color:#64748b;font-weight:700}
+.tobay-track-step.active{background:#d9f4e4;color:#17633a}
+.tobay-notice-item{padding:12px;border:1px solid #e3eaf2;border-radius:10px;margin:8px 0;background:#fff}
+.tobay-notice-item.unread{border-left:4px solid #e99b24;background:#fffaf0}
+.tobay-review-modal{position:fixed;inset:0;z-index:100010;background:#07172dcc;display:flex;align-items:center;justify-content:center;padding:16px}
+.tobay-review-panel{width:min(560px,100%);max-height:88vh;overflow:auto;background:white;border-radius:16px;padding:20px}
+.tobay-review-panel textarea{width:100%;min-height:90px;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
+@media(max-width:620px){.tobay-upgrade-panel{padding:12px}.tobay-track-step{font-size:10px;padding:5px 7px}}
+
 </style>
 </head>
 <body>
@@ -1255,6 +1272,30 @@ document.body.appendChild(modal);
   price,
   detailsButton
 );
+
+    const actionRow = document.createElement("div");
+    actionRow.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;";
+    const saveButton = document.createElement("button");
+    saveButton.type = "button";
+    saveButton.textContent = "♡ Save item";
+    saveButton.style.cssText = "padding:9px 12px;border:1px solid #173d70;border-radius:8px;background:#fff;color:#173d70;cursor:pointer;font-weight:700;";
+    saveButton.addEventListener("click", async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) { alert("Please sign in as a buyer to save items."); document.getElementById("account")?.scrollIntoView({behavior:"smooth"}); return; }
+      saveButton.disabled = true;
+      const { error } = await supabase.from("tobay_wishlist").upsert({user_id:auth.user.id,listing_id:item.id},{onConflict:"user_id,listing_id",ignoreDuplicates:true});
+      saveButton.disabled = false;
+      if (error) { alert("Could not save this item: " + error.message); return; }
+      saveButton.textContent = "♥ Saved";
+      if (document.getElementById("tobayWishlistItems")) await loadTobayWishlist(auth.user);
+    });
+    const reviewButton = document.createElement("button");
+    reviewButton.type = "button";
+    reviewButton.textContent = "Customer reviews";
+    reviewButton.style.cssText = "padding:9px 12px;border:1px solid #d6a13a;border-radius:8px;background:#fff9eb;color:#704b08;cursor:pointer;font-weight:700;";
+    reviewButton.addEventListener("click", () => openTobayProductReviews(item));
+    actionRow.append(saveButton, reviewButton);
+    body.appendChild(actionRow);
 
     card.append(imageArea, body);
     grid.appendChild(card);
@@ -2931,6 +2972,8 @@ async function loadMyListings() {
 <div class="buyer-section-title"><h3>Buy Now Orders</h3></div>
 <input type="search" id="tobayBuyNowSearch" class="buyer-search" placeholder="Search Buy Now orders..." aria-label="Search Buy Now orders">
 <div id="tobayBuyerBuyNowOrders">Loading Buy Now orders...</div>
+    <div class="buyer-section-title"><h3>Saved Products & Services</h3></div>
+    <div id="tobayWishlistItems" class="buyer-order-card">Loading your saved items...</div>
   `;
 
   const container = document.getElementById("tobayBuyerOrdersList");
@@ -3047,6 +3090,7 @@ heading.appendChild(statusBadge);
       " | Status: " + order.order_status;
 
     card.append(heading, details);
+    card.appendChild(tobayBuildOrderTimeline(order.order_status));
 if (order.order_status === "pending") {
   const cancelButton = document.createElement("button");
 
@@ -3170,6 +3214,7 @@ async function loadTobayNormalBuyerOrders(user) {
     }
     notice.className = "buyer-notice";
     card.append(heading, reference, amount, status, date, notice);
+    card.appendChild(tobayBuildOrderTimeline(order.order_status));
     if (order.order_status === "accepted") {
       const paymentMethod = document.createElement("p");
       paymentMethod.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : "To be confirmed by seller");
@@ -3220,6 +3265,14 @@ async function loadTobayAdminDashboard(user) {
   panel.style.display = "block";
   panel.innerHTML = `
     <h2>TOBAY Admin Dashboard</h2>
+    <section id="tobayAdminInsights" style="margin:18px 0 28px;padding:18px;background:#f5f8fc;border:1px solid #dce5f0;border-radius:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div><h3 style="margin:0;color:#102b55;">Marketplace Overview</h3><p style="margin:5px 0;color:#64748b;">Live totals from marketplace records. Order value is not confirmed revenue.</p></div>
+        <button type="button" id="tobayAdminExportOrders" style="padding:10px 14px;border:0;border-radius:8px;background:#173d70;color:white;font-weight:700;cursor:pointer;">Export Orders CSV</button>
+      </div>
+      <div id="tobayAdminMetricGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:14px;"><p>Loading marketplace statistics...</p></div>
+      <p id="tobayAdminInsightNote" style="font-size:12px;color:#64748b;margin:12px 0 0;"></p>
+    </section>
     <p>Seller Applications Management</p>
     <div id="tobayAdminApplications">Loading applications...</div>
   `;
@@ -3389,6 +3442,7 @@ async function loadTobayAdminDashboard(user) {
   });
 
   await loadTobayAdminEarnings(panel);
+  await loadTobayAdminInsights(panel);
 }
 
 async function loadTobayAdminEarnings(panel) {
@@ -4066,7 +4120,9 @@ if (adminCheckError) throw adminCheckError;
 if (!metadata.business_name && !adminRecord) {
   await loadTobayBuyerOrders(user);
   await loadTobayNormalBuyerOrders(user);
+  await loadTobayWishlist(user);
 } 
+      await loadTobayNotifications(user);
       if (metadata.business_name) {
         const { data: existing, error: checkError } = await supabase
           .from("seller_applications")
@@ -4179,6 +4235,128 @@ tobayLogoutButton.addEventListener("click", async () => {
   alert("You have logged out successfully.");
   window.location.reload();
 });
+
+
+/* ================= TOBAY COMPLETE MARKETPLACE UPGRADES =================
+   Additive features. Existing order, seller, payment and admin RPC flows remain unchanged.
+*/
+function tobayBuildOrderTimeline(statusValue) {
+  const status = String(statusValue || "pending").toLowerCase();
+  const wrap = document.createElement("div");
+  wrap.className = "tobay-track";
+  wrap.setAttribute("aria-label", "Order progress");
+  if (["rejected", "cancelled"].includes(status)) {
+    const terminal = document.createElement("span");
+    terminal.className = "tobay-track-step active";
+    terminal.textContent = status === "rejected" ? "✕ Seller declined" : "✕ Cancelled";
+    wrap.appendChild(terminal);
+    return wrap;
+  }
+  const steps = ["pending", "accepted", "completed"];
+  const labels = ["1. Received", "2. Accepted", "3. Completed"];
+  const active = Math.max(0, steps.indexOf(status));
+  steps.forEach((step, index) => {
+    const el = document.createElement("span");
+    el.className = "tobay-track-step" + (index <= active ? " active" : "");
+    el.textContent = labels[index];
+    wrap.appendChild(el);
+  });
+  return wrap;
+}
+
+async function loadTobayWishlist(user) {
+  const target = document.getElementById("tobayWishlistItems");
+  if (!target || !user) return;
+  target.textContent = "Loading your saved items...";
+  const { data: saved, error } = await supabase.from("tobay_wishlist").select("listing_id,created_at").eq("user_id", user.id).order("created_at", {ascending:false});
+  if (error) { target.textContent = "Saved items are not available yet. Please run the supplied Supabase SQL upgrade. Details: " + error.message; return; }
+  if (!saved || !saved.length) { target.textContent = "You have not saved any products or services yet. Use ♡ Save item on a marketplace listing."; return; }
+  const ids = saved.map(row => row.listing_id);
+  const { data: listings, error: listingError } = await supabase.from("listings").select("id,title,price,currency,listing_type,status").in("id", ids);
+  if (listingError) { target.textContent = "Could not load saved listings: " + listingError.message; return; }
+  target.replaceChildren();
+  (listings || []).filter(item => item.status === "published").forEach(item => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid #e5eaf1;";
+    const details = document.createElement("div");
+    const title = document.createElement("strong"); title.textContent = item.title || "Saved listing";
+    const meta = document.createElement("p"); meta.style.cssText = "margin:4px 0;color:#64748b;font-size:12px;"; meta.textContent = (item.listing_type || "Listing") + " · " + (item.currency || "") + " " + Number(item.price || 0).toLocaleString();
+    details.append(title, meta);
+    const remove = document.createElement("button"); remove.type = "button"; remove.textContent = "Remove"; remove.style.cssText = "padding:8px 12px;border:1px solid #b42318;border-radius:7px;color:#b42318;background:white;cursor:pointer;";
+    remove.addEventListener("click", async () => { remove.disabled = true; const result = await supabase.from("tobay_wishlist").delete().eq("user_id", user.id).eq("listing_id", item.id); if (result.error) { alert("Could not remove saved item: " + result.error.message); remove.disabled=false; return; } await loadTobayWishlist(user); });
+    row.append(details, remove); target.appendChild(row);
+  });
+  if (!target.children.length) target.textContent = "Your saved items are no longer published.";
+}
+
+async function openTobayProductReviews(item) {
+  const { data: auth } = await supabase.auth.getUser();
+  const modal = document.createElement("div"); modal.className = "tobay-review-modal";
+  const panel = document.createElement("div"); panel.className = "tobay-review-panel";
+  const close = document.createElement("button"); close.type="button"; close.textContent="✕ Close"; close.style.cssText="float:right;border:0;background:#eef2f7;padding:8px 12px;border-radius:7px;cursor:pointer;"; close.onclick=()=>modal.remove();
+  const heading = document.createElement("h2"); heading.textContent = "Reviews: " + (item.title || "Marketplace listing");
+  const list = document.createElement("div"); list.textContent = "Loading customer reviews...";
+  const formTitle = document.createElement("h3"); formTitle.textContent = "Share your experience";
+  const hint = document.createElement("p"); hint.style.cssText="font-size:12px;color:#64748b;"; hint.textContent = "Only signed-in buyers with an accepted or completed order for this listing can submit a review.";
+  const rating = document.createElement("select"); rating.style.cssText="padding:10px;border:1px solid #cbd5e1;border-radius:8px;margin:8px 0;"; [5,4,3,2,1].forEach(n=>{const o=document.createElement("option");o.value=String(n);o.textContent="⭐".repeat(n)+" ("+n+"/5)";rating.appendChild(o)});
+  const review = document.createElement("textarea"); review.maxLength=1200; review.placeholder="Write your product or service review (at least 5 characters)...";
+  const submit = document.createElement("button"); submit.type="button"; submit.textContent="Submit review"; submit.style.cssText="margin-top:10px;padding:11px 16px;background:#173d70;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;";
+  const message = document.createElement("p"); message.setAttribute("role","status");
+  if (!auth.user) { hint.textContent="Sign in and place an order before submitting a review."; submit.disabled=true; }
+  submit.addEventListener("click", async()=>{
+    if (!auth.user) { message.textContent="Please sign in first."; return; }
+    const textValue=review.value.trim(); if(textValue.length<5){message.textContent="Please write at least 5 characters.";return;}
+    submit.disabled=true; message.textContent="Submitting review...";
+    const {error}=await supabase.from("tobay_product_reviews").insert({listing_id:item.id,buyer_id:auth.user.id,rating:Number(rating.value),review:textValue});
+    if(error){message.textContent=error.message.includes("duplicate")?"You have already reviewed this listing.":"Review could not be submitted. Reviews require an accepted or completed order. " + error.message;submit.disabled=false;return;}
+    message.textContent="Thank you. Your review has been published."; review.value=""; await loadReviews();
+  });
+  async function loadReviews(){
+    const {data,error}=await supabase.from("tobay_product_reviews").select("rating,review,created_at").eq("listing_id",item.id).order("created_at",{ascending:false}).limit(30);
+    list.replaceChildren(); if(error){list.textContent="Reviews are not available yet. Run the supplied SQL upgrade. " + error.message;return;}
+    if(!data?.length){list.textContent="No product reviews yet.";return;}
+    data.forEach(r=>{const card=document.createElement("article");card.style.cssText="padding:11px;margin:8px 0;border:1px solid #e2e8f0;border-radius:9px;";const stars=document.createElement("strong");stars.textContent="⭐".repeat(Number(r.rating||0));const content=document.createElement("p");content.textContent=r.review;const date=document.createElement("small");date.style.color="#64748b";date.textContent=new Date(r.created_at).toLocaleDateString();card.append(stars,content,date);list.appendChild(card)});
+  }
+  panel.append(close,heading,list,formTitle,hint,rating,review,submit,message); modal.appendChild(panel); document.body.appendChild(modal); await loadReviews();
+}
+
+async function loadTobayNotifications(user) {
+  if (!user) return;
+  let panel = document.getElementById("tobayNotificationCentre");
+  if (!panel) { panel=document.createElement("section"); panel.id="tobayNotificationCentre"; panel.className="tobay-upgrade-panel"; document.getElementById("tobayAccountForm").after(panel); }
+  panel.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><div><h3 style="margin:0;color:#102b55;">🔔 Notification Centre</h3><p style="margin:4px 0;color:#64748b;font-size:12px;">Order updates for your account</p></div><button type="button" id="tobayRefreshNotifications" style="padding:9px 12px;border:1px solid #173d70;border-radius:8px;background:#fff;color:#173d70;cursor:pointer;">Refresh</button></div><div id="tobayNotificationList">Loading notifications...</div>';
+  const refresh=async()=>{
+    const list=document.getElementById("tobayNotificationList"); if(!list)return; list.textContent="Loading notifications...";
+    const {data,error}=await supabase.from("tobay_notifications").select("id,title,message,order_status,is_read,created_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(30);
+    if(error){list.textContent="Notification history needs the supplied Supabase SQL upgrade. " + error.message;return;}
+    list.replaceChildren(); if(!data?.length){list.textContent="No notifications yet. New order updates will appear here.";return;}
+    data.forEach(n=>{const card=document.createElement("div");card.className="tobay-notice-item"+(n.is_read?"":" unread");const title=document.createElement("strong");title.textContent=n.title||"TOBAY update";const msg=document.createElement("p");msg.style.margin="5px 0";msg.textContent=n.message||"Your order has been updated.";const date=document.createElement("small");date.style.color="#64748b";date.textContent=new Date(n.created_at).toLocaleString("en-NG");card.append(title,msg,date);if(!n.is_read){const read=document.createElement("button");read.type="button";read.textContent="Mark as read";read.style.cssText="display:block;margin-top:8px;padding:7px 10px;border:1px solid #173d70;border-radius:7px;background:white;color:#173d70;cursor:pointer;";read.onclick=async()=>{read.disabled=true;const result=await supabase.from("tobay_notifications").update({is_read:true}).eq("id",n.id).eq("user_id",user.id);if(result.error){alert("Could not update notification: "+result.error.message);read.disabled=false;return;}await refresh();};card.appendChild(read);}list.appendChild(card);});
+  };
+  document.getElementById("tobayRefreshNotifications").onclick=refresh;
+  await refresh();
+  if(!window.tobayNotificationRefreshTimer) window.tobayNotificationRefreshTimer=window.setInterval(refresh,90000);
+}
+
+async function loadTobayAdminInsights(panel) {
+  const grid=document.getElementById("tobayAdminMetricGrid"); if(!grid)return;
+  const tables=["seller_applications","listings","tobay_orders","easybuy_orders"];
+  const results=await Promise.all(tables.map(table=>supabase.from(table).select("id",{count:"exact",head:true})));
+  if(results.some(r=>r.error)){grid.textContent="Some statistics could not be loaded. Check admin table permissions.";return;}
+  const counts=results.map(r=>Number(r.count||0));
+  const pendingApps=await supabase.from("seller_applications").select("id",{count:"exact",head:true}).eq("status","pending");
+  const pendingListings=await supabase.from("listings").select("id",{count:"exact",head:true}).eq("status","pending");
+  const metrics=[["Seller applications",counts[0]],["Pending applications",pendingApps.count||0],["All listings",counts[1]],["Pending listings",pendingListings.count||0],["Buy Now orders",counts[2]],["EasyBuy orders",counts[3]]];
+  grid.innerHTML="";metrics.forEach(([label,value])=>{const card=document.createElement("div");card.className="tobay-upgrade-metric";const name=document.createElement("span");name.textContent=label;const val=document.createElement("strong");val.textContent=String(value);card.append(name,val);grid.appendChild(card)});
+  const note=document.getElementById("tobayAdminInsightNote");if(note)note.textContent="These are record counts, not unique people or verified revenue. Buyer personal details are not included in the dashboard summary.";
+  const exportButton=document.getElementById("tobayAdminExportOrders");if(exportButton&&!exportButton.dataset.bound){exportButton.dataset.bound="1";exportButton.onclick=async()=>{
+    exportButton.disabled=true;exportButton.textContent="Preparing CSV...";
+    const [buyNow,easy]=await Promise.all([supabase.from("tobay_orders").select("id,created_at,total_amount,currency,order_status,payment_status").order("created_at",{ascending:false}).limit(5000),supabase.from("easybuy_orders").select("id,created_at,total_amount,currency,order_status").order("created_at",{ascending:false}).limit(5000)]);
+    if(buyNow.error||easy.error){alert("Could not export orders: "+(buyNow.error||easy.error).message);exportButton.disabled=false;exportButton.textContent="Export Orders CSV";return;}
+    const rows=[["order_type","order_id","created_at","total_amount","currency","order_status","payment_status"],...(buyNow.data||[]).map(o=>["Buy Now",o.id,o.created_at,o.total_amount,o.currency,o.order_status,o.payment_status||""]),...(easy.data||[]).map(o=>["EasyBuy",o.id,o.created_at,o.total_amount,o.currency,o.order_status,""])];
+    const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="TOBAY_orders_export_"+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);exportButton.disabled=false;exportButton.textContent="Export Orders CSV";
+  };}
+}
+
 </script>
 </body>
 </html>
