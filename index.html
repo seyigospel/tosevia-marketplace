@@ -6623,7 +6623,30 @@ section p,section li{color:var(--tobay-body)!important}
 #tobayCartSummary{padding:16px 0;color:#17365f;font-weight:800}
 #tobayCartContinue{width:100%;border:0;border-radius:9px;background:#173e70;color:#fff;padding:13px;font-weight:800;cursor:pointer}
 #tobayCartNote{font-size:12px;line-height:1.55;color:#68788e;margin-top:10px}
-@media(max-width:600px){#tobayCartLauncher{right:12px;bottom:12px;padding:12px 15px}#tobayCartPanel{padding:17px}}
+@media(max-width:600px){
+  #tobayCartLauncher{
+    position:static;
+    right:auto;bottom:auto;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:9px 13px;
+    margin:0;
+    font-size:13px;
+    box-shadow:none;
+    white-space:nowrap;
+    transform:none !important;
+  }
+  .tobay-sort-row{
+    justify-content:space-between !important;
+    align-items:center;
+    gap:8px;
+    padding:8px 0;
+  }
+  .tobay-sort-row label{flex:1 1 100%;margin-bottom:2px}
+  .tobay-sort-row select{flex:1;min-width:0 !important;max-width:190px}
+  #tobayCartPanel{padding:17px}
+}
 </style>
 <button id="tobayCartLauncher" type="button" aria-label="Open shopping cart">🛒 Cart <span id="tobayCartCount">0</span></button>
 <div id="tobayCartOverlay" role="dialog" aria-modal="true" aria-labelledby="tobayCartTitle">
@@ -6726,6 +6749,19 @@ section p,section li{color:var(--tobay-body)!important}
     },500);
   });
   // Sort the rendered marketplace cards without changing the underlying Supabase data.
+  function positionCartForScreen(){
+    const launcher=document.getElementById("tobayCartLauncher");
+    const sortRow=document.querySelector(".tobay-sort-row");
+    if(!launcher||!sortRow)return;
+    if(window.matchMedia("(max-width: 600px)").matches){
+      // Keep the cart inside the marketplace controls instead of covering phone content.
+      if(launcher.parentElement!==sortRow)sortRow.insertBefore(launcher,sortRow.firstChild);
+    } else if(launcher.parentElement!==document.body){
+      document.body.appendChild(launcher);
+    }
+  }
+  positionCartForScreen();
+  window.addEventListener("resize",positionCartForScreen,{passive:true});
   function installSort(){
     const select=document.getElementById("tobaySortListings");
     const grid=document.getElementById("listingGrid");
