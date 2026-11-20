@@ -7,8 +7,81 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 26</title>
+<title>TOBAY | Global Marketplace — Version 29</title>
+
 <style>
+/* TOBAY V29 — professional seller storefront presentation */
+#tobaySellerProfile .tobay-storefront-panel{
+  width:min(760px,100%)!important;max-height:90vh!important;
+  padding:clamp(16px,3vw,28px)!important;border:1px solid #e3eaf3;
+  box-shadow:0 24px 80px rgba(0,0,0,.28);color:#26364b;
+}
+#tobaySellerProfile .tobay-storefront-close{
+  position:sticky;top:0;z-index:2;float:right;padding:9px 13px!important;
+  border:1px solid #dbe3ed!important;background:#fff;color:#243b5a;
+  border-radius:9px;font-weight:700;
+}
+#tobaySellerProfile .tobay-storefront-title{
+  color:#102b55;font-size:clamp(23px,4vw,31px);line-height:1.2;
+  margin:12px 0 7px;overflow-wrap:anywhere;
+}
+#tobaySellerProfile .tobay-storefront-hero{
+  clear:both;margin:16px 0 14px;padding:20px;border-radius:16px;
+  background:linear-gradient(120deg,#102b55,#19477f 72%,#a91f2b);color:#fff;
+}
+#tobaySellerProfile .tobay-storefront-eyebrow{
+  display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.8px;color:#ffe0a8;
+}
+#tobaySellerProfile .tobay-storefront-intro{margin:8px 0 0;color:#fff;font-size:14px;line-height:1.6}
+#tobaySellerProfile .tobay-storefront-location{color:#64748b;font-size:13px;margin:7px 0 12px}
+#tobaySellerProfile .tobay-storefront-stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 20px;
+}
+#tobaySellerProfile .tobay-storefront-stat{
+  padding:13px 10px;border:1px solid #e4eaf2;border-radius:12px;background:#f8fafc;text-align:center;
+}
+#tobaySellerProfile .tobay-storefront-stat strong{display:block;color:#102b55;font-size:23px;line-height:1.2}
+#tobaySellerProfile .tobay-storefront-stat span{display:block;margin-top:5px;color:#64748b;font-size:11px;font-weight:700}
+#tobaySellerProfile .tobay-storefront-panel h3{color:#102b55;font-size:18px;margin:22px 0 12px}
+#tobaySellerProfile .tobay-storefront-listing{
+  display:grid;grid-template-columns:88px minmax(0,1fr) auto;align-items:center;gap:13px;
+  padding:13px;margin:10px 0;border:1px solid #e5ebf3;border-radius:13px;background:#fff;
+}
+#tobaySellerProfile .tobay-storefront-listing-image{
+  width:88px;height:82px;border-radius:10px;background:#f1f5f9;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:27px;
+}
+#tobaySellerProfile .tobay-storefront-listing-image img{width:100%;height:100%;object-fit:cover}
+#tobaySellerProfile .tobay-storefront-listing-details{min-width:0}
+#tobaySellerProfile .tobay-storefront-listing-type{
+  display:block;color:#a91f2b;font-size:10px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.6px;margin-bottom:5px;
+}
+#tobaySellerProfile .tobay-storefront-listing-details strong{display:block;color:#18385f;font-size:14px;overflow-wrap:anywhere}
+#tobaySellerProfile .tobay-storefront-listing-price{margin:6px 0 0;color:#102b55;font-weight:800;font-size:14px}
+#tobaySellerProfile .tobay-storefront-add{
+  padding:9px 11px;border:0;border-radius:8px;background:#a91f2b;color:#fff;
+  font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;
+}
+#tobaySellerProfile .tobay-storefront-service-note{color:#64748b;font-size:10px;font-weight:700;text-align:right}
+#tobaySellerProfile .tobay-storefront-empty{
+  padding:18px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc;color:#64748b;
+}
+@media(max-width:560px){
+  #tobaySellerProfile{padding:8px!important;align-items:flex-end!important}
+  #tobaySellerProfile .tobay-storefront-panel{
+    max-height:94vh!important;border-radius:18px 18px 10px 10px!important;padding:15px!important;
+  }
+  #tobaySellerProfile .tobay-storefront-listing{grid-template-columns:68px minmax(0,1fr);gap:10px;padding:10px}
+  #tobaySellerProfile .tobay-storefront-listing-image{width:68px;height:68px}
+  #tobaySellerProfile .tobay-storefront-add,
+  #tobaySellerProfile .tobay-storefront-service-note{grid-column:2;justify-self:start}
+  #tobaySellerProfile .tobay-storefront-stats{gap:7px}
+  #tobaySellerProfile .tobay-storefront-stat{padding:11px 5px}
+  #tobaySellerProfile .tobay-storefront-stat strong{font-size:20px}
+}
+
+
 :root {
   --navy:#102b55;
   --blue:#19477f;
@@ -355,6 +428,18 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 @media(max-width:420px){#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{gap:8px}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card{padding:12px 9px;gap:8px}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card-value{font-size:21px}}
 @media(prefers-reduced-motion:reduce){#tobaySellerDashboard *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
+
+
+/* TOBAY v28 — consolidated buyer order tracking */
+#tobayBuyerOrders .buyer-overall-summary{margin:0 0 22px;padding:18px;border:1px solid #dce6f2;border-radius:16px;background:linear-gradient(135deg,#f7faff,#eef4fb)}
+#tobayBuyerOrders .buyer-overall-summary h3{margin:0 0 4px;color:#102b55;font-size:18px}
+#tobayBuyerOrders .buyer-overall-summary>p{margin:0 0 13px;color:#607086;font-size:13px}
+#tobayBuyerOrders .buyer-overall-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#tobayBuyerOrders .buyer-overall-item{padding:12px;border:1px solid #e0e8f2;border-radius:11px;background:#fff;min-width:0}
+#tobayBuyerOrders .buyer-overall-item span{display:block;color:#68788e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.35px}
+#tobayBuyerOrders .buyer-overall-item strong{display:block;margin-top:3px;color:#102b55;font-size:25px;line-height:1.2}
+#tobayBuyerOrders .buyer-overall-foot{margin:12px 0 0!important;color:#68788e!important;font-size:12px!important}
+@media(max-width:620px){#tobayBuyerOrders .buyer-overall-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#tobayBuyerOrders .buyer-overall-summary{padding:14px}}
 
 /* TOBAY Buyer Dashboard refresh */
 #tobayBuyerOrders{max-width:1160px!important;margin:34px auto!important;padding:clamp(18px,3vw,34px)!important;border:1px solid #e5eaf2!important;border-radius:22px!important;background:linear-gradient(180deg,#fff 0%,#fbfcff 100%)!important;box-shadow:0 18px 55px rgba(16,43,85,.09)!important;color:#18243a}
@@ -2985,24 +3070,107 @@ profilePanel.append(
   const sellerListings = tobayMarketplaceListings.filter(
     listing => listing.seller_id === item.seller_id
   );
+  const productCount = sellerListings.filter(listing => listing.listing_type === "product").length;
+  const serviceCount = sellerListings.filter(listing => listing.listing_type === "service").length;
+
+  profilePanel.classList.add("tobay-storefront-panel");
+  profileTitle.className = "tobay-storefront-title";
+  profileLocation.className = "tobay-storefront-location";
+  closeProfile.className = "tobay-storefront-close";
+
+  const storefrontHero = document.createElement("div");
+  storefrontHero.className = "tobay-storefront-hero";
+  const storefrontEyebrow = document.createElement("span");
+  storefrontEyebrow.textContent = "TOBAY SELLER STOREFRONT";
+  storefrontEyebrow.className = "tobay-storefront-eyebrow";
+  const storefrontIntro = document.createElement("p");
+  storefrontIntro.textContent = "Discover this seller's products, services and business information.";
+  storefrontIntro.className = "tobay-storefront-intro";
+  storefrontHero.append(storefrontEyebrow, storefrontIntro);
+
+  const storefrontStats = document.createElement("div");
+  storefrontStats.className = "tobay-storefront-stats";
+  [
+    ["Published listings", sellerListings.length],
+    ["Products", productCount],
+    ["Services", serviceCount]
+  ].forEach(([label, value]) => {
+    const stat = document.createElement("div");
+    stat.className = "tobay-storefront-stat";
+    const number = document.createElement("strong");
+    number.textContent = String(value);
+    const caption = document.createElement("span");
+    caption.textContent = label;
+    stat.append(number, caption);
+    storefrontStats.appendChild(stat);
+  });
+
+  profilePanel.insertBefore(storefrontHero, profilePanel.children[1] || null);
+  profilePanel.insertBefore(storefrontStats, profilePanel.children[2] || null);
 
   sellerListings.forEach(listing => {
-    const entry = document.createElement("div");
-    entry.style.cssText =
-      "padding:12px 0;border-bottom:1px solid #ddd;";
+    const entry = document.createElement("article");
+    entry.className = "tobay-storefront-listing";
 
+    const imageWrap = document.createElement("div");
+    imageWrap.className = "tobay-storefront-listing-image";
+    const imagePath = Array.isArray(listing.image_urls) ? listing.image_urls[0] : "";
+    if (imagePath) {
+      const imageUrl = window.tobaySupabase.storage
+        .from("tobay-listings")
+        .getPublicUrl(imagePath).data.publicUrl;
+      const listingImage = document.createElement("img");
+      listingImage.src = imageUrl;
+      listingImage.alt = listing.title || "Seller listing";
+      listingImage.loading = "lazy";
+      imageWrap.appendChild(listingImage);
+    } else {
+      imageWrap.textContent = listing.listing_type === "service" ? "✦" : "🛍️";
+    }
+
+    const details = document.createElement("div");
+    details.className = "tobay-storefront-listing-details";
+    const type = document.createElement("span");
+    type.className = "tobay-storefront-listing-type";
+    type.textContent = (listing.listing_type || "listing") + (listing.category ? " · " + listing.category : "");
     const name = document.createElement("strong");
     name.textContent = listing.title || "Untitled listing";
-
     const price = document.createElement("p");
+    price.className = "tobay-storefront-listing-price";
     price.textContent = listing.price != null
-      ? (listing.currency || "") + " " +
-        Number(listing.price).toLocaleString()
+      ? (listing.currency || "NGN") + " " + Number(listing.price).toLocaleString()
       : "Price not specified";
+    details.append(type, name, price);
+    entry.append(imageWrap, details);
 
-    entry.append(name, price);
+    if (listing.listing_type === "product") {
+      const addButton = document.createElement("button");
+      addButton.type = "button";
+      addButton.className = "tobay-storefront-add";
+      addButton.textContent = "＋ Add to Cart";
+      addButton.addEventListener("click", () => {
+        if (typeof window.tobayAddToCart === "function") {
+          window.tobayAddToCart(listing);
+        } else {
+          alert("The shopping cart is still loading. Please refresh and try again.");
+        }
+      });
+      entry.appendChild(addButton);
+    } else {
+      const serviceNote = document.createElement("span");
+      serviceNote.className = "tobay-storefront-service-note";
+      serviceNote.textContent = "Contact seller for details";
+      entry.appendChild(serviceNote);
+    }
     profilePanel.appendChild(entry);
   });
+
+  if (!sellerListings.length) {
+    const noListings = document.createElement("p");
+    noListings.className = "tobay-storefront-empty";
+    noListings.textContent = "This seller has no currently published listings.";
+    profilePanel.appendChild(noListings);
+  }
 
   
   const reviewsHeading = document.createElement("h3");
@@ -4533,6 +4701,49 @@ async function loadMyListings() {
   document.getElementById("tobayAllOrderStatus")?.addEventListener("change", applyTobayCombinedOrderFilters);
   applyTobayCombinedOrderFilters();
 };
+async function loadTobayBuyerOverallSummary(user) {
+  const panel = document.getElementById("tobayBuyerOverallSummary");
+  if (!panel || !user) return;
+  const note = document.getElementById("buyerAllSummaryNote");
+  if (note) note.textContent = "Updating your combined order summary…";
+
+  const [easyResult, normalResult] = await Promise.all([
+    supabase.from("easybuy_orders").select("id,order_status").eq("buyer_id", user.id),
+    supabase.from("tobay_orders").select("id,order_status").eq("buyer_id", user.id)
+  ]);
+  if (easyResult.error || normalResult.error) {
+    if (note) note.textContent = "Some order totals could not be loaded. Open the individual order sections below for details.";
+    console.warn("TOBAY buyer summary could not load both order types:", easyResult.error || normalResult.error);
+    return;
+  }
+
+  const allOrders = [
+    ...(easyResult.data || []).map(order => ({...order, source:"EasyBuy"})),
+    ...(normalResult.data || []).map(order => ({...order, source:"Buy Now"}))
+  ];
+  const counts = {pending:0, accepted:0, completed:0};
+  allOrders.forEach(order => {
+    const status = String(order.order_status || "").toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
+  });
+  const values = {
+    buyerAllTotal: allOrders.length,
+    buyerAllPending: counts.pending,
+    buyerAllAccepted: counts.accepted,
+    buyerAllCompleted: counts.completed
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const target = document.getElementById(id);
+    if (target) target.textContent = String(value);
+  });
+  if (note) {
+    const other = allOrders.length - counts.pending - counts.accepted - counts.completed;
+    note.textContent = other
+      ? "Combined EasyBuy and Buy Now totals. " + other + " order(s) are rejected or cancelled."
+      : "Combined totals include both EasyBuy instalment orders and Buy Now orders.";
+  }
+}
+
   async function loadTobayBuyerOrders(user) {
   let panel = document.getElementById("tobayBuyerOrders");
 
@@ -4550,7 +4761,18 @@ async function loadMyListings() {
   panel.style.display = "block";
   panel.innerHTML = `
     <div class="buyer-hero"><div><h2>Welcome to Your Buyer Dashboard</h2><p>Track your purchases, follow order updates and manage your EasyBuy instalments.</p><button type="button" id="tobayRefreshBuyerOrders" style="margin-top:12px;padding:10px 14px;border:0;border-radius:8px;background:#173e70;color:#fff;font-weight:700;cursor:pointer">↻ Refresh order updates</button></div><div class="buyer-mark" aria-hidden="true">🛍️</div></div>
-    <div class="buyer-stats" aria-label="Your order summary">
+    <section class="buyer-overall-summary" id="tobayBuyerOverallSummary" aria-live="polite">
+      <h3>Your Marketplace Orders</h3>
+      <p>One quick view of your EasyBuy and Buy Now purchases.</p>
+      <div class="buyer-overall-grid">
+        <div class="buyer-overall-item"><span>Total orders</span><strong id="buyerAllTotal">—</strong></div>
+        <div class="buyer-overall-item"><span>Awaiting seller</span><strong id="buyerAllPending">—</strong></div>
+        <div class="buyer-overall-item"><span>Accepted</span><strong id="buyerAllAccepted">—</strong></div>
+        <div class="buyer-overall-item"><span>Completed</span><strong id="buyerAllCompleted">—</strong></div>
+      </div>
+      <p class="buyer-overall-foot" id="buyerAllSummaryNote">Loading your combined order summary…</p>
+    </section>
+    <div class="buyer-stats" aria-label="Your EasyBuy order summary">
       <div class="buyer-stat"><span>Total EasyBuy Orders</span><strong id="buyerEasyTotal">—</strong></div>
       <div class="buyer-stat"><span>Pending</span><strong id="buyerEasyPending">—</strong></div>
       <div class="buyer-stat"><span>Accepted</span><strong id="buyerEasyAccepted">—</strong></div>
@@ -4584,6 +4806,7 @@ async function loadMyListings() {
       try {
         await loadTobayBuyerOrders(user);
         await loadTobayNormalBuyerOrders(user);
+        await loadTobayBuyerOverallSummary(user);
       } finally {
         refreshBuyerOrders.disabled = false;
         refreshBuyerOrders.textContent = "↻ Refresh order updates";
@@ -5741,6 +5964,7 @@ if (adminCheckError) throw adminCheckError;
 if (!metadata.business_name && !adminRecord) {
   await loadTobayBuyerOrders(user);
   await loadTobayNormalBuyerOrders(user);
+  await loadTobayBuyerOverallSummary(user);
   await loadTobayWishlist(user);
 } 
       await loadTobayNotifications(user);
