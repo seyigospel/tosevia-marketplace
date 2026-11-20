@@ -1226,6 +1226,54 @@ footer{background:#062f28!important}
 }
 </style>
 
+
+<style id="tobay-feature-panel-professional-v7">
+/* Refined TOBAY hero feature panel: roomy on desktop and genuinely readable on phones. */
+.tobay-hero-layout{grid-template-columns:minmax(0,1.02fr) minmax(340px,.98fr)!important;gap:clamp(26px,4vw,58px)!important}
+.tobay-feature-panel{box-sizing:border-box!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:17px!important;width:100%!important;max-width:540px!important;min-height:0!important;height:auto!important;aspect-ratio:auto!important;padding:clamp(20px,2.6vw,30px)!important;justify-self:end!important;transform:none!important;overflow:hidden!important;border:1px solid rgba(228,197,143,.34)!important;border-radius:22px!important;background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.045))!important;box-shadow:0 22px 52px rgba(3,20,17,.18)!important}
+.tobay-feature-heading{display:flex;flex-direction:column;gap:8px;padding:0 2px 5px}
+.tobay-feature-kicker{color:#e4c58f;font-size:10px;font-weight:850;letter-spacing:2px}
+.tobay-feature-heading>strong{max-width:360px;color:#fff;font-size:clamp(17px,1.8vw,22px);line-height:1.3;letter-spacing:-.35px}
+.tobay-feature-list{display:grid;grid-template-columns:1fr;gap:10px}
+.tobay-feature-card{box-sizing:border-box;display:flex;align-items:center;gap:14px;min-width:0;min-height:78px;padding:13px 15px;border:1px solid rgba(255,255,255,.62);border-radius:14px;background:rgba(255,255,255,.97);box-shadow:0 8px 22px rgba(3,20,17,.12);color:#173f38}
+.tobay-feature-icon{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border-radius:12px;background:#f3ecdf;font-size:22px}
+.tobay-feature-copy{display:flex;flex:1 1 auto;flex-direction:column;gap:4px;min-width:0}
+.tobay-feature-copy strong{color:#173f38;font-size:14px;line-height:1.25;font-weight:850}
+.tobay-feature-copy small{color:#687a73;font-size:12px;line-height:1.45;white-space:normal}
+.tobay-feature-arrow{flex:0 0 auto;color:#a77c3d;font-size:20px;font-weight:700}
+.tobay-feature-foot{display:flex;align-items:center;gap:9px;padding:2px 2px 0;color:#e8d5b1;font-size:9px;font-weight:800;letter-spacing:1.8px}
+.tobay-feature-foot span{width:24px;height:1px;background:#e4c58f}
+@media(max-width:760px){
+ .tobay-home-hero{padding:27px 0 29px!important}
+ .tobay-hero-layout{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:22px!important;width:calc(100% - 32px)!important;max-width:620px!important}
+ .tobay-hero-copy{width:100%;min-width:0}
+ .tobay-hero-copy .eyebrow{font-size:10px!important;letter-spacing:1.1px!important;padding:8px 11px!important;margin-bottom:15px!important}
+ .tobay-hero-copy h1{font-size:clamp(32px,8vw,43px)!important;line-height:1.1!important;margin-bottom:14px!important;padding-bottom:14px!important}
+ .tobay-hero-copy>p:not(.hero-note){font-size:14px!important;line-height:1.55!important;margin-bottom:15px!important;padding:13px 14px!important}
+ .tobay-hero-search{max-width:none!important;margin-bottom:12px!important}
+ .tobay-hero-actions{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;gap:9px!important}
+ .tobay-hero-actions .btn{width:auto!important;min-height:43px!important;padding:10px 13px!important;font-size:12px!important}
+ .tobay-feature-panel{justify-self:stretch!important;max-width:none!important;width:100%!important;padding:19px 16px!important;gap:14px!important;border-radius:17px!important}
+ .tobay-feature-heading{gap:6px}
+ .tobay-feature-kicker{font-size:9px;letter-spacing:1.7px}
+ .tobay-feature-heading>strong{max-width:100%;font-size:18px;line-height:1.3}
+ .tobay-feature-list{gap:9px}
+ .tobay-feature-card{min-height:76px;padding:12px 13px;gap:12px;border-radius:12px}
+ .tobay-feature-icon{flex-basis:42px;width:42px;height:42px;font-size:21px;border-radius:11px}
+ .tobay-feature-copy strong{font-size:14px}
+ .tobay-feature-copy small{font-size:12px;line-height:1.45}
+ .tobay-feature-foot{font-size:8px;letter-spacing:1.5px}
+}
+@media(max-width:390px){
+ .tobay-hero-layout{width:calc(100% - 26px)!important;gap:18px!important}
+ .tobay-feature-panel{padding:16px 13px!important}
+ .tobay-feature-card{gap:10px;padding:11px 10px}
+ .tobay-feature-copy strong{font-size:13px}
+ .tobay-feature-copy small{font-size:11.5px}
+ .tobay-feature-arrow{font-size:17px}
+}
+</style>
+
 </head>
 <body>
 
@@ -1269,13 +1317,14 @@ footer{background:#062f28!important}
    </div>
    <p class="hero-note">Products <span>•</span> Services <span>•</span> Opportunities</p>
   </div>
-  <div class="tobay-hero-visual" aria-label="Shopping and global marketplace illustration">
-   <div class="hero-orbit hero-orbit-one"></div><div class="hero-orbit hero-orbit-two"></div>
-   <div class="hero-globe">🌍</div>
-   <div class="hero-product-card hero-card-main"><div class="hero-card-icon">🛍️</div><div><strong>One marketplace</strong><small>Discover what you need</small></div><span class="hero-card-arrow">↗</span></div>
-   <div class="hero-product-card hero-card-small hero-card-top"><span>✨</span><div><strong>New finds</strong><small>Explore more</small></div></div>
-   <div class="hero-product-card hero-card-small hero-card-bottom"><span>🤝</span><div><strong>Direct connections</strong><small>Meet local sellers</small></div></div>
-   <div class="hero-visual-caption">YOUR WORLD. YOUR MARKETPLACE.</div>
+  <div class="tobay-hero-visual tobay-feature-panel" aria-label="Why explore TOBAY Global Marketplace">
+   <div class="tobay-feature-heading"><span class="tobay-feature-kicker">THE TOBAY EXPERIENCE</span><strong>More ways to discover. More ways to connect.</strong></div>
+   <div class="tobay-feature-list">
+    <article class="tobay-feature-card"><span class="tobay-feature-icon" aria-hidden="true">🛍️</span><span class="tobay-feature-copy"><strong>One marketplace</strong><small>Shop products and discover services in one place.</small></span><span class="tobay-feature-arrow" aria-hidden="true">↗</span></article>
+    <article class="tobay-feature-card"><span class="tobay-feature-icon" aria-hidden="true">✨</span><span class="tobay-feature-copy"><strong>Fresh discoveries</strong><small>Explore new finds, useful services and opportunities.</small></span><span class="tobay-feature-arrow" aria-hidden="true">↗</span></article>
+    <article class="tobay-feature-card"><span class="tobay-feature-icon" aria-hidden="true">🤝</span><span class="tobay-feature-copy"><strong>Direct connections</strong><small>Connect with sellers and discover local businesses.</small></span><span class="tobay-feature-arrow" aria-hidden="true">↗</span></article>
+   </div>
+   <div class="tobay-feature-foot"><span></span> YOUR WORLD. YOUR MARKETPLACE.</div>
   </div>
  </div>
 </section>
