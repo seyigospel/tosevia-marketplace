@@ -150,6 +150,7 @@ footer{background:#0b1f3d;color:white;padding:45px 0 22px}
 .tobay-choice-icon{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:10px;background:#edf4fc;font-size:17px}.tobay-choice-login .tobay-choice-icon{background:#ffecd7;color:#b65c0d;font-weight:800}
 .tobay-choice strong,.tobay-choice small{display:block}.tobay-choice strong{font-size:12px}.tobay-choice small{font-size:9px;color:#77869a;margin-top:3px;line-height:1.3}
 .tobay-account-form{padding:23px;background:#f9fbfe;border:1px solid #e5edf6;border-radius:16px}
+#tobayCaptchaWrap{margin:4px 0 16px;padding:12px;background:#fff;border:1px solid #e5edf6;border-radius:10px;overflow-x:auto}#tobayCaptchaHelp{font-size:11px;color:#718096;margin:0 0 7px}
 .tobay-account-form h3{font-size:21px;color:#102b55;margin:0 0 5px}.tobay-form-intro{font-size:12px;color:#78879a;margin:0 0 19px}
 .tobay-account-form>label,.tobay-account-form #tobayBusinessField>label{display:block;font-size:11px;font-weight:700;color:#30445e;margin:0 0 7px}
 .tobay-account-form input:not([type=checkbox]),.tobay-account-form textarea{display:block;width:100%;box-sizing:border-box;padding:12px 13px;margin:0 0 15px;border:1px solid #dce5ef;border-radius:9px;background:#fff;color:#17324f;font:inherit;font-size:13px;outline:none;transition:border-color .2s,box-shadow .2s}
@@ -1860,6 +1861,7 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
           <label class="tobay-show-password"><input id="tobayShowPassword" type="checkbox"> Show password</label>
           <button id="tobayForgotPassword" type="button" style="display:none;">Forgot password?</button>
         </div>
+        <div id="tobayCaptchaWrap"><p id="tobayCaptchaHelp">Complete the security check before continuing.</p><div id="tobayCaptcha"></div></div>
         <button id="tobaySubmit" class="tobay-submit" type="submit">Create Account</button>
         <p id="tobayAccountMessage" role="status" aria-live="polite"></p>
       </form>
@@ -1868,6 +1870,29 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
   </div>
 </section>
 <!-- END TOBAY ACCOUNT REGISTRATION -->
+
+<!-- hCaptcha browser widget. Replace the sitekey below with your hCaptcha Sitekey. -->
+<script>
+  window.tobayCaptchaToken = "";
+  window.tobayCaptchaWidgetId = null;
+  window.onTobayHCaptchaLoad = function () {
+    const target = document.getElementById("tobayCaptcha");
+    if (!target || !window.hcaptcha || window.tobayCaptchaWidgetId !== null) return;
+    window.tobayCaptchaWidgetId = window.hcaptcha.render(target, {
+      sitekey: "0c1a7ba2-4716-4942-9da6-fef8e500253a",
+      callback: function (token) { window.tobayCaptchaToken = token || ""; },
+      "expired-callback": function () { window.tobayCaptchaToken = ""; },
+      "error-callback": function () { window.tobayCaptchaToken = ""; }
+    });
+  };
+  window.tobayResetCaptcha = function () {
+    window.tobayCaptchaToken = "";
+    if (window.hcaptcha && window.tobayCaptchaWidgetId !== null) {
+      window.hcaptcha.reset(window.tobayCaptchaWidgetId);
+    }
+  };
+</script>
+<script src="https://js.hcaptcha.com/1/api.js?onload=onTobayHCaptchaLoad&render=explicit" async defer></script>
 
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
@@ -1953,17 +1978,25 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
     return;
   }
 
+  const captchaToken = window.tobayCaptchaToken;
+  if (!captchaToken) {
+    message.textContent = "Please complete the hCaptcha security check first.";
+    return;
+  }
+
   this.disabled = true;
   message.textContent = "Sending password reset email...";
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.href.split("#")[0]
+      redirectTo: window.location.href.split("#")[0],
+      captchaToken
     });
     if (error) throw error;
     message.textContent = "If an account exists for this email, a password reset link has been sent. Please check your inbox and spam folder.";
   } catch (error) {
     message.textContent = "Could not send the reset email: " + error.message;
   } finally {
+    window.tobayResetCaptcha();
     this.disabled = false;
   }
 });
@@ -4155,6 +4188,12 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
     return;
   }
 
+  const captchaToken = window.tobayCaptchaToken;
+  if (!captchaToken) {
+    message.textContent = "Please complete the hCaptcha security check before continuing.";
+    return;
+  }
+
   message.textContent = "Please wait...";
   submit.disabled = true;
 
@@ -4164,7 +4203,8 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
     if (tobayAccountMode === "login") {
       result = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
+        options: { captchaToken }
       });
 
       if (result.error) throw result.error;
@@ -4223,6 +4263,7 @@ if (!metadata.business_name && !adminRecord) {
         email,
         password,
         options: {
+          captchaToken,
           data: {
             full_name: name,
             business_name: tobayAccountMode === "seller" ? business : "",
@@ -4269,6 +4310,7 @@ whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
   } catch (error) {
     message.textContent = error.message || "Something went wrong. Please try again.";
   } finally {
+    window.tobayResetCaptcha();
     submit.disabled = false;
   }
 });
