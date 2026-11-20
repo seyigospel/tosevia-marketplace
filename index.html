@@ -6100,5 +6100,67 @@ async function loadTobayAdminInsights(panel) {
 }
 
 </script>
-<nav aria-label="Mobile marketplace shortcuts" class="tobay-mobile-dock"><a href="#home"><span>⌂</span><small>Home</small></a><a href="#categories"><span>▦</span><small>Categories</small></a><a href="#explore"><span>⌕</span><small>Explore</small></a><a href="#sell"><span>＋</span><small>Sell</small></a><a href="#account"><span>♙</span><small>Account</small></a></nav></body>
+<nav aria-label="Mobile marketplace shortcuts" class="tobay-mobile-dock"><a href="#home"><span>⌂</span><small>Home</small></a><a href="#categories"><span>▦</span><small>Categories</small></a><a href="#explore"><span>⌕</span><small>Explore</small></a><a href="#sell"><span>＋</span><small>Sell</small></a><a href="#account"><span>♙</span><small>Account</small></a></nav>
+<style id="tobay-phone-all-categories-and-new-colours-v14">
+/* TOBAY refreshed identity: midnight indigo, clear aqua and warm ivory */
+:root{--navy:#202b58!important;--blue:#354783!important;--orange:#e56d55!important;--tobay-ink:#202943!important;--tobay-green:#25356f!important;--tobay-orange:#e56d55!important;--tobay-line:#e4e8f0!important;--tobay-soft:#f4f6fb!important;--ink:#202943!important;--bg:#f4f6fb!important}
+body{background:#f4f6fb!important;color:#202943!important}
+header,.tobay-quick-nav,.quick-stats{background:#fff!important}
+.logo,.section-head h2,.category h3,.listing h3,.seller-banner h2{color:#25356f!important}
+.nav a:hover,.tobay-quick-nav a:hover,.tobay-quick-nav a:first-child,.text-link{color:#e56d55!important}
+.btn-orange,.listing-body button{background:#e56d55!important;color:#fff!important}
+.btn-orange:hover{background:#cb5844!important}
+.hero.tobay-home-hero{background:linear-gradient(120deg,#f0f3fc 0%,#e9f7f7 58%,#fff3ed 100%)!important;border-bottom:1px solid #e2e8f1!important}
+.tobay-market-topline{background:#202b58!important;color:#fff!important}
+.tobay-feature-panel{background:linear-gradient(145deg,#25356f,#344b88)!important;border-color:rgba(255,255,255,.18)!important;box-shadow:0 16px 38px rgba(32,43,88,.16)!important}
+.tobay-feature-kicker{color:#9ce5df!important}
+.tobay-feature-foot{color:#c9e9e8!important}
+.tobay-feature-card{background:#fff!important;border-color:#e5eaf3!important;color:#25356f!important}
+.tobay-feature-copy strong{color:#25356f!important}
+.tobay-feature-icon{background:#e9f7f6!important}
+.tobay-feature-arrow{color:#e56d55!important}
+.category{border-color:#e4e8f0!important;background:#fff!important}
+.category-icon{background:#e9f7f6!important}
+.category-featured{background:#f0f3fc!important;border-color:#dce3f4!important}
+.listing{border-color:#e4e8f0!important;background:#fff!important}
+.listing-art{background:linear-gradient(135deg,#edf2fb,#f4f7fa)!important}
+.seller-banner{background:linear-gradient(110deg,#edf7f7,#f1f3fc)!important;border-color:#dce8ee!important}
+footer{background:#202b58!important}
+@media(max-width:760px){
+ .tobay-home-hero{padding:22px 0 23px!important}
+ .tobay-hero-layout{grid-template-columns:minmax(0,1fr)!important;gap:17px!important;width:calc(100% - 28px)!important}
+ .tobay-hero-copy h1{font-size:clamp(31px,8vw,39px)!important;line-height:1.08!important}
+ .tobay-hero-copy>p:not(.hero-note){font-size:14px!important;line-height:1.5!important}
+ .tobay-feature-panel{width:100%!important;max-width:none!important;padding:17px 14px!important;gap:12px!important;overflow:visible!important}
+ .tobay-feature-heading{padding:0 2px 3px!important}
+ .tobay-feature-heading>strong{font-size:18px!important;line-height:1.28!important;max-width:none!important}
+ .tobay-feature-list{display:grid!important;grid-template-columns:1fr!important;gap:9px!important;overflow:visible!important;padding:0!important;margin:0!important}
+ .tobay-feature-card{display:flex!important;flex:initial!important;width:100%!important;min-height:70px!important;padding:11px 12px!important;gap:11px!important;scroll-snap-align:none!important}
+ .tobay-feature-copy{min-width:0!important}
+ .tobay-feature-copy strong{font-size:13px!important}
+ .tobay-feature-copy small{font-size:12px!important;line-height:1.4!important;white-space:normal!important}
+ .tobay-feature-foot{padding:0 2px!important}
+ /* Show every marketplace category together: no hidden horizontal category carousel. */
+ #categories .category-grid,.categories-section .category-grid,.category-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;overflow:visible!important;padding:0!important;scroll-snap-type:none!important}
+ #categories .category,.categories-section .category,.category-grid .category{display:flex!important;flex-direction:row!important;align-items:center!important;gap:9px!important;min-width:0!important;width:100%!important;min-height:84px!important;height:auto!important;padding:10px 9px!important;border-radius:12px!important;scroll-snap-align:none!important}
+ #categories .category-icon,.categories-section .category-icon,.category-grid .category-icon{display:grid!important;flex:0 0 38px!important;width:38px!important;height:38px!important;margin:0!important;border-radius:10px!important;font-size:20px!important;place-items:center!important}
+ #categories .category h3,.categories-section .category h3,.category-grid .category h3{font-size:11.5px!important;line-height:1.22!important;margin:0 0 3px!important;overflow-wrap:anywhere!important}
+ #categories .category p,.categories-section .category p,.category-grid .category p{font-size:9.5px!important;line-height:1.25!important;margin:0!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+ .category-arrow{display:none!important}
+ .categories-heading{align-items:flex-start!important;margin-bottom:15px!important}
+ .categories-heading h2{font-size:24px!important}
+ .categories-heading p{font-size:12px!important;line-height:1.45!important}
+ #listingGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .listing-art{aspect-ratio:5/4!important;height:auto!important}
+ .section{padding-top:30px!important;padding-bottom:30px!important}
+}
+@media(max-width:380px){
+ #categories .category,.categories-section .category,.category-grid .category{min-height:78px!important;padding:8px 7px!important;gap:7px!important}
+ #categories .category-icon,.categories-section .category-icon,.category-grid .category-icon{flex-basis:33px!important;width:33px!important;height:33px!important;font-size:18px!important}
+ #categories .category h3,.categories-section .category h3,.category-grid .category h3{font-size:10.5px!important}
+ #categories .category p,.categories-section .category p,.category-grid .category p{font-size:9px!important}
+}
+</style>
+
+</body>
 </html>
