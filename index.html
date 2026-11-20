@@ -1662,6 +1662,118 @@ footer{background:#102f30!important;color:#dce8e2!important}footer a:hover{color
 @media(max-width:380px){.nav{max-width:58vw!important;gap:11px!important}.header-inner>.btn{font-size:10px!important;padding:8px!important}.tobay-hero-actions{grid-template-columns:1fr!important}.category{padding:12px 10px!important}}
 
 </style>
+<style id="tobay-v12-landscape-phone-layout">
+/* TOBAY v12 — balanced landscape-style mobile homepage */
+@media (max-width: 760px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { overflow-x: hidden !important; font-size: 15px !important; line-height: 1.55 !important; }
+  img, video, iframe { max-width: 100%; }
+  .container { width: calc(100% - 28px) !important; max-width: 100% !important; }
+  section.section { padding-top: 25px !important; padding-bottom: 25px !important; }
+  .section-head { gap: 10px !important; align-items: flex-end !important; margin-bottom: 15px !important; }
+  .section-head h2, .categories-heading h2, .discover-heading h2 { font-size: clamp(19px, 5vw, 23px) !important; line-height: 1.25 !important; }
+  .section-head p, .categories-heading p, .discover-heading p { font-size: 13px !important; line-height: 1.55 !important; }
+
+  /* Category tiles become wide, tidy landscape cards */
+  #categories .category-grid, .categories-section .category-grid, .category-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    overflow: visible !important;
+    padding: 2px 0 8px !important;
+  }
+  #categories .category, .categories-section .category, .category {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    align-content: center !important;
+    align-items: center !important;
+    column-gap: 9px !important;
+    row-gap: 2px !important;
+    min-width: 0 !important;
+    min-height: 88px !important;
+    height: auto !important;
+    padding: 11px 10px !important;
+    border-radius: 12px !important;
+    text-align: left !important;
+    overflow: hidden !important;
+  }
+  #categories .category-icon, .categories-section .category-icon, .category-icon {
+    grid-column: 1 !important; grid-row: 1 / span 2 !important;
+    width: 40px !important; height: 40px !important; margin: 0 !important;
+    display: grid !important; place-items: center !important; font-size: 21px !important;
+  }
+  #categories .category h3, .categories-section .category h3, .category h3 {
+    grid-column: 2 !important; grid-row: 1 !important; min-width: 0 !important;
+    margin: 0 !important; font-size: 12px !important; line-height: 1.3 !important;
+    overflow-wrap: anywhere !important;
+  }
+  #categories .category p, .categories-section .category p, .category p {
+    grid-column: 2 !important; grid-row: 2 !important; margin: 0 !important;
+    font-size: 10px !important; line-height: 1.35 !important;
+    display: -webkit-box !important; -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important; overflow: hidden !important;
+  }
+  .category-arrow { display: none !important; }
+
+  /* Product cards: two balanced columns, wide image windows, readable details */
+  #listingGrid, .listing-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 11px !important;
+    align-items: stretch !important;
+  }
+  #listingGrid .listing, .listing-grid .listing {
+    min-width: 0 !important; width: 100% !important; border-radius: 12px !important;
+    display: flex !important; flex-direction: column !important;
+  }
+  #listingGrid .listing-art, .listing-grid .listing-art {
+    width: 100% !important; height: auto !important; aspect-ratio: 4 / 3 !important;
+    min-height: 0 !important; max-height: 150px !important; overflow: hidden !important;
+    display: grid !important; place-items: center !important; font-size: 40px !important;
+  }
+  #listingGrid .listing-art img, .listing-grid .listing-art img {
+    width: 100% !important; height: 100% !important; object-fit: cover !important;
+  }
+  #listingGrid .listing-body, .listing-grid .listing-body { padding: 10px !important; min-width: 0 !important; }
+  #listingGrid .listing h3, .listing-grid .listing h3 {
+    font-size: 13px !important; line-height: 1.35 !important; margin: 4px 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+  #listingGrid .listing p, .listing-grid .listing p { font-size: 11px !important; line-height: 1.45 !important; }
+  #listingGrid .tag, .listing-grid .tag { font-size: 9px !important; }
+  #listingGrid .listing .btn, .listing-grid .listing .btn { max-width: 100% !important; white-space: normal !important; font-size: 11px !important; padding: 9px 8px !important; }
+
+  /* Normal phone proportions for hero, forms, seller/buyer panels and footer */
+  .tobay-hero-layout { grid-template-columns: minmax(0,1fr) !important; gap: 18px !important; }
+  .tobay-hero-copy h1 { font-size: clamp(29px, 8vw, 38px) !important; line-height: 1.12 !important; }
+  .tobay-hero-copy p { font-size: 14px !important; line-height: 1.6 !important; }
+  .tobay-hero-actions { display: grid !important; grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: 9px !important; }
+  .tobay-hero-actions .btn { min-width: 0 !important; font-size: 12px !important; padding: 11px 9px !important; }
+  .seller-banner { display: flex !important; flex-direction: column !important; align-items: stretch !important; padding: 19px !important; gap: 13px !important; }
+  .seller-banner h2 { font-size: 21px !important; line-height: 1.25 !important; }
+  .seller-banner p { font-size: 13px !important; }
+  .tobay-account-choices { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .tobay-account-choices > *, .tobay-account-form input, .tobay-account-form select, .tobay-account-form textarea { min-width: 0 !important; max-width: 100% !important; }
+  input, select, textarea, button { max-width: 100%; }
+  .marketplace-tools { grid-template-columns: minmax(0,1fr) !important; }
+  .type-tabs { flex-wrap: nowrap !important; overflow-x: auto !important; max-width: 100% !important; padding-bottom: 4px !important; }
+  .type-tabs .tab { flex: 0 0 auto !important; white-space: nowrap !important; }
+  .tobay-mobile-dock { grid-template-columns: repeat(5, minmax(0,1fr)) !important; }
+}
+@media (max-width: 390px) {
+  .container { width: calc(100% - 22px) !important; }
+  #categories .category, .categories-section .category, .category { min-height: 82px !important; padding: 9px 8px !important; grid-template-columns: 35px minmax(0,1fr) !important; column-gap: 7px !important; }
+  #categories .category-icon, .categories-section .category-icon, .category-icon { width: 34px !important; height: 34px !important; font-size: 18px !important; }
+  #categories .category h3, .categories-section .category h3, .category h3 { font-size: 11px !important; }
+  #categories .category p, .categories-section .category p, .category p { font-size: 9px !important; }
+  #listingGrid, .listing-grid { gap: 8px !important; }
+  #listingGrid .listing-body, .listing-grid .listing-body { padding: 8px !important; }
+  #listingGrid .listing h3, .listing-grid .listing h3 { font-size: 12px !important; }
+  .tobay-hero-actions { grid-template-columns: 1fr 1fr !important; }
+}
+
+</style>
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY GLOBAL MARKETPLACE  •  DISCOVER PRODUCTS, SERVICES &amp; NEW OPPORTUNITIES</div><header>
