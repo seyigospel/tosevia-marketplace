@@ -4144,15 +4144,12 @@ async function loadTobaySellerOrders() {
         if (!confirm("Mark this EasyBuy order as completed? Only do this after fulfilling the order.")) return;
         completeButton.disabled = true;
         completeButton.textContent = "Updating...";
-        const { data: updated, error: updateError } = await supabase
-          .from("easybuy_orders")
-          .update({ order_status: "completed" })
-          .eq("id", order.id)
-          .eq("seller_id", user.id)
-          .select("id")
-          .maybeSingle();
-        if (updateError || !updated) {
-          alert("Could not complete this order. Your Supabase seller update policy may not permit this action. " + (updateError?.message || ""));
+        const { data: updated, error: updateError } = await supabase.rpc(
+          "complete_tobay_easybuy_order",
+          { p_order_id: order.id }
+        );
+        if (updateError || updated !== true) {
+          alert("Could not complete this order. Please make sure the TOBAY Seller Order Completion SQL has been run in Supabase. " + (updateError?.message || "The order may no longer be eligible for completion."));
           completeButton.disabled = false;
           completeButton.textContent = "Mark Order Completed";
           return;
@@ -4240,15 +4237,12 @@ async function loadTobayNormalSellerOrders() {
         if (!confirm("Mark this Buy Now order as completed? Only do this after fulfilling the order.")) return;
         completeButton.disabled = true;
         completeButton.textContent = "Updating...";
-        const { data: updated, error: updateError } = await supabase
-          .from("tobay_orders")
-          .update({ order_status: "completed" })
-          .eq("id", order.id)
-          .eq("seller_id", user.id)
-          .select("id")
-          .maybeSingle();
-        if (updateError || !updated) {
-          alert("Could not complete this order. Your Supabase seller update policy may not permit this action. " + (updateError?.message || ""));
+        const { data: updated, error: updateError } = await supabase.rpc(
+          "complete_tobay_normal_order",
+          { p_order_id: order.id }
+        );
+        if (updateError || updated !== true) {
+          alert("Could not complete this order. Please make sure the TOBAY Seller Order Completion SQL has been run in Supabase. " + (updateError?.message || "The order may no longer be eligible for completion."));
           completeButton.disabled = false;
           completeButton.textContent = "Mark Order Completed";
           return;
