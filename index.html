@@ -2964,6 +2964,26 @@ profileButton.style.cssText =
   "background:#fff;color:#123b70;border:1px solid #123b70;" +
   "border-radius:7px;cursor:pointer;font-weight:bold;";
 
+async function tobayHasCompletedSellerOrder(client, buyerId, sellerId) {
+  const checks = await Promise.all([
+    client.from("tobay_orders").select("id").eq("buyer_id", buyerId).eq("seller_id", sellerId).eq("order_status", "completed").limit(1),
+    client.from("easybuy_orders").select("id").eq("buyer_id", buyerId).eq("seller_id", sellerId).eq("order_status", "completed").limit(1)
+  ]);
+  const failed = checks.find(result => result.error);
+  if (failed) return { eligible: false, error: failed.error };
+  return { eligible: checks.some(result => Array.isArray(result.data) && result.data.length > 0), error: null };
+}
+
+async function tobayHasCompletedListingOrder(client, buyerId, listingId) {
+  const checks = await Promise.all([
+    client.from("tobay_orders").select("id").eq("buyer_id", buyerId).eq("listing_id", listingId).eq("order_status", "completed").limit(1),
+    client.from("easybuy_orders").select("id").eq("buyer_id", buyerId).eq("listing_id", listingId).eq("order_status", "completed").limit(1)
+  ]);
+  const failed = checks.find(result => result.error);
+  if (failed) return { eligible: false, error: failed.error };
+  return { eligible: checks.some(result => Array.isArray(result.data) && result.data.length > 0), error: null };
+}
+
 profileButton.addEventListener("click", async () => {
   const oldProfile = document.getElementById("tobaySellerProfile");
   if (oldProfile) oldProfile.remove();
@@ -3181,8 +3201,14 @@ profilePanel.append(
   reviewsList.textContent = "Loading customer reviews...";
 
   profilePanel.append(reviewsHeading, reviewsList);
-const { data: authData } =
+  const { data: authData } =
   await window.tobaySupabase.auth.getUser();
+  let sellerReviewEligibility = { eligible: false, error: null };
+  if (authData.user) {
+    sellerReviewEligibility = await tobayHasCompletedSellerOrder(
+      window.tobaySupabase, authData.user.id, item.seller_id
+    );
+  }
   const { data: reviews, error: reviewsError } =
     await window.tobaySupabase
       .from("seller_reviews")
@@ -3282,13 +3308,18 @@ if (authData.user && review.reviewer_id === authData.user.id) {
   const reviewMessage = document.createElement("p");
 
   if (!authData.user) {
-    reviewMessage.textContent =
-      "Please sign in to submit a review.";
+    reviewMessage.textContent = "Please sign in to submit a review.";
+    submitReview.disabled = true;
+  } else if (sellerReviewEligibility.error) {
+    reviewMessage.textContent = "We could not verify a completed order. Please refresh or contact support.";
+    submitReview.disabled = true;
+  } else if (!sellerReviewEligibility.eligible) {
+    reviewMessage.textContent = "Seller reviews are available after your order is marked completed.";
     submitReview.disabled = true;
   }
 
   submitReview.addEventListener("click", async () => {
-    if (!authData.user) return;
+    if (!authData.user || !sellerReviewEligibility.eligible) return;
 
     const reviewText = reviewInput.value.trim();
 
@@ -3319,6 +3350,14 @@ if (authData.user && review.reviewer_id === authData.user.id) {
 
     reviewMessage.textContent = "Your review was submitted!";
     reviewInput.value = "";
+    const refreshedRating = await window.tobaySupabase.rpc(
+      "get_seller_rating_summary", { p_seller_id: item.seller_id }
+    );
+    if (!refreshedRating.error && refreshedRating.data && refreshedRating.data.length) {
+      const summary = refreshedRating.data[0];
+      ratingDisplay.textContent = "⭐ " + Number(summary.average_rating).toFixed(1) +
+        " / 5 (" + summary.total_reviews + " reviews)";
+    }
 
     const { data: updatedReviews } =
       await window.tobaySupabase
@@ -5280,6 +5319,84 @@ async function loadTobayAdminDashboard(user) {
 
   await loadTobayAdminEarnings(panel);
   await loadTobayAdminInsights(panel);
+  await loadTobayAdminReviewModeration(panel);
+}
+
+async function loadTobayAdminReviewModeration(panel) {
+  let section = document.getElementById("tobayAdminReviewModeration");
+  if (!section) {
+    section = document.createElement("section");
+    section.id = "tobayAdminReviewModeration";
+    section.style.cssText = "margin-top:30px;padding:20px;border:1px solid #dce5f0;border-radius:13px;background:#f8faff;";
+    panel.appendChild(section);
+  }
+  section.replaceChildren();
+  const heading = document.createElement("h3");
+  heading.textContent = "Ratings & Reviews Moderation";
+  heading.style.color = "#102b55";
+  const intro = document.createElement("p");
+  intro.textContent = "Admin-only review queue. Remove abusive, misleading or inappropriate reviews. Deletion is permanent.";
+  intro.style.cssText = "color:#64748b;font-size:13px;";
+  const list = document.createElement("div");
+  list.textContent = "Loading reviews...";
+  section.append(heading, intro, list);
+
+  const [sellerResult, productResult] = await Promise.all([
+    supabase.from("seller_reviews").select("id,seller_id,reviewer_id,rating,review,created_at").order("created_at", { ascending: false }).limit(100),
+    supabase.from("tobay_product_reviews").select("id,listing_id,buyer_id,rating,review,created_at").order("created_at", { ascending: false }).limit(100)
+  ]);
+  const errors = [];
+  if (sellerResult.error) errors.push("Seller reviews: " + sellerResult.error.message);
+  if (productResult.error) errors.push("Product reviews: " + productResult.error.message);
+  if (errors.length) {
+    list.textContent = "Review moderation could not load all records. " + errors.join(" | ") + " Check admin SELECT permissions for both review tables.";
+    return;
+  }
+  const entries = [
+    ...(sellerResult.data || []).map(row => ({ ...row, reviewType: "Seller review", ownerId: row.seller_id, authorId: row.reviewer_id, table: "seller_reviews" })),
+    ...(productResult.data || []).map(row => ({ ...row, reviewType: "Product / service review", ownerId: row.listing_id, authorId: row.buyer_id, table: "tobay_product_reviews" }))
+  ].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  list.replaceChildren();
+  if (!entries.length) {
+    list.textContent = "There are no customer reviews to moderate.";
+    return;
+  }
+  const summary = document.createElement("p");
+  summary.style.cssText = "font-weight:700;color:#173d70;";
+  summary.textContent = entries.length + " review record(s) loaded · showing up to 100 per review type.";
+  list.appendChild(summary);
+  entries.forEach(entry => {
+    const card = document.createElement("article");
+    card.style.cssText = "padding:14px;margin:10px 0;background:#fff;border:1px solid #e1e7f0;border-radius:10px;";
+    const title = document.createElement("strong");
+    title.textContent = entry.reviewType + " · " + "⭐".repeat(Math.max(0, Math.min(5, Number(entry.rating || 0))));
+    const body = document.createElement("p");
+    body.textContent = entry.review || "(No written comment)";
+    body.style.cssText = "white-space:pre-wrap;overflow-wrap:anywhere;color:#334155;";
+    const meta = document.createElement("small");
+    meta.style.cssText = "display:block;color:#64748b;overflow-wrap:anywhere;";
+    meta.textContent = "Record: " + entry.id + " · Related ID: " + (entry.ownerId || "not available") + " · Author ID: " + (entry.authorId || "not available") + " · " + (entry.created_at ? new Date(entry.created_at).toLocaleString("en-NG") : "Date unavailable");
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "Remove review";
+    remove.style.cssText = "margin-top:10px;padding:9px 13px;border:0;border-radius:7px;background:#b42318;color:#fff;font-weight:700;cursor:pointer;";
+    remove.addEventListener("click", async () => {
+      if (!confirm("Permanently delete this review? This cannot be undone.")) return;
+      remove.disabled = true;
+      remove.textContent = "Removing...";
+      const { error } = await supabase.from(entry.table).delete().eq("id", entry.id);
+      if (error) {
+        alert("Could not remove review: " + error.message + ". Confirm the admin DELETE policy for this table.");
+        remove.disabled = false;
+        remove.textContent = "Remove review";
+        return;
+      }
+      card.remove();
+      alert("Review removed.");
+    });
+    card.append(title, body, meta, remove);
+    list.appendChild(card);
+  });
 }
 
 async function loadTobayAdminEarnings(panel) {
@@ -6194,9 +6311,21 @@ async function openTobayProductReviews(item) {
   message.setAttribute("role", "status");
   message.setAttribute("aria-live", "polite");
 
+  let productReviewEligibility = { eligible: false, error: null };
+  if (currentUser) {
+    productReviewEligibility = await tobayHasCompletedListingOrder(client, currentUser.id, item.id);
+  }
   if (!currentUser) {
-    hint.textContent = authMessage || "Sign in and place an order before submitting a review.";
+    hint.textContent = authMessage || "Sign in and complete an order before submitting a review.";
     submit.disabled = true;
+  } else if (productReviewEligibility.error) {
+    hint.textContent = "We could not verify a completed purchase. Please refresh or contact support.";
+    submit.disabled = true;
+  } else if (!productReviewEligibility.eligible) {
+    hint.textContent = "Only buyers with a completed order for this listing can submit a review.";
+    submit.disabled = true;
+  } else {
+    hint.textContent = "Verified completed-order buyer: you can submit one review for this listing.";
   }
 
   async function loadReviews() {
@@ -6214,6 +6343,11 @@ async function openTobayProductReviews(item) {
         list.textContent = "No product reviews yet.";
         return;
       }
+      const average = data.reduce((sum, row) => sum + Number(row.rating || 0), 0) / data.length;
+      const summary = document.createElement("p");
+      summary.style.cssText = "padding:10px 12px;background:#fff8e8;border:1px solid #f2dfb5;border-radius:9px;color:#704b08;font-weight:700;";
+      summary.textContent = "⭐ " + average.toFixed(1) + " / 5 · " + data.length + " review" + (data.length === 1 ? "" : "s");
+      list.appendChild(summary);
       data.forEach(row => {
         const card = document.createElement("article");
         card.style.cssText = "padding:11px;margin:8px 0;border:1px solid #e2e8f0;border-radius:9px;";
@@ -6234,8 +6368,8 @@ async function openTobayProductReviews(item) {
   }
 
   submit.addEventListener("click", async () => {
-    if (!currentUser) {
-      message.textContent = "Please sign in first.";
+    if (!currentUser || !productReviewEligibility.eligible) {
+      message.textContent = "A completed order is required before submitting a review.";
       return;
     }
     const textValue = review.value.trim();
@@ -6960,6 +7094,12 @@ section p,section li{color:var(--tobay-body)!important}
   .tobay-sort-row select{flex:1;min-width:0 !important;max-width:190px}
   #tobayCartPanel{padding:17px}
 }
+
+/* TOBAY V30 — completed-order review eligibility and admin moderation */
+#tobayAdminReviewModeration{scroll-margin-top:20px}
+#tobayAdminReviewModeration article{overflow-wrap:anywhere}
+.tobay-review-panel [role="status"]{font-size:13px;color:#315477;line-height:1.5}
+@media(max-width:600px){.tobay-review-panel{padding:15px!important}.tobay-review-panel button{max-width:100%}}
 </style>
 <button id="tobayCartLauncher" type="button" aria-label="Open shopping cart">🛒 Cart <span id="tobayCartCount">0</span></button>
 <div id="tobayCartOverlay" role="dialog" aria-modal="true" aria-labelledby="tobayCartTitle">
