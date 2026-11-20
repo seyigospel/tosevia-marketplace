@@ -556,6 +556,35 @@ img,video,iframe{max-width:100%;}
 .tobay-review-panel textarea{width:100%;min-height:90px;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
 @media(max-width:620px){.tobay-upgrade-panel{padding:12px}.tobay-track-step{font-size:10px;padding:5px 7px}}
 
+
+/* TOBAY Notification Centre controls */
+.tobay-notification-header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:15px}
+.tobay-notification-header h3{margin:0;color:#102b55;font-size:20px}
+.tobay-notification-header p{margin:4px 0 0;color:#718096;font-size:12px}
+.tobay-unread-counter{display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border:1px solid #dce6f1;border-radius:30px;background:#f4f7fb;color:#52657d;font-size:11px;font-weight:800;white-space:nowrap}
+.tobay-unread-counter.has-unread{border-color:#f2d5a8;background:#fff5e7;color:#a75a0c}
+.tobay-notification-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tobay-notification-button{padding:9px 13px;border:1px solid #19477f;border-radius:9px;background:#19477f;color:#fff;font-size:11px;font-weight:800;cursor:pointer}
+.tobay-notification-button.secondary{border-color:#d8e2ee;background:#fff;color:#19477f}
+.tobay-notification-button:disabled{opacity:.45;cursor:not-allowed}
+.tobay-notification-feedback{min-height:0;margin:7px 0;color:#187348;font-size:11px}
+.tobay-notification-feedback:empty{display:none}
+.tobay-notification-feedback.error{color:#b42318}
+.tobay-notification-card{padding:15px;border-radius:12px}
+.tobay-notification-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tobay-notification-card-top strong{color:#17375f;font-size:13px}
+.tobay-notification-state{flex:0 0 auto;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:900}
+.tobay-notification-state.unread{background:#fff0d8;color:#a85c0b}
+.tobay-notification-state.read{background:#edf2f7;color:#68778a}
+.tobay-notification-message{margin:7px 0;color:#526176;font-size:12px;line-height:1.6}
+.tobay-notification-date{color:#8290a2;font-size:10px}
+.tobay-notification-card-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.tobay-notification-link{padding:0;border:0;background:transparent;color:#175b9b;font-size:11px;font-weight:800;cursor:pointer}
+.tobay-notification-link.danger{color:#b42318}
+.tobay-notification-link:disabled{opacity:.5;cursor:wait}
+.tobay-notification-empty{padding:24px 18px;border:1px dashed #cbd8e7;border-radius:12px;background:#f8fafd;color:#718096;font-size:12px;text-align:center}
+@media(max-width:520px){.tobay-notification-actions{display:grid;grid-template-columns:1fr 1fr}.tobay-notification-actions button:last-child{grid-column:1/-1}.tobay-notification-header h3{font-size:18px}}
+
 </style>
 </head>
 <body>
@@ -4466,20 +4495,197 @@ window.openTobayProductReviews = openTobayProductReviews;
 async function loadTobayNotifications(user) {
   if (!user) return;
   let panel = document.getElementById("tobayNotificationCentre");
-  if (!panel) { panel=document.createElement("section"); panel.id="tobayNotificationCentre"; panel.className="tobay-upgrade-panel"; document.getElementById("tobayAccountForm").after(panel); }
-  panel.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><div><h3 style="margin:0;color:#102b55;">🔔 Notification Centre</h3><p style="margin:4px 0;color:#64748b;font-size:12px;">Order updates for your account</p></div><button type="button" id="tobayRefreshNotifications" style="padding:9px 12px;border:1px solid #173d70;border-radius:8px;background:#fff;color:#173d70;cursor:pointer;">Refresh</button></div><div id="tobayNotificationList">Loading notifications...</div>';
-  const refresh=async()=>{
-    const list=document.getElementById("tobayNotificationList"); if(!list)return; list.textContent="Loading notifications...";
-    const {data,error}=await supabase.from("tobay_notifications").select("id,title,message,order_status,is_read,created_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(30);
-    if(error){list.textContent="Notification history needs the supplied Supabase SQL upgrade. " + error.message;return;}
-    list.replaceChildren(); if(!data?.length){list.textContent="No notifications yet. New order updates will appear here.";return;}
-    data.forEach(n=>{const card=document.createElement("div");card.className="tobay-notice-item"+(n.is_read?"":" unread");const title=document.createElement("strong");title.textContent=n.title||"TOBAY update";const msg=document.createElement("p");msg.style.margin="5px 0";msg.textContent=n.message||"Your order has been updated.";const date=document.createElement("small");date.style.color="#64748b";date.textContent=new Date(n.created_at).toLocaleString("en-NG");card.append(title,msg,date);if(!n.is_read){const read=document.createElement("button");read.type="button";read.textContent="Mark as read";read.style.cssText="display:block;margin-top:8px;padding:7px 10px;border:1px solid #173d70;border-radius:7px;background:white;color:#173d70;cursor:pointer;";read.onclick=async()=>{read.disabled=true;const result=await supabase.from("tobay_notifications").update({is_read:true}).eq("id",n.id).eq("user_id",user.id);if(result.error){alert("Could not update notification: "+result.error.message);read.disabled=false;return;}await refresh();};card.appendChild(read);}list.appendChild(card);});
-  };
-  document.getElementById("tobayRefreshNotifications").onclick=refresh;
-  await refresh();
-  if(!window.tobayNotificationRefreshTimer) window.tobayNotificationRefreshTimer=window.setInterval(refresh,90000);
-}
+  if (!panel) {
+    panel = document.createElement("section");
+    panel.id = "tobayNotificationCentre";
+    panel.className = "tobay-upgrade-panel";
+    document.getElementById("tobayAccountForm").after(panel);
+  }
 
+  panel.innerHTML = `
+    <div class="tobay-notification-header">
+      <div>
+        <h3>🔔 Notification Centre</h3>
+        <p>Stay updated on orders and activity on your TOBAY account.</p>
+      </div>
+      <span class="tobay-unread-counter" id="tobayUnreadCounter" aria-live="polite">0 unread</span>
+    </div>
+    <div class="tobay-notification-actions">
+      <button type="button" class="tobay-notification-button" id="tobayMarkAllRead">Mark all as read</button>
+      <button type="button" class="tobay-notification-button secondary" id="tobayClearRead">Clear all read</button>
+      <button type="button" class="tobay-notification-button secondary" id="tobayRefreshNotifications">Refresh</button>
+    </div>
+    <p id="tobayNotificationActionMessage" class="tobay-notification-feedback" role="status" aria-live="polite"></p>
+    <div id="tobayNotificationList" aria-live="polite">Loading notifications...</div>
+  `;
+
+  const list = document.getElementById("tobayNotificationList");
+  const counter = document.getElementById("tobayUnreadCounter");
+  const feedback = document.getElementById("tobayNotificationActionMessage");
+  const markAllButton = document.getElementById("tobayMarkAllRead");
+  const clearReadButton = document.getElementById("tobayClearRead");
+  const refreshButton = document.getElementById("tobayRefreshNotifications");
+
+  const setFeedback = (message, isError = false) => {
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.classList.toggle("error", isError);
+  };
+
+  const refresh = async () => {
+    if (!list) return;
+    list.textContent = "Loading notifications...";
+    const { data, error } = await supabase
+      .from("tobay_notifications")
+      .select("id,title,message,order_status,is_read,created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    if (error) {
+      list.textContent = "Could not load notifications. " + error.message;
+      if (counter) counter.textContent = "— unread";
+      return;
+    }
+
+    const notifications = data || [];
+    const unreadCount = notifications.filter(item => !item.is_read).length;
+    if (counter) {
+      counter.textContent = `${unreadCount} unread`;
+      counter.classList.toggle("has-unread", unreadCount > 0);
+    }
+    if (markAllButton) markAllButton.disabled = unreadCount === 0;
+    if (clearReadButton) clearReadButton.disabled = !notifications.some(item => item.is_read);
+
+    list.replaceChildren();
+    if (!notifications.length) {
+      const empty = document.createElement("div");
+      empty.className = "tobay-notification-empty";
+      empty.textContent = "You're all caught up. New order updates and account notifications will appear here.";
+      list.appendChild(empty);
+      return;
+    }
+
+    notifications.forEach(notification => {
+      const card = document.createElement("article");
+      card.className = "tobay-notice-item tobay-notification-card" + (notification.is_read ? "" : " unread");
+
+      const top = document.createElement("div");
+      top.className = "tobay-notification-card-top";
+      const title = document.createElement("strong");
+      title.textContent = notification.title || "TOBAY update";
+      const state = document.createElement("span");
+      state.className = "tobay-notification-state" + (notification.is_read ? " read" : " unread");
+      state.textContent = notification.is_read ? "Read" : "Unread";
+      top.append(title, state);
+
+      const message = document.createElement("p");
+      message.className = "tobay-notification-message";
+      message.textContent = notification.message || "Your order has been updated.";
+
+      const date = document.createElement("small");
+      date.className = "tobay-notification-date";
+      date.textContent = notification.created_at
+        ? new Date(notification.created_at).toLocaleString("en-NG")
+        : "Date unavailable";
+
+      const actions = document.createElement("div");
+      actions.className = "tobay-notification-card-actions";
+
+      if (!notification.is_read) {
+        const readButton = document.createElement("button");
+        readButton.type = "button";
+        readButton.className = "tobay-notification-link";
+        readButton.textContent = "Mark as read";
+        readButton.addEventListener("click", async () => {
+          readButton.disabled = true;
+          const result = await supabase
+            .from("tobay_notifications")
+            .update({ is_read: true })
+            .eq("id", notification.id)
+            .eq("user_id", user.id);
+          if (result.error) {
+            setFeedback("Could not mark this notification as read: " + result.error.message, true);
+            readButton.disabled = false;
+            return;
+          }
+          setFeedback("Notification marked as read.");
+          await refresh();
+        });
+        actions.appendChild(readButton);
+      }
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "tobay-notification-link danger";
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", async () => {
+        if (!window.confirm("Delete this notification? This cannot be undone.")) return;
+        deleteButton.disabled = true;
+        const result = await supabase
+          .from("tobay_notifications")
+          .delete()
+          .eq("id", notification.id)
+          .eq("user_id", user.id);
+        if (result.error) {
+          setFeedback("Could not delete this notification: " + result.error.message, true);
+          deleteButton.disabled = false;
+          return;
+        }
+        setFeedback("Notification deleted.");
+        await refresh();
+      });
+      actions.appendChild(deleteButton);
+
+      card.append(top, message, date, actions);
+      list.appendChild(card);
+    });
+  };
+
+  if (markAllButton) markAllButton.onclick = async () => {
+    markAllButton.disabled = true;
+    const result = await supabase
+      .from("tobay_notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+    if (result.error) {
+      setFeedback("Could not mark all notifications as read: " + result.error.message, true);
+      await refresh();
+      return;
+    }
+    setFeedback("All notifications marked as read.");
+    await refresh();
+  };
+
+  if (clearReadButton) clearReadButton.onclick = async () => {
+    if (!window.confirm("Clear all read notifications? Unread notifications will be kept.")) return;
+    clearReadButton.disabled = true;
+    const result = await supabase
+      .from("tobay_notifications")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("is_read", true);
+    if (result.error) {
+      setFeedback("Could not clear read notifications: " + result.error.message, true);
+      await refresh();
+      return;
+    }
+    setFeedback("All read notifications have been cleared.");
+    await refresh();
+  };
+
+  if (refreshButton) refreshButton.onclick = async () => {
+    setFeedback("");
+    await refresh();
+  };
+
+  await refresh();
+  if (window.tobayNotificationRefreshTimer) {
+    window.clearInterval(window.tobayNotificationRefreshTimer);
+  }
+  window.tobayNotificationRefreshTimer = window.setInterval(refresh, 90000);
+}
 async function loadTobayAdminInsights(panel) {
   const grid=document.getElementById("tobayAdminMetricGrid"); if(!grid)return;
   const tables=["seller_applications","listings","tobay_orders","easybuy_orders"];
