@@ -4475,7 +4475,7 @@ async function loadMyListings() {
 
   panel.style.display = "block";
   panel.innerHTML = `
-    <div class="buyer-hero"><div><h2>Welcome to Your Buyer Dashboard</h2><p>Track your purchases, follow order updates and manage your EasyBuy instalments.</p></div><div class="buyer-mark" aria-hidden="true">🛍️</div></div>
+    <div class="buyer-hero"><div><h2>Welcome to Your Buyer Dashboard</h2><p>Track your purchases, follow order updates and manage your EasyBuy instalments.</p><button type="button" id="tobayRefreshBuyerOrders" style="margin-top:12px;padding:10px 14px;border:0;border-radius:8px;background:#173e70;color:#fff;font-weight:700;cursor:pointer">↻ Refresh order updates</button></div><div class="buyer-mark" aria-hidden="true">🛍️</div></div>
     <div class="buyer-stats" aria-label="Your order summary">
       <div class="buyer-stat"><span>Total EasyBuy Orders</span><strong id="buyerEasyTotal">—</strong></div>
       <div class="buyer-stat"><span>Pending</span><strong id="buyerEasyPending">—</strong></div>
@@ -4501,6 +4501,21 @@ async function loadMyListings() {
     <div id="tobayWishlistItems" class="buyer-order-card">Loading your saved items...</div>
   `;
 
+  const refreshBuyerOrders = document.getElementById("tobayRefreshBuyerOrders");
+  if (refreshBuyerOrders && !refreshBuyerOrders.dataset.bound) {
+    refreshBuyerOrders.dataset.bound = "1";
+    refreshBuyerOrders.addEventListener("click", async () => {
+      refreshBuyerOrders.disabled = true;
+      refreshBuyerOrders.textContent = "Refreshing...";
+      try {
+        await loadTobayBuyerOrders(user);
+        await loadTobayNormalBuyerOrders(user);
+      } finally {
+        refreshBuyerOrders.disabled = false;
+        refreshBuyerOrders.textContent = "↻ Refresh order updates";
+      }
+    });
+  }
   const container = document.getElementById("tobayBuyerOrdersList");
  const orderSearch = document.getElementById("tobayOrderSearch");
 
@@ -6654,8 +6669,9 @@ section p,section li{color:var(--tobay-body)!important}
     <div class="tobay-cart-head"><h2 id="tobayCartTitle">Your Shopping Cart</h2><button class="tobay-cart-close" id="tobayCartClose" type="button">Close</button></div>
     <div id="tobayCartItems"></div>
     <div id="tobayCartSummary"></div>
+    <div id="tobayCartCheckout"></div>
     <button id="tobayCartContinue" type="button">Continue to checkout</button>
-    <p id="tobayCartNote">Your cart is saved on this device. TOBAY's existing secure order and payment flow is used for checkout. Items are checked out individually so each seller's existing order process remains intact.</p>
+    <p id="tobayCartNote">Your cart is saved on this device. Checkout submits order requests through TOBAY's existing Supabase order system. Online card/bank payment is not active yet; no payment is collected here. Each product is sent as a separate seller order.</p>
   </aside>
 </div>
 <script id="tobay-cart-and-sort-upgrade">
@@ -6728,25 +6744,94 @@ section p,section li{color:var(--tobay-body)!important}
   document.getElementById("tobayCartLauncher")?.addEventListener("click",openCart);
   document.getElementById("tobayCartClose")?.addEventListener("click",closeCart);
   document.getElementById("tobayCartOverlay")?.addEventListener("click",e=>{if(e.target.id==="tobayCartOverlay")closeCart();});
+  function showCartCheckout(){
+    const area=document.getElementById("tobayCartCheckout");
+    if(!area)return;
+    area.replaceChildren();
+    if(!cart.length){const empty=document.createElement("p");empty.textContent="Add products to your cart before checkout.";area.appendChild(empty);return;}
+    const panel=document.createElement("section");
+    panel.style.cssText="margin:16px 0;padding:16px;border:1px solid #dce5f0;border-radius:12px;background:#f8fbff";
+    const title=document.createElement("h3");title.textContent="Secure order request";title.style.cssText="margin:0 0 6px;color:#17365f;font-size:18px";
+    const intro=document.createElement("p");intro.textContent="Sign in to place your order. TOBAY will send each product to its seller for review. No online payment will be collected at this stage.";intro.style.cssText="font-size:12px;line-height:1.55;color:#64748b;margin:0 0 12px";
+    const planLabel=document.createElement("label");planLabel.textContent="Purchase plan";planLabel.style.cssText="display:block;font-size:12px;font-weight:700;color:#334155;margin:10px 0";
+    const plan=document.createElement("select");plan.style.cssText="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:8px;background:white;color:#17365f;margin-top:6px";
+    [["buy_now","Buy Now — Full Payment"],["easybuy","EasyBuy — Instalments"]].forEach(([value,label])=>{const option=document.createElement("option");option.value=value;option.textContent=label;plan.appendChild(option)});
+    planLabel.appendChild(plan);
+    const fields=document.createElement("div");
+    const makeField=(label,placeholder,type,autocomplete)=>{const wrap=document.createElement("label");wrap.textContent=label;wrap.style.cssText="display:block;margin:11px 0;font-size:12px;font-weight:700;color:#334155";const input=document.createElement("input");input.type=type;input.placeholder=placeholder;input.autocomplete=autocomplete;input.style.cssText="display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:12px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#17365f;font:inherit";wrap.appendChild(input);fields.appendChild(wrap);return input};
+    const buyerName=makeField("Full name","Name for the order","text","name");
+    const buyerPhone=makeField("Phone number","Reachable phone number","tel","tel");
+    const address=makeField("Delivery address","Full delivery address","text","street-address");
+    const deliveryHint=document.createElement("p");deliveryHint.textContent="Delivery details are required for Buy Now orders. EasyBuy follows the existing seller-review and instalment process.";deliveryHint.style.cssText="font-size:11px;color:#64748b;line-height:1.5;margin:8px 0";
+    const message=document.createElement("p");message.setAttribute("role","status");message.setAttribute("aria-live","polite");message.style.cssText="font-size:12px;line-height:1.6;color:#17365f;margin-top:12px;white-space:pre-wrap";
+    const submit=document.createElement("button");submit.type="button";submit.textContent="Place order request";submit.style.cssText="width:100%;border:0;border-radius:9px;background:#173e70;color:white;padding:13px;font-weight:800;cursor:pointer;margin-top:8px";
+    const back=document.createElement("button");back.type="button";back.textContent="Back to cart";back.style.cssText="width:100%;border:1px solid #d7e0eb;border-radius:9px;background:#fff;color:#17365f;padding:11px;font-weight:700;cursor:pointer;margin-top:8px";
+    plan.addEventListener("change",()=>{fields.style.display=plan.value==="buy_now"?"block":"none";deliveryHint.textContent=plan.value==="buy_now"?"Enter the delivery details the seller will use to contact you.":"EasyBuy follows TOBAY's existing instalment schedule and seller-review process. Delivery arrangements are confirmed with the seller.";});
+    back.addEventListener("click",()=>{area.replaceChildren();document.getElementById("tobayCartContinue").style.display="block";});
+    submit.addEventListener("click",async()=>{
+      const client=window.tobaySupabase;
+      if(!client||!client.auth){message.textContent="Account service is not available. Please refresh the page and try again.";return;}
+      submit.disabled=true;submit.textContent="Submitting orders...";
+      try{
+        const {data:authData,error:authError}=await client.auth.getUser();
+        if(authError)throw authError;
+        if(!authData?.user){
+          message.textContent="Please sign in or create a buyer account before placing an order. Opening the account section...";
+          setTimeout(()=>{closeCart();location.hash="account";document.getElementById("account")?.scrollIntoView({behavior:"smooth"});},900);
+          return;
+        }
+        if(plan.value==="buy_now"&&(!buyerName.value.trim()||!buyerPhone.value.trim()||!address.value.trim())){
+          throw new Error("Please complete your full name, phone number and delivery address.");
+        }
+        const submitted=[],failed=[];
+        // Existing RPCs create one seller order per listing. Keep failed items in the cart.
+        for(const item of [...cart]){
+          try{
+            let result;
+            if(plan.value==="buy_now"){
+              result=await client.rpc("create_tobay_order",{
+                p_listing_id:item.id,
+                p_buyer_name:buyerName.value.trim(),
+                p_buyer_phone:buyerPhone.value.trim(),
+                p_delivery_address:address.value.trim()
+              });
+            }else{
+              result=await client.rpc("create_tobay_easybuy_order",{
+                p_listing_id:item.id,
+                p_payment_option:"easybuy"
+              });
+            }
+            if(result.error)throw result.error;
+            submitted.push({item,reference:result.data});
+          }catch(error){failed.push({item,error});}
+        }
+        const successfulIds=new Set(submitted.map(x=>String(x.item.id)));
+        cart=cart.filter(x=>!successfulIds.has(String(x.id)));
+        save();
+        const lines=submitted.map(x=>"✓ "+(x.item.title||"Product")+" — reference: "+String(x.reference));
+        failed.forEach(x=>lines.push("• "+(x.item.title||"Product")+" — not submitted: "+(x.error?.message||"Please try again.")));
+        if(submitted.length){
+          message.textContent="Order request result\n"+lines.join("\n")+"\n\nThe seller must review each order. No online payment has been collected. Track updates in your Buyer Dashboard.";
+        }else{
+          message.textContent="No orders were submitted.\n"+lines.join("\n");
+        }
+        if(!cart.length){
+          const done=document.createElement("p");done.textContent="Your successfully submitted products have been removed from the cart.";done.style.cssText="font-size:11px;color:#16804a;margin-top:8px";panel.appendChild(done);
+        }
+        submit.textContent="Submit remaining products";
+      }catch(error){
+        message.textContent="Checkout could not continue: "+(error?.message||"Please try again.");
+        submit.textContent="Place order request";
+      }finally{submit.disabled=false;}
+    });
+    panel.append(title,intro,planLabel,fields,deliveryHint,submit,back,message);
+    area.appendChild(panel);
+    fields.style.display=plan.value==="buy_now"?"block":"none";
+    document.getElementById("tobayCartContinue").style.display="none";
+  }
   document.getElementById("tobayCartContinue")?.addEventListener("click",()=>{
-    if(!cart.length){alert("Your cart is empty. Add a product before continuing.");return;}
-    const item=cart[0];
-    closeCart();
-    location.hash="explore";
-    const search=document.getElementById("marketplaceSearch");
-    const category=document.getElementById("marketplaceCategory");
-    const allTab=document.querySelector('.type-tabs .tab[data-type="all"]');
-    if(search)search.value="";
-    if(category)category.value="";
-    if(allTab)allTab.click();
-    if(typeof window.updateListings==="function")window.updateListings();
-    setTimeout(()=>{
-      const cards=[...document.querySelectorAll("#listingGrid .listing")];
-      const card=cards.find(c=>c.dataset && c.dataset.title===item.title);
-      const button=card?.querySelector("button");
-      if(button)button.click();
-      else alert("This product may no longer be published. Please find it in the marketplace and open its details.");
-    },500);
+    if(!cart.length){alert("Your cart is empty. Add a product before checkout.");return;}
+    showCartCheckout();
   });
   // Sort the rendered marketplace cards without changing the underlying Supabase data.
   function positionCartForScreen(){
