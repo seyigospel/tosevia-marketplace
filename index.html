@@ -2052,6 +2052,15 @@ footer{background:#102f30!important;color:#dce8e2!important}footer a:hover{color
 <label class="marketplace-search-wrap" for="marketplaceSearch"><span aria-hidden="true">⌕</span><input id="marketplaceSearch" placeholder="Search products, services or keywords..." type="search"/></label>
 <label class="marketplace-category-wrap" for="marketplaceCategory"><span aria-hidden="true">▦</span><select id="marketplaceCategory"><option value="">All Categories</option></select></label>
 </div>
+<div class="tobay-sort-row" style="display:flex;justify-content:flex-end;align-items:center;gap:9px;margin:10px 0 4px;flex-wrap:wrap;">
+  <label for="tobaySortListings" style="font-size:13px;font-weight:700;color:#29415f;">Sort listings</label>
+  <select id="tobaySortListings" aria-label="Sort marketplace listings" style="min-width:175px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#18345b;font:inherit;">
+    <option value="newest">Newest first</option>
+    <option value="price-low">Price: low to high</option>
+    <option value="price-high">Price: high to low</option>
+    <option value="name">Name: A to Z</option>
+  </select>
+</div>
 <div class="marketplace-filter-row">
 <div aria-label="Filter marketplace listings" class="type-tabs">
 <button class="tab active" data-type="all" type="button">All Listings</button>
@@ -2301,6 +2310,9 @@ function updateListings() {
 
     const card = document.createElement("article");
     card.className = "listing";
+    card.dataset.price = item.price == null ? "" : String(item.price);
+    card.dataset.title = item.title || "";
+    card.dataset.listingType = item.listing_type || "";
 
     const imageArea = document.createElement("div");
     imageArea.className = "listing-art";
@@ -2771,7 +2783,21 @@ document.body.appendChild(modal);
         alert("Customer reviews are still loading. Please refresh the page and try again.");
       }
     });
-    actionRow.append(saveButton, reviewButton);
+    const cartButton = document.createElement("button");
+    cartButton.type = "button";
+    cartButton.textContent = item.listing_type === "product" ? "＋ Add to Cart" : "Service enquiry";
+    cartButton.style.cssText = "padding:9px 12px;border:1px solid #c52d3a;border-radius:8px;background:#fff;color:#a91f2b;cursor:pointer;font-weight:700;";
+    if (item.listing_type === "product") {
+      cartButton.addEventListener("click", () => {
+        if (typeof window.tobayAddToCart === "function") window.tobayAddToCart(item);
+      });
+    } else {
+      cartButton.disabled = true;
+      cartButton.style.opacity = ".65";
+      cartButton.style.cursor = "not-allowed";
+      cartButton.title = "Services are arranged directly with the seller.";
+    }
+    actionRow.append(saveButton, reviewButton, cartButton);
     body.appendChild(actionRow);
 
     card.append(imageArea, body);
@@ -6578,6 +6604,156 @@ section p,section li{color:var(--tobay-body)!important}
  const originalLoad=window.loadTobayMarketplace;
  if(typeof originalLoad==='function')window.loadTobayMarketplace=async function(){const result=await originalLoad.apply(this,arguments);window.tobayMarketplaceListings=window.tobayMarketplaceListings||[];updateHomeShowcases();return result};
  setTimeout(()=>{const source=window.tobayMarketplaceListings;if(Array.isArray(source)&&source.length)updateHomeShowcases()},1400);
+})();
+</script>
+
+
+<style id="tobay-cart-and-sort-styles">
+#tobayCartLauncher{position:fixed;right:20px;bottom:22px;z-index:9997;border:0;border-radius:999px;padding:14px 19px;background:#b92332;color:#fff;font-weight:800;box-shadow:0 9px 28px rgba(15,35,65,.25);cursor:pointer}
+#tobayCartLauncher span{display:inline-flex;min-width:22px;height:22px;align-items:center;justify-content:center;margin-left:7px;border-radius:50%;background:#fff;color:#a51f2b;font-size:12px}
+#tobayCartOverlay{position:fixed;inset:0;z-index:9998;background:rgba(8,20,40,.55);display:none;justify-content:flex-end}
+#tobayCartPanel{width:min(470px,100%);height:100%;overflow:auto;background:#fff;padding:22px;box-shadow:-10px 0 35px rgba(0,0,0,.18)}
+.tobay-cart-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #e5eaf1;padding-bottom:14px}
+.tobay-cart-head h2{margin:0;color:#17365f;font-size:23px}
+.tobay-cart-close{border:0;border-radius:8px;background:#edf2f8;color:#17365f;padding:9px 12px;font-weight:700;cursor:pointer}
+.tobay-cart-item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:15px 0;border-bottom:1px solid #e8edf3}
+.tobay-cart-item strong{display:block;color:#1c3558;margin-bottom:5px}
+.tobay-cart-item small{color:#61738c}
+.tobay-cart-item button{border:1px solid #d7e0eb;border-radius:7px;background:#fff;color:#a51f2b;padding:7px 9px;cursor:pointer}
+#tobayCartSummary{padding:16px 0;color:#17365f;font-weight:800}
+#tobayCartContinue{width:100%;border:0;border-radius:9px;background:#173e70;color:#fff;padding:13px;font-weight:800;cursor:pointer}
+#tobayCartNote{font-size:12px;line-height:1.55;color:#68788e;margin-top:10px}
+@media(max-width:600px){#tobayCartLauncher{right:12px;bottom:12px;padding:12px 15px}#tobayCartPanel{padding:17px}}
+</style>
+<button id="tobayCartLauncher" type="button" aria-label="Open shopping cart">🛒 Cart <span id="tobayCartCount">0</span></button>
+<div id="tobayCartOverlay" role="dialog" aria-modal="true" aria-labelledby="tobayCartTitle">
+  <aside id="tobayCartPanel">
+    <div class="tobay-cart-head"><h2 id="tobayCartTitle">Your Shopping Cart</h2><button class="tobay-cart-close" id="tobayCartClose" type="button">Close</button></div>
+    <div id="tobayCartItems"></div>
+    <div id="tobayCartSummary"></div>
+    <button id="tobayCartContinue" type="button">Continue to checkout</button>
+    <p id="tobayCartNote">Your cart is saved on this device. TOBAY's existing secure order and payment flow is used for checkout. Items are checked out individually so each seller's existing order process remains intact.</p>
+  </aside>
+</div>
+<script id="tobay-cart-and-sort-upgrade">
+(function(){
+  "use strict";
+  const CART_KEY = "tobay_global_cart_v1";
+  const readCart = () => {
+    try {
+      const value = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+      return Array.isArray(value) ? value.filter(x => x && x.id && x.listing_type === "product") : [];
+    } catch (_) { return []; }
+  };
+  let cart = readCart();
+  const money = item => {
+    if (item.price === null || item.price === undefined || item.price === "") return "Price not specified";
+    const amount = Number(item.price);
+    return (item.currency || "NGN") + " " + (Number.isFinite(amount) ? amount.toLocaleString() : String(item.price));
+  };
+  const save = () => {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (_) {}
+    render();
+  };
+  function render(){
+    const count = document.getElementById("tobayCartCount");
+    const list = document.getElementById("tobayCartItems");
+    const summary = document.getElementById("tobayCartSummary");
+    if(count) count.textContent = String(cart.length);
+    if(!list || !summary) return;
+    list.replaceChildren();
+    if(!cart.length){
+      const empty=document.createElement("p");
+      empty.textContent="Your cart is empty. Browse the marketplace and add products you like.";
+      empty.style.cssText="padding:24px 4px;color:#64748b;line-height:1.6";
+      list.appendChild(empty);
+      summary.textContent="";
+      return;
+    }
+    cart.forEach((item,index)=>{
+      const row=document.createElement("div");row.className="tobay-cart-item";
+      const info=document.createElement("div");
+      const title=document.createElement("strong");title.textContent=item.title||"Marketplace product";
+      const detail=document.createElement("small");detail.textContent=(item.category||"Product")+" · "+money(item);
+      info.append(title,detail);
+      const remove=document.createElement("button");remove.type="button";remove.textContent="Remove";
+      remove.addEventListener("click",()=>{cart.splice(index,1);save();});
+      row.append(info,remove);list.appendChild(row);
+    });
+    const currencies=[...new Set(cart.map(x=>x.currency||"NGN"))];
+    if(currencies.length===1 && cart.every(x=>x.price!==null && x.price!==undefined && x.price!=="")){
+      const total=cart.reduce((sum,x)=>sum+Number(x.price||0),0);
+      summary.textContent="Cart total: "+currencies[0]+" "+total.toLocaleString();
+    } else {
+      summary.textContent=""+cart.length+" product"+(cart.length===1?"":"s")+" · Prices are confirmed at checkout";
+    }
+  }
+  window.tobayAddToCart = function(item){
+    if(!item || item.listing_type!=="product") return;
+    if(cart.some(x=>String(x.id)===String(item.id))){
+      const button=document.getElementById("tobayCartLauncher");
+      if(button){const old=button.textContent;button.textContent="✓ Already in cart";setTimeout(()=>button.innerHTML='🛒 Cart <span id="tobayCartCount">'+cart.length+'</span>',1300);}
+      return;
+    }
+    cart.push({id:item.id,title:item.title||"Marketplace product",listing_type:"product",category:item.category||"",price:item.price??null,currency:item.currency||"NGN",seller_id:item.seller_id||null});
+    save();
+    const launcher=document.getElementById("tobayCartLauncher");
+    if(launcher){launcher.style.transform="scale(1.04)";setTimeout(()=>launcher.style.transform="",180);}
+  };
+  function openCart(){const overlay=document.getElementById("tobayCartOverlay");if(overlay){render();overlay.style.display="flex";document.body.style.overflow="hidden";}}
+  function closeCart(){const overlay=document.getElementById("tobayCartOverlay");if(overlay){overlay.style.display="none";document.body.style.overflow="";}}
+  document.getElementById("tobayCartLauncher")?.addEventListener("click",openCart);
+  document.getElementById("tobayCartClose")?.addEventListener("click",closeCart);
+  document.getElementById("tobayCartOverlay")?.addEventListener("click",e=>{if(e.target.id==="tobayCartOverlay")closeCart();});
+  document.getElementById("tobayCartContinue")?.addEventListener("click",()=>{
+    if(!cart.length){alert("Your cart is empty. Add a product before continuing.");return;}
+    const item=cart[0];
+    closeCart();
+    location.hash="explore";
+    const search=document.getElementById("marketplaceSearch");
+    const category=document.getElementById("marketplaceCategory");
+    const allTab=document.querySelector('.type-tabs .tab[data-type="all"]');
+    if(search)search.value="";
+    if(category)category.value="";
+    if(allTab)allTab.click();
+    if(typeof window.updateListings==="function")window.updateListings();
+    setTimeout(()=>{
+      const cards=[...document.querySelectorAll("#listingGrid .listing")];
+      const card=cards.find(c=>c.dataset && c.dataset.title===item.title);
+      const button=card?.querySelector("button");
+      if(button)button.click();
+      else alert("This product may no longer be published. Please find it in the marketplace and open its details.");
+    },500);
+  });
+  // Sort the rendered marketplace cards without changing the underlying Supabase data.
+  function installSort(){
+    const select=document.getElementById("tobaySortListings");
+    const grid=document.getElementById("listingGrid");
+    if(!select||!grid||select.dataset.ready==="1")return;
+    select.dataset.ready="1";
+    const sortCards=()=>{
+      const cards=[...grid.querySelectorAll(".listing")];
+      const mode=select.value;
+      cards.sort((a,b)=>{
+        if(mode==="name")return (a.dataset.title||"").localeCompare(b.dataset.title||"");
+        if(mode==="price-low"||mode==="price-high"){
+          const av=Number(a.dataset.price),bv=Number(b.dataset.price);
+          const aMissing=a.dataset.price==="",bMissing=b.dataset.price==="";
+          if(aMissing!==bMissing)return aMissing?1:-1;
+          return mode==="price-low"?av-bv:bv-av;
+        }
+        // Newest first is already the default order returned by Supabase.
+        return 0;
+      });
+      cards.forEach(card=>grid.appendChild(card));
+    };
+    select.addEventListener("change",sortCards);
+    const observer=new MutationObserver(()=>{if(select.value!=="newest")sortCards();});
+    observer.observe(grid,{childList:true});
+  }
+  render();
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",installSort,{once:true});
+  else installSort();
 })();
 </script>
 
