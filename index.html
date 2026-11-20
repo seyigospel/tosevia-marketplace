@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace</title>
+<title>TOBAY | Global Marketplace — Version 26</title>
 <style>
 :root {
   --navy:#102b55;
@@ -893,6 +893,19 @@ footer a,footer p,footer strong{color:#eee6fa}
 /* prevent horizontal page scrolling on narrow devices */
 html,body{max-width:100%;overflow-x:hidden}
 img,svg{max-width:100%}
+
+
+/* TOBAY Version 26 — seller order completion workflow */
+#tobaySellerDashboard [data-seller-order] button,
+#tobaySellerDashboard [data-tobay-buy-now-order] button{min-height:40px;white-space:normal}
+#tobaySellerDashboard [data-seller-order] p,
+#tobaySellerDashboard [data-tobay-buy-now-order] p{overflow-wrap:anywhere}
+@media(max-width:540px){
+  #tobaySellerDashboard [data-seller-order],
+  #tobaySellerDashboard [data-tobay-buy-now-order]{padding:14px!important}
+  #tobaySellerDashboard [data-seller-order] button,
+  #tobaySellerDashboard [data-tobay-buy-now-order] button{width:100%;margin:8px 0 0!important}
+}
 
 </style>
 <style id="tobay-professional-homepage">
@@ -3608,10 +3621,12 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
 
 <hr style="margin:25px 0;">
 <h3>Incoming EasyBuy Orders</h3>
+<p class="tobay-sub" style="margin:0 0 12px;color:#718096;font-size:12px;">Review new requests, accept or reject pending orders, then mark accepted orders completed after fulfilment.</p>
 <div id="tobaySellerOrders">Loading your orders...</div>
 
 <hr style="margin:25px 0;">
 <h3>Incoming Buy Now Orders</h3>
+<p class="tobay-sub" style="margin:0 0 12px;color:#718096;font-size:12px;">Review buyer and delivery details, choose the payment arrangement when accepting, and mark the order completed only after fulfilment.</p>
 <div id="tobaySellerBuyNowOrders">Loading Buy Now orders...</div>
   `;
 const saveBusinessButton = document.getElementById("tobaySaveBusinessProfile");
@@ -3941,6 +3956,7 @@ async function loadTobaySellerOrders() {
       <button type="button" data-status="all">All Orders</button>
       <button type="button" data-status="pending">Pending</button>
       <button type="button" data-status="accepted">Accepted</button>
+      <button type="button" data-status="completed">Completed</button>
       <button type="button" data-status="rejected">Rejected</button>
       <button type="button" data-status="cancelled">Cancelled</button>
     </div>
@@ -3977,6 +3993,7 @@ async function loadTobaySellerOrders() {
   const pendingOrders = orderList.filter(order => order.order_status === "pending").length;
   const acceptedOrders = orderList.filter(order => order.order_status === "accepted").length;
   const rejectedOrders = orderList.filter(order => order.order_status === "rejected").length;
+  const completedOrders = orderList.filter(order => order.order_status === "completed").length;
 
   summary.innerHTML = `
     <div style="padding:15px;background:#eaf1ff;border-radius:8px;">
@@ -3990,6 +4007,10 @@ async function loadTobaySellerOrders() {
     <div style="padding:15px;background:#e2f7e9;border-radius:8px;">
       <strong>Accepted</strong>
       <h2>${acceptedOrders}</h2>
+    </div>
+    <div style="padding:15px;background:#eeeaff;border-radius:8px;">
+      <strong>Completed</strong>
+      <h2>${completedOrders}</h2>
     </div>
     <div style="padding:15px;background:#ffe8e8;border-radius:8px;">
       <strong>Rejected</strong>
@@ -4111,6 +4132,37 @@ async function loadTobaySellerOrders() {
       });
     }
 
+    if (order.order_status === "accepted") {
+      const completeButton = document.createElement("button");
+      completeButton.type = "button";
+      completeButton.textContent = "Mark Order Completed";
+      completeButton.style.cssText = "margin:10px 8px 0 0;padding:10px 15px;border:0;border-radius:7px;background:#6653b7;color:#fff;font-weight:700;cursor:pointer;";
+      const completionNote = document.createElement("p");
+      completionNote.style.cssText = "margin-top:8px;font-size:11px;color:#718096;";
+      completionNote.textContent = "Use this only after the order has been fulfilled. This does not verify or collect payment.";
+      completeButton.addEventListener("click", async () => {
+        if (!confirm("Mark this EasyBuy order as completed? Only do this after fulfilling the order.")) return;
+        completeButton.disabled = true;
+        completeButton.textContent = "Updating...";
+        const { data: updated, error: updateError } = await supabase
+          .from("easybuy_orders")
+          .update({ order_status: "completed" })
+          .eq("id", order.id)
+          .eq("seller_id", user.id)
+          .select("id")
+          .maybeSingle();
+        if (updateError || !updated) {
+          alert("Could not complete this order. Your Supabase seller update policy may not permit this action. " + (updateError?.message || ""));
+          completeButton.disabled = false;
+          completeButton.textContent = "Mark Order Completed";
+          return;
+        }
+        await loadTobaySellerOrders();
+        await loadTobaySellerOrderOverview();
+      });
+      card.append(completeButton, completionNote);
+    }
+
     list.appendChild(card);
 
     supabase.rpc("get_tobay_order_buyer_name", {
@@ -4177,6 +4229,34 @@ async function loadTobayNormalSellerOrders() {
         instructions.textContent = "Buyer instructions: " + order.seller_payment_instructions;
         card.appendChild(instructions);
       }
+      const completeButton = document.createElement("button");
+      completeButton.type = "button";
+      completeButton.textContent = "Mark Order Completed";
+      completeButton.style.cssText = "margin:10px 8px 0 0;padding:10px 15px;border:0;border-radius:7px;background:#6653b7;color:#fff;font-weight:700;cursor:pointer;";
+      const completionNote = document.createElement("p");
+      completionNote.style.cssText = "margin-top:8px;font-size:11px;color:#718096;";
+      completionNote.textContent = "Use this only after delivery or fulfilment. Marking an order complete does not verify payment.";
+      completeButton.addEventListener("click", async () => {
+        if (!confirm("Mark this Buy Now order as completed? Only do this after fulfilling the order.")) return;
+        completeButton.disabled = true;
+        completeButton.textContent = "Updating...";
+        const { data: updated, error: updateError } = await supabase
+          .from("tobay_orders")
+          .update({ order_status: "completed" })
+          .eq("id", order.id)
+          .eq("seller_id", user.id)
+          .select("id")
+          .maybeSingle();
+        if (updateError || !updated) {
+          alert("Could not complete this order. Your Supabase seller update policy may not permit this action. " + (updateError?.message || ""));
+          completeButton.disabled = false;
+          completeButton.textContent = "Mark Order Completed";
+          return;
+        }
+        await loadTobayNormalSellerOrders();
+        await loadTobaySellerOrderOverview();
+      });
+      card.append(completeButton, completionNote);
     }
 
     if (order.order_status === "pending") {
