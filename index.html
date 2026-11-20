@@ -2069,6 +2069,47 @@ footer{background:#102f30!important;color:#dce8e2!important}footer a:hover{color
     </p>
 </div>
 </section>
+
+<section class="section tobay-home-additions" id="popular-products">
+ <div class="container">
+  <div class="section-head"><div><span class="discover-overline">HANDPICKED FROM THE MARKETPLACE</span><h2>Popular Products</h2><p>Explore published products currently available on TOBAY.</p></div><a class="btn btn-orange" href="#explore">View all products</a></div>
+  <div class="tobay-showcase-grid" id="tobayFeaturedProducts"><p class="tobay-showcase-empty">Loading published products…</p></div>
+ </div>
+</section>
+<section class="section tobay-home-additions" id="featured-services">
+ <div class="container">
+  <div class="section-head"><div><span class="discover-overline">SKILLS • EXPERTISE • SUPPORT</span><h2>Featured Services</h2><p>Discover services published by TOBAY sellers.</p></div><a class="btn btn-orange" href="#explore">View all services</a></div>
+  <div class="tobay-showcase-grid" id="tobayFeaturedServices"><p class="tobay-showcase-empty">Loading published services…</p></div>
+ </div>
+</section>
+<section class="section tobay-home-additions" id="seller-community">
+ <div class="container tobay-community-panel">
+  <div><span class="discover-overline">GROW WITH TOBAY</span><h2>Meet the Marketplace Community</h2><p>Discover products and services shared by independent sellers and businesses. Browse current listings or create your seller account to showcase what you offer.</p><a class="btn btn-orange" href="#sell">Join as a seller</a></div>
+  <div class="tobay-community-stat"><strong id="tobaySellerCount">—</strong><span>seller accounts represented in published listings</span></div>
+ </div>
+</section>
+<section class="section tobay-home-additions" id="how-it-works">
+ <div class="container">
+  <div class="section-head"><div><span class="discover-overline">A SIMPLE WAY TO GET STARTED</span><h2>How TOBAY Works</h2><p>Three simple steps to discover and connect.</p></div></div>
+  <div class="tobay-steps-grid">
+   <article><span>01</span><div class="tobay-step-icon">🔎</div><h3>Discover</h3><p>Search products and services or browse the marketplace categories.</p></article>
+   <article><span>02</span><div class="tobay-step-icon">🛍️</div><h3>Explore</h3><p>Review listing details, prices and information provided by sellers.</p></article>
+   <article><span>03</span><div class="tobay-step-icon">🤝</div><h3>Connect</h3><p>Use the available listing details to contact sellers and discuss next steps.</p></article>
+  </div>
+ </div>
+</section>
+<section class="section tobay-home-additions" id="why-tobay">
+ <div class="container">
+  <div class="section-head"><div><span class="discover-overline">YOUR WORLD. YOUR MARKETPLACE.</span><h2>Why Explore TOBAY?</h2><p>One place to discover a wide range of marketplace opportunities.</p></div></div>
+  <div class="tobay-reasons-grid">
+   <article><b>🌍</b><h3>Wide discovery</h3><p>Explore listings across different categories and locations.</p></article>
+   <article><b>🧭</b><h3>Easy browsing</h3><p>Search and filter products and services to find relevant listings.</p></article>
+   <article><b>🤝</b><h3>Seller connections</h3><p>Discover businesses and independent professionals on the marketplace.</p></article>
+   <article><b>📩</b><h3>Support when needed</h3><p>Contact TOBAY Admin for account and marketplace assistance.</p></article>
+  </div>
+ </div>
+</section>
+
 <section class="section" id="sell">
 <div class="container">
 <div class="seller-banner">
@@ -6412,6 +6453,81 @@ body :where(p,li,label,small,.muted,.subtitle,.description){opacity:1!important;
   }
 }
 </style>
+
+
+<style id="tobay-home-additions-style">
+.tobay-home-additions{background:#f7f8fc}
+.tobay-home-additions:nth-of-type(even){background:#fff}
+.tobay-showcase-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tobay-showcase-grid .listing{height:100%;margin:0}
+.tobay-showcase-empty{grid-column:1/-1;color:#475569;background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:20px}
+.tobay-community-panel{display:grid;grid-template-columns:1fr minmax(180px,260px);align-items:center;gap:28px;background:linear-gradient(120deg,#172554,#312e81 65%,#6d28d9);color:#fff;padding:clamp(24px,4vw,42px);border-radius:20px}
+.tobay-community-panel h2,.tobay-community-panel p{color:#fff}
+.tobay-community-stat{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:16px}
+.tobay-community-stat strong{font-size:42px;color:#fff;line-height:1.1}
+.tobay-community-stat span{font-size:13px;color:#e0e7ff;margin-top:8px}
+.tobay-steps-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tobay-steps-grid article,.tobay-reasons-grid article{position:relative;background:#fff;border:1px solid #dbe2ef;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(23,37,84,.05)}
+.tobay-steps-grid article>span{position:absolute;right:18px;top:15px;color:#dc2626;font-weight:900;font-size:13px}
+.tobay-step-icon,.tobay-reasons-grid article>b{display:grid;place-items:center;width:46px;height:46px;background:#eef2ff;border-radius:13px;font-size:24px;margin-bottom:13px}
+.tobay-steps-grid h3,.tobay-reasons-grid h3{color:#172554;margin:0 0 7px}
+.tobay-steps-grid p,.tobay-reasons-grid p{color:#475569;margin:0;line-height:1.6;font-size:14px}
+.tobay-reasons-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.tobay-reasons-grid article>b{font-size:22px}
+@media(max-width:800px){.tobay-showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tobay-reasons-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.tobay-community-panel{grid-template-columns:1fr;gap:18px}.tobay-community-stat{padding:15px}.tobay-steps-grid{grid-template-columns:1fr;gap:10px}.tobay-steps-grid article{padding:18px}.tobay-home-additions .section-head{align-items:flex-start;gap:12px}.tobay-home-additions .section-head>.btn{font-size:11px;padding:9px 10px;white-space:nowrap}}
+</style>
+
+
+<script id="tobay-home-additions-data">
+(function(){
+ function updateHomeShowcases(){
+  const products=document.getElementById('tobayFeaturedProducts');
+  const services=document.getElementById('tobayFeaturedServices');
+  const sellerCount=document.getElementById('tobaySellerCount');
+  const data=Array.isArray(window.tobayMarketplaceListings)?window.tobayMarketplaceListings:[];
+  if(!products||!services)return;
+  const source=document.getElementById('listingGrid');
+  function fill(target,type){
+   const selected=data.filter(x=>String(x.listing_type||'').toLowerCase()===type).slice(0,4);
+   target.replaceChildren();
+   if(!selected.length){
+    const msg=document.createElement('p');msg.className='tobay-showcase-empty';
+    msg.textContent='No published '+(type==='product'?'products':'services')+' yet. Check back as sellers add listings.';
+    target.appendChild(msg);return;
+   }
+   selected.forEach(item=>{
+    const original=source&&Array.from(source.children).find(card=>card.querySelector('h3')?.textContent===item.title);
+    if(original){target.appendChild(original.cloneNode(true));return;}
+    const card=document.createElement('article');card.className='listing';
+    const art=document.createElement('div');art.className='listing-art';art.textContent=type==='service'?'🧰':'🛍️';
+    if(Array.isArray(item.image_urls)&&item.image_urls[0]){
+      const img=document.createElement('img');img.src='https://ydjjwftkhqqgyzbsfgmh.supabase.co/storage/v1/object/public/tobay-listings/'+item.image_urls[0].split('/').slice(-2).join('/');
+      img.alt=item.title||'Marketplace listing';img.loading='lazy';img.style.cssText='width:100%;height:190px;object-fit:cover';art.textContent='';art.appendChild(img);
+    }
+    const body=document.createElement('div');body.className='listing-body';
+    const tag=document.createElement('span');tag.className='tag';tag.textContent=type==='service'?'Service':'Product';
+    const title=document.createElement('h3');title.textContent=item.title||'Marketplace listing';
+    const desc=document.createElement('p');desc.textContent=item.description||'View listing details in the marketplace.';
+    const price=document.createElement('strong');price.textContent=item.price!=null?(item.currency||'')+' '+Number(item.price).toLocaleString():'Price not specified';
+    const btn=document.createElement('a');btn.className='btn btn-orange';btn.href='#explore';btn.textContent='View listing';
+    body.append(tag,title,desc,price,btn);card.append(art,body);target.appendChild(card);
+   });
+  }
+  fill(products,'product');fill(services,'service');
+  if(sellerCount)sellerCount.textContent=new Set(data.map(x=>x.seller_id).filter(Boolean)).size.toLocaleString();
+ }
+ window.updateTobayHomeShowcases=updateHomeShowcases;
+ const grid=document.getElementById('listingGrid');
+ if(grid)new MutationObserver(updateHomeShowcases).observe(grid,{childList:true,subtree:true});
+ document.addEventListener('DOMContentLoaded',updateHomeShowcases);
+ const originalLoad=window.loadTobayMarketplace;
+ if(typeof originalLoad==='function'){
+  window.loadTobayMarketplace=async function(){const result=await originalLoad.apply(this,arguments);updateHomeShowcases();return result;};
+ }
+ setTimeout(updateHomeShowcases,1200);
+})();
+</script>
 
 </body>
 </html>
