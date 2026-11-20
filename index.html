@@ -6387,5 +6387,31 @@ body :where(p,li,label,small,.muted,.subtitle,.description){opacity:1!important;
 }
 </style>
 
+
+<style id="tobay-phone-navigation-red-text-v19">
+/* Change navigation text to red on phones only; keep layout and desktop unchanged. */
+@media (max-width:760px){
+  header .nav a,header .nav a:visited{
+    color:#ff4545!important;
+    font-weight:800!important;
+    text-shadow:none!important;
+  }
+  header .nav a:hover,header .nav a:focus{
+    color:#fecaca!important;
+  }
+  .tobay-quick-nav a,.tobay-quick-nav a:visited{
+    color:#c1121f!important;
+    font-weight:800!important;
+  }
+  .tobay-quick-nav a:first-child,
+  .tobay-quick-nav a:hover,.tobay-quick-nav a:focus{
+    color:#a30d19!important;
+  }
+  header .nav .btn,header .btn{
+    color:#fff!important;
+  }
+}
+</style>
+
 </body>
 </html>
