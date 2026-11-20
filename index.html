@@ -2088,6 +2088,14 @@ footer{background:#102f30!important;color:#dce8e2!important}footer a:hover{color
   <div class="tobay-community-stat"><strong id="tobaySellerCount">—</strong><span>seller accounts represented in published listings</span></div>
  </div>
 </section>
+<section class="section tobay-home-additions" id="new-arrivals">
+ <div class="container"><div class="section-head"><div><span class="discover-overline">FRESH ON TOBAY</span><h2>New Arrivals</h2><p>The latest published products and services from the marketplace.</p></div><a class="btn btn-orange" href="#explore">Explore marketplace</a></div>
+ <div class="tobay-showcase-grid" id="tobayNewArrivals"><p class="tobay-showcase-empty">Loading new arrivals…</p></div></div>
+</section>
+<section class="section tobay-home-additions" id="featured-sellers">
+ <div class="container"><div class="section-head"><div><span class="discover-overline">MEET THE PEOPLE BEHIND THE LISTINGS</span><h2>Featured Sellers</h2><p>Discover independent sellers represented by published marketplace listings.</p></div><a class="btn btn-orange" href="#sell">Become a seller</a></div>
+ <div class="tobay-sellers-grid" id="tobayFeaturedSellers"><p class="tobay-showcase-empty">Loading seller community…</p></div></div>
+</section>
 <section class="section tobay-home-additions" id="how-it-works">
  <div class="container">
   <div class="section-head"><div><span class="discover-overline">A SIMPLE WAY TO GET STARTED</span><h2>How TOBAY Works</h2><p>Three simple steps to discover and connect.</p></div></div>
@@ -2212,6 +2220,7 @@ function showNotice(message) {
 
 
 let tobayMarketplaceListings = [];
+window.tobayMarketplaceListings = tobayMarketplaceListings;
 
 
 async function loadTobayMarketplace() {
@@ -2233,6 +2242,7 @@ async function loadTobayMarketplace() {
     }
 
     tobayMarketplaceListings = data || [];
+    window.tobayMarketplaceListings = tobayMarketplaceListings;
 
     const categories = [...new Set(
       tobayMarketplaceListings
@@ -6483,53 +6493,91 @@ body :where(p,li,label,small,.muted,.subtitle,.description){opacity:1!important;
 </style>
 
 
+
+<style id="tobay-v22-professional-contrast">
+/* Consistent, high-contrast typography across desktop and mobile. */
+:root{--tobay-heading:#14213d;--tobay-body:#334155;--tobay-red:#c81e35;--tobay-blue:#173b70;--tobay-line:#dbe3ee}
+body{color:var(--tobay-body)!important}
+section h1,section h2,section h3,.section-title{color:var(--tobay-heading)!important}
+section p,section li{color:var(--tobay-body)!important}
+.tobay-community-panel{background:linear-gradient(125deg,#102a52 0%,#173b70 62%,#29245d 100%)!important;color:#fff!important;border-radius:20px!important;padding:30px!important}
+.tobay-community-panel h2,.tobay-community-panel p,.tobay-community-panel .tobay-community-kicker{color:#fff!important}
+.tobay-community-panel .tobay-community-kicker b{color:#ff4058!important}
+.tobay-community-panel .tobay-community-stat strong{color:#ff4058!important}
+.tobay-community-panel .tobay-community-stat span{color:#fff!important}
+.tobay-home-additions .section-head h2{color:#14213d!important}
+.tobay-home-additions .section-head p{color:#475569!important}
+.tobay-showcase-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tobay-showcase-grid .listing{height:100%;border:1px solid #dbe3ee!important;border-radius:15px!important;overflow:hidden;background:#fff!important;box-shadow:0 7px 22px rgba(20,33,61,.07)!important}
+.tobay-showcase-grid .listing h3{color:#14213d!important;font-size:16px!important;line-height:1.35!important}
+.tobay-showcase-grid .listing p{color:#475569!important}
+.tobay-showcase-grid .listing strong{color:#b42332!important}
+.tobay-showcase-grid .listing .btn{background:#c81e35!important;color:#fff!important}
+.tobay-sellers-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.tobay-seller-card{background:#fff;border:1px solid #dbe3ee;border-radius:15px;padding:18px;box-shadow:0 6px 18px rgba(20,33,61,.06);min-width:0}
+.tobay-seller-avatar{width:46px;height:46px;display:grid;place-items:center;border-radius:13px;background:#eaf0fb;color:#173b70;font-size:22px;margin-bottom:12px}
+.tobay-seller-card h3{font-size:16px;color:#14213d;margin:0 0 5px}
+.tobay-seller-card p{font-size:13px;color:#526174;margin:0 0 13px}
+.tobay-seller-card button{width:100%;border:0;border-radius:8px;padding:11px;background:#173b70;color:#fff;font-weight:750;cursor:pointer}
+.tobay-showcase-empty{grid-column:1/-1;color:#526174;background:#f1f5f9;padding:18px;border-radius:12px}
+.tobay-profile-modal{position:fixed;inset:0;background:rgba(9,20,39,.76);z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px}
+.tobay-profile-panel{background:#fff;width:100%;max-width:560px;max-height:86vh;overflow:auto;border-radius:17px;padding:22px;color:#334155}
+.tobay-profile-panel h2{color:#14213d!important;margin-top:0}
+.tobay-profile-item{border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin:10px 0}
+.tobay-profile-item b{color:#14213d}.tobay-profile-item small{display:block;color:#64748b;margin-top:4px}
+@media(max-width:850px){.tobay-showcase-grid,.tobay-sellers-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.tobay-community-panel{padding:20px!important}.tobay-community-panel h2{font-size:23px!important;line-height:1.25!important}.tobay-community-panel p{font-size:14px!important;line-height:1.65!important}.tobay-showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tobay-showcase-grid .listing-art img{height:135px!important}.tobay-showcase-grid .listing-body{padding:10px!important}.tobay-showcase-grid .listing h3{font-size:13px!important}.tobay-showcase-grid .listing p{font-size:11px!important;line-height:1.45!important}.tobay-sellers-grid{gap:9px}.tobay-seller-card{padding:13px}.tobay-seller-card h3{font-size:13px}.tobay-seller-card p{font-size:11px}.tobay-home-additions .section-head{align-items:flex-start!important}.tobay-home-additions .section-head h2{font-size:21px!important}.tobay-home-additions .section-head p{font-size:13px!important}}
+</style>
 <script id="tobay-home-additions-data">
 (function(){
+ const supabaseUrl='https://ydjjwftkhqqgyzbsfgmh.supabase.co/storage/v1/object/public/tobay-listings/';
+ function openListing(item){
+  const search=document.getElementById('marketplaceSearch');const category=document.getElementById('marketplaceCategory');
+  const tabs=document.querySelectorAll('.type-tabs .tab');
+  if(search)search.value='';if(category)category.value='';
+  const allTab=Array.from(tabs).find(t=>t.dataset.type==='all');if(allTab)allTab.click();
+  if(typeof window.updateListings==='function')window.updateListings();
+  location.hash='explore';
+  setTimeout(()=>{const cards=Array.from(document.querySelectorAll('#listingGrid .listing'));const card=cards.find(c=>c.querySelector('h3')?.textContent.trim()===(item.title||'').trim());const btn=card?.querySelector('button');if(btn)btn.click();},450);
+ }
+ function showSellerProfile(sellerId,data){
+  const old=document.querySelector('.tobay-profile-modal');if(old)old.remove();
+  const modal=document.createElement('div');modal.className='tobay-profile-modal';
+  const panel=document.createElement('div');panel.className='tobay-profile-panel';
+  const close=document.createElement('button');close.textContent='✕ Close';close.style.cssText='float:right;border:0;background:#173b70;color:#fff;padding:9px 13px;border-radius:8px;cursor:pointer';close.onclick=()=>modal.remove();
+  const heading=document.createElement('h2');heading.textContent='Seller storefront';
+  const intro=document.createElement('p');intro.textContent='Published listings from this TOBAY seller.';
+  panel.append(close,heading,intro);
+  data.forEach(item=>{const row=document.createElement('div');row.className='tobay-profile-item';const name=document.createElement('b');name.textContent=item.title||'Marketplace listing';const detail=document.createElement('small');detail.textContent=(item.listing_type==='service'?'Service':'Product')+' • '+(item.category||'General category')+' • '+(item.price!=null?(item.currency||'')+' '+Number(item.price).toLocaleString():'Price not specified');const view=document.createElement('button');view.textContent='View listing details';view.style.cssText='margin-top:9px;border:0;background:#c81e35;color:#fff;border-radius:7px;padding:8px 11px;cursor:pointer';view.onclick=()=>{modal.remove();openListing(item)};row.append(name,detail,view);panel.appendChild(row)});
+  modal.appendChild(panel);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});document.body.appendChild(modal);
+ }
+ function makeCard(item){
+  const card=document.createElement('article');card.className='listing';
+  const art=document.createElement('div');art.className='listing-art';art.textContent=item.listing_type==='service'?'🧰':'🛍️';
+  const imagePath=Array.isArray(item.image_urls)?item.image_urls[0]:'';
+  if(imagePath){const img=document.createElement('img');img.src=supabaseUrl+imagePath.split('/').slice(-2).join('/');img.alt=item.title||'Marketplace listing';img.loading='lazy';img.style.cssText='width:100%;height:190px;object-fit:cover';art.textContent='';art.appendChild(img)}
+  const body=document.createElement('div');body.className='listing-body';const tag=document.createElement('span');tag.className='tag';tag.textContent=item.listing_type==='service'?'Service':'Product';
+  const title=document.createElement('h3');title.textContent=item.title||'Marketplace listing';const desc=document.createElement('p');desc.textContent=item.description||'Explore this published marketplace listing.';const price=document.createElement('strong');price.textContent=item.price!=null?(item.currency||'')+' '+Number(item.price).toLocaleString():'Price not specified';const btn=document.createElement('button');btn.type='button';btn.className='btn btn-orange';btn.textContent='View details';btn.onclick=()=>openListing(item);body.append(tag,title,desc,price,btn);card.append(art,body);return card;
+ }
  function updateHomeShowcases(){
-  const products=document.getElementById('tobayFeaturedProducts');
-  const services=document.getElementById('tobayFeaturedServices');
-  const sellerCount=document.getElementById('tobaySellerCount');
-  const data=Array.isArray(window.tobayMarketplaceListings)?window.tobayMarketplaceListings:[];
+  const data=Array.isArray(window.tobayMarketplaceListings)?window.tobayMarketplaceListings:(Array.isArray(window.__tobayListings)?window.__tobayListings:[]);
+  const products=document.getElementById('tobayFeaturedProducts'),services=document.getElementById('tobayFeaturedServices'),newArrivals=document.getElementById('tobayNewArrivals'),sellers=document.getElementById('tobayFeaturedSellers'),sellerCount=document.getElementById('tobaySellerCount');
   if(!products||!services)return;
-  const source=document.getElementById('listingGrid');
-  function fill(target,type){
-   const selected=data.filter(x=>String(x.listing_type||'').toLowerCase()===type).slice(0,4);
-   target.replaceChildren();
-   if(!selected.length){
-    const msg=document.createElement('p');msg.className='tobay-showcase-empty';
-    msg.textContent='No published '+(type==='product'?'products':'services')+' yet. Check back as sellers add listings.';
-    target.appendChild(msg);return;
-   }
-   selected.forEach(item=>{
-    const original=source&&Array.from(source.children).find(card=>card.querySelector('h3')?.textContent===item.title);
-    if(original){target.appendChild(original.cloneNode(true));return;}
-    const card=document.createElement('article');card.className='listing';
-    const art=document.createElement('div');art.className='listing-art';art.textContent=type==='service'?'🧰':'🛍️';
-    if(Array.isArray(item.image_urls)&&item.image_urls[0]){
-      const img=document.createElement('img');img.src='https://ydjjwftkhqqgyzbsfgmh.supabase.co/storage/v1/object/public/tobay-listings/'+item.image_urls[0].split('/').slice(-2).join('/');
-      img.alt=item.title||'Marketplace listing';img.loading='lazy';img.style.cssText='width:100%;height:190px;object-fit:cover';art.textContent='';art.appendChild(img);
-    }
-    const body=document.createElement('div');body.className='listing-body';
-    const tag=document.createElement('span');tag.className='tag';tag.textContent=type==='service'?'Service':'Product';
-    const title=document.createElement('h3');title.textContent=item.title||'Marketplace listing';
-    const desc=document.createElement('p');desc.textContent=item.description||'View listing details in the marketplace.';
-    const price=document.createElement('strong');price.textContent=item.price!=null?(item.currency||'')+' '+Number(item.price).toLocaleString():'Price not specified';
-    const btn=document.createElement('a');btn.className='btn btn-orange';btn.href='#explore';btn.textContent='View listing';
-    body.append(tag,title,desc,price,btn);card.append(art,body);target.appendChild(card);
-   });
-  }
-  fill(products,'product');fill(services,'service');
-  if(sellerCount)sellerCount.textContent=new Set(data.map(x=>x.seller_id).filter(Boolean)).size.toLocaleString();
+  function fill(target,items,empty){if(!target)return;target.replaceChildren();if(!items.length){const msg=document.createElement('p');msg.className='tobay-showcase-empty';msg.textContent=empty;target.appendChild(msg);return}items.forEach(item=>target.appendChild(makeCard(item)))}
+  fill(products,data.filter(x=>String(x.listing_type||'').toLowerCase()==='product').slice(0,4),'No published products yet. Check back as sellers add listings.');
+  fill(services,data.filter(x=>String(x.listing_type||'').toLowerCase()==='service').slice(0,4),'No published services yet. Check back as sellers add listings.');
+  fill(newArrivals,data.slice(0,4),'New listings will appear here when sellers publish them.');
+  const grouped=new Map();data.forEach(item=>{if(!item.seller_id)return;if(!grouped.has(item.seller_id))grouped.set(item.seller_id,[]);grouped.get(item.seller_id).push(item)});
+  if(sellerCount)sellerCount.textContent=grouped.size.toLocaleString();
+  if(sellers){sellers.replaceChildren();const entries=Array.from(grouped.entries()).slice(0,4);if(!entries.length){const msg=document.createElement('p');msg.className='tobay-showcase-empty';msg.textContent='Seller storefronts will appear here as published listings become available.';sellers.appendChild(msg)}else entries.forEach(([id,items],i)=>{const card=document.createElement('article');card.className='tobay-seller-card';const avatar=document.createElement('div');avatar.className='tobay-seller-avatar';avatar.textContent='🏪';const title=document.createElement('h3');title.textContent='Marketplace Seller '+(i+1);const desc=document.createElement('p');desc.textContent=items.length+' published listing'+(items.length===1?'':'s');const btn=document.createElement('button');btn.type='button';btn.textContent='View storefront';btn.onclick=()=>showSellerProfile(id,items);card.append(avatar,title,desc,btn);sellers.appendChild(card)})}
  }
  window.updateTobayHomeShowcases=updateHomeShowcases;
- const grid=document.getElementById('listingGrid');
- if(grid)new MutationObserver(updateHomeShowcases).observe(grid,{childList:true,subtree:true});
+ window.tobayMarketplaceListings=window.tobayMarketplaceListings||[];
+ const grid=document.getElementById('listingGrid');if(grid)new MutationObserver(()=>{if(window.__tobayShowcaseQueued)return;window.__tobayShowcaseQueued=true;requestAnimationFrame(()=>{window.__tobayShowcaseQueued=false;updateHomeShowcases()})}).observe(grid,{childList:true,subtree:true});
  document.addEventListener('DOMContentLoaded',updateHomeShowcases);
  const originalLoad=window.loadTobayMarketplace;
- if(typeof originalLoad==='function'){
-  window.loadTobayMarketplace=async function(){const result=await originalLoad.apply(this,arguments);updateHomeShowcases();return result;};
- }
- setTimeout(updateHomeShowcases,1200);
+ if(typeof originalLoad==='function')window.loadTobayMarketplace=async function(){const result=await originalLoad.apply(this,arguments);window.tobayMarketplaceListings=window.tobayMarketplaceListings||[];updateHomeShowcases();return result};
+ setTimeout(()=>{const source=window.tobayMarketplaceListings;if(Array.isArray(source)&&source.length)updateHomeShowcases()},1400);
 })();
 </script>
 
