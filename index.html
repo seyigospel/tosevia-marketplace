@@ -4477,7 +4477,7 @@ async function loadTobayNormalSellerOrders() {
       methodLabel.textContent = "Choose payment method";
       const methodSelect = document.createElement("select");
       methodSelect.style.cssText = "display:block;width:100%;padding:10px;margin:6px 0 12px;";
-      methodSelect.innerHTML = '<option value="pay_on_delivery">Pay on Delivery</option><option value="bank_transfer">Bank Transfer</option>';
+      methodSelect.innerHTML = '<option value="pay_on_delivery">Pay on Delivery</option><option value="bank_transfer">Bank Transfer</option><option value="paystack">Paystack Secure Online Payment (TEST)</option>';
       const instructionsLabel = document.createElement("label");
       instructionsLabel.textContent = "Payment / delivery instructions for the buyer";
       const instructionsInput = document.createElement("textarea");
@@ -4497,7 +4497,9 @@ async function loadTobayNormalSellerOrders() {
       methodSelect.addEventListener("change", () => {
         instructionsInput.placeholder = methodSelect.value === "bank_transfer"
           ? "Enter account name, bank name, account number and any payment reference."
-          : "Optional delivery or payment-on-delivery details for the buyer.";
+          : methodSelect.value === "paystack"
+            ? "The buyer will pay securely online through Paystack after accepting this method. No bank details are needed."
+            : "Optional delivery or payment-on-delivery details for the buyer.";
       });
       acceptButton.addEventListener("click", () => {
         paymentPanel.style.display = paymentPanel.style.display === "none" ? "block" : "none";
@@ -5103,7 +5105,9 @@ async function loadTobayNormalBuyerOrders(user) {
     if (order.order_status === "pending") {
       notice.textContent = "Your order request has been received. Please wait for the seller to review your order. No payment has been collected yet.";
     } else if (order.order_status === "accepted") {
-      notice.textContent = "Your order has been accepted! Please follow the seller's payment and delivery instructions. Payment status: " + order.payment_status + ".";
+      notice.textContent = order.payment_method === "paystack"
+        ? "Your order has been accepted. Use the Paystack button below to complete your secure online payment. Payment status: " + order.payment_status + "."
+        : "Your order has been accepted! Please follow the seller's payment and delivery instructions. Payment status: " + order.payment_status + ".";
     } else if (order.order_status === "rejected") {
       notice.textContent = "Unfortunately, the seller could not accept your order. Payment status: " + order.payment_status + ". If you need clarification, please contact the seller.";
     } else if (order.order_status === "cancelled") {
