@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 33 Paystack Display Fix</title>
+<title>TOBAY | Global Marketplace — Version 34 Paystack Verification Fix</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -5079,7 +5079,7 @@ async function loadTobayNormalBuyerOrders(user) {
 
   const { data: orders, error } = await supabase
     .from("tobay_orders")
-    .select("id,total_amount,currency,order_status,payment_status,payment_method,seller_payment_instructions,created_at,listing:listings(title)")
+    .select("id,total_amount,currency,order_status,payment_status,payment_method,paystack_reference,seller_payment_instructions,created_at,listing:listings(title)")
     .eq("buyer_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -5112,7 +5112,9 @@ async function loadTobayNormalBuyerOrders(user) {
       notice.textContent = "Your order request has been received. Please wait for the seller to review your order. No payment has been collected yet.";
     } else if (order.order_status === "accepted") {
       notice.textContent = order.payment_method === "paystack"
-        ? "Your order has been accepted. Use the Paystack button below to complete your secure online payment. Payment status: " + order.payment_status + "."
+        ? (order.payment_status === "pending_verification"
+            ? "Your existing Paystack payment is awaiting confirmation. Use the button below to verify it. Do not pay again."
+            : "Your order has been accepted. Use the button below to complete your secure Paystack payment. Payment status: " + order.payment_status + ".")
         : "Your order has been accepted! Please follow the seller's payment and delivery instructions. Payment status: " + order.payment_status + ".";
     } else if (order.order_status === "rejected") {
       notice.textContent = "Unfortunately, the seller could not accept your order. Payment status: " + order.payment_status + ". If you need clarification, please contact the seller.";
@@ -5144,8 +5146,25 @@ async function loadTobayNormalBuyerOrders(user) {
           const client = window.tobaySupabase;
           if (!client) { alert("Payment service is unavailable. Refresh and try again."); return; }
           payButton.disabled = true;
-          payButton.textContent = "Connecting to secure checkout...";
           try {
+            if (order.payment_status === "pending_verification") {
+              if (!order.paystack_reference) {
+                throw new Error("This order has no saved Paystack reference. Please contact TOBAY support; do not make another payment.");
+              }
+              payButton.textContent = "Verifying existing Paystack payment...";
+              const { data, error } = await client.functions.invoke("paystack-verify", {
+                body: { reference: order.paystack_reference }
+              });
+              if (error) throw error;
+              if (!data || data.verified !== true) {
+                throw new Error(data?.error || "Paystack has not confirmed this transaction yet.");
+              }
+              payButton.textContent = "Payment confirmed. Refreshing order...";
+              await loadTobayNormalBuyerOrders(user);
+              return;
+            }
+
+            payButton.textContent = "Connecting to secure checkout...";
             const { data, error } = await client.functions.invoke("paystack-initialize", {
               body: { order_id: order.id, order_type: "tobay" }
             });
@@ -5153,9 +5172,10 @@ async function loadTobayNormalBuyerOrders(user) {
             if (!data || !data.authorization_url) throw new Error(data?.error || "Paystack did not return a checkout link.");
             window.location.assign(data.authorization_url);
           } catch (err) {
-            alert("Could not start Paystack payment: " + (err?.message || "Please try again."));
+            const verifying = order.payment_status === "pending_verification";
+            alert((verifying ? "Could not verify the existing Paystack payment: " : "Could not start Paystack payment: ") + (err?.message || "Please try again."));
             payButton.disabled = false;
-            payButton.textContent = "Pay securely with Paystack (TEST)";
+            payButton.textContent = verifying ? "Verify existing Paystack payment" : "Pay securely with Paystack (TEST)";
           }
         });
         card.appendChild(payButton);
