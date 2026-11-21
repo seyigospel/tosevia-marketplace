@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 29</title>
+<title>TOBAY | Global Marketplace — Version 31 Paystack Test Checkout</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -4903,7 +4903,7 @@ const selectedStatus = selectedOrderStatus;
 
   const { data: orders, error } = await supabase
     .from("easybuy_orders")
-    .select("id,total_amount,currency,payment_option,order_status,created_at")
+    .select("id,total_amount,currency,payment_option,order_status,payment_status,created_at")
     .eq("buyer_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -5031,15 +5031,40 @@ if (order.order_status === "pending") {
     }
 
     const notice = document.createElement("p");
-    notice.textContent =
-      "Payments are not collected or verified through TOBAY yet.";
-
+    notice.textContent = order.order_status === "accepted"
+      ? "Your EasyBuy order has been accepted. Follow the instalment schedule and seller instructions. Paystack instalment collection is not enabled yet."
+      : "EasyBuy payments are handled through the existing seller-review and instalment process. No payment is collected before acceptance.";
     notice.className = "buyer-notice";
     card.appendChild(notice);
     container.appendChild(card);
   }
 }
+async function tobayVerifyPaystackReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const reference = params.get("reference") || params.get("trxref");
+  if (!reference || window.__tobayPaystackReturnChecked) return;
+  window.__tobayPaystackReturnChecked = true;
+  const client = window.tobaySupabase;
+  if (!client) return;
+  const target = document.getElementById("tobayAccountMessage") || document.getElementById("tobayBuyerBuyNowOrders");
+  if (target) target.textContent = "Checking your Paystack payment securely...";
+  try {
+    const { data, error } = await client.functions.invoke("paystack-verify", { body: { reference } });
+    if (error) throw error;
+    if (!data || data.verified !== true) throw new Error(data?.error || "Payment has not been confirmed.");
+    if (target) target.textContent = "Paystack payment verified successfully. Your order payment status is now updated.";
+  } catch (err) {
+    if (target) target.textContent = "Paystack return received, but payment is not confirmed: " + (err?.message || "Please refresh your Buyer Dashboard or contact support.");
+  } finally {
+    params.delete("reference");
+    params.delete("trxref");
+    const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }
+}
+
 async function loadTobayNormalBuyerOrders(user) {
+  await tobayVerifyPaystackReturn();
   const container = document.getElementById("tobayBuyerBuyNowOrders");
   if (!container) return;
   container.textContent = "Loading Buy Now orders...";
@@ -5093,12 +5118,42 @@ async function loadTobayNormalBuyerOrders(user) {
     card.appendChild(tobayBuildOrderTimeline(order.order_status));
     if (order.order_status === "accepted") {
       const paymentMethod = document.createElement("p");
-      paymentMethod.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : "To be confirmed by seller");
+      paymentMethod.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : order.payment_method === "paystack" ? "Paystack" : "To be confirmed by seller");
       card.appendChild(paymentMethod);
       if (order.seller_payment_instructions) {
         const instructions = document.createElement("p");
         instructions.textContent = "Seller's instructions: " + order.seller_payment_instructions;
         card.appendChild(instructions);
+      }
+      if (order.payment_status !== "paid" && order.payment_method === "paystack") {
+        const payButton = document.createElement("button");
+        payButton.type = "button";
+        payButton.textContent = order.payment_status === "pending_verification" ? "Continue / verify Paystack payment" : "Pay securely with Paystack (TEST)";
+        payButton.style.cssText = "display:block;width:100%;max-width:360px;margin:12px 0;padding:12px 16px;border:0;border-radius:9px;background:#4b2b91;color:#fff;font-weight:800;cursor:pointer";
+        payButton.addEventListener("click", async () => {
+          const client = window.tobaySupabase;
+          if (!client) { alert("Payment service is unavailable. Refresh and try again."); return; }
+          payButton.disabled = true;
+          payButton.textContent = "Connecting to secure checkout...";
+          try {
+            const { data, error } = await client.functions.invoke("paystack-initialize", {
+              body: { order_id: order.id, order_type: "tobay" }
+            });
+            if (error) throw error;
+            if (!data || !data.authorization_url) throw new Error(data?.error || "Paystack did not return a checkout link.");
+            window.location.assign(data.authorization_url);
+          } catch (err) {
+            alert("Could not start Paystack payment: " + (err?.message || "Please try again."));
+            payButton.disabled = false;
+            payButton.textContent = "Pay securely with Paystack (TEST)";
+          }
+        });
+        card.appendChild(payButton);
+      } else if (order.payment_status === "paid") {
+        const paid = document.createElement("p");
+        paid.textContent = "✓ Payment confirmed by Paystack.";
+        paid.style.cssText = "color:#16804a;font-weight:800";
+        card.appendChild(paid);
       }
     }
     container.appendChild(card);
@@ -7101,6 +7156,10 @@ section p,section li{color:var(--tobay-body)!important}
 .tobay-review-panel [role="status"]{font-size:13px;color:#315477;line-height:1.5}
 @media(max-width:600px){.tobay-review-panel{padding:15px!important}.tobay-review-panel button{max-width:100%}}
 </style>
+<style id="tobay-paystack-checkout-polish">
+#tobayBuyerBuyNowOrders button:focus-visible{outline:3px solid #f07835;outline-offset:3px}
+#tobayBuyerBuyNowOrders .buyer-order-card{overflow-wrap:anywhere}
+</style>
 <button id="tobayCartLauncher" type="button" aria-label="Open shopping cart">🛒 Cart <span id="tobayCartCount">0</span></button>
 <div id="tobayCartOverlay" role="dialog" aria-modal="true" aria-labelledby="tobayCartTitle">
   <aside id="tobayCartPanel">
@@ -7109,7 +7168,7 @@ section p,section li{color:var(--tobay-body)!important}
     <div id="tobayCartSummary"></div>
     <div id="tobayCartCheckout"></div>
     <button id="tobayCartContinue" type="button">Continue to checkout</button>
-    <p id="tobayCartNote">Your cart is saved on this device. Checkout submits order requests through TOBAY's existing Supabase order system. Online card/bank payment is not active yet; no payment is collected here. Each product is sent as a separate seller order.</p>
+    <p id="tobayCartNote">Your cart is saved on this device. Checkout submits order requests through TOBAY's existing Supabase order system. Buy Now Paystack TEST checkout is available only after seller acceptance. EasyBuy instalment collection is not enabled yet. Each product is sent as a separate seller order.</p>
   </aside>
 </div>
 <script id="tobay-cart-and-sort-upgrade">
@@ -7190,7 +7249,7 @@ section p,section li{color:var(--tobay-body)!important}
     const panel=document.createElement("section");
     panel.style.cssText="margin:16px 0;padding:16px;border:1px solid #dce5f0;border-radius:12px;background:#f8fbff";
     const title=document.createElement("h3");title.textContent="Secure order request";title.style.cssText="margin:0 0 6px;color:#17365f;font-size:18px";
-    const intro=document.createElement("p");intro.textContent="Sign in to place your order. TOBAY will send each product to its seller for review. No online payment will be collected at this stage.";intro.style.cssText="font-size:12px;line-height:1.55;color:#64748b;margin:0 0 12px";
+    const intro=document.createElement("p");intro.textContent="Sign in to place your order. TOBAY sends each product to its seller for review first. For accepted Buy Now orders, Paystack TEST checkout can be started from your Buyer Dashboard. EasyBuy instalments remain on the existing seller-review schedule.";intro.style.cssText="font-size:12px;line-height:1.55;color:#64748b;margin:0 0 12px";
     const planLabel=document.createElement("label");planLabel.textContent="Purchase plan";planLabel.style.cssText="display:block;font-size:12px;font-weight:700;color:#334155;margin:10px 0";
     const plan=document.createElement("select");plan.style.cssText="display:block;width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:8px;background:white;color:#17365f;margin-top:6px";
     [["buy_now","Buy Now — Full Payment"],["easybuy","EasyBuy — Instalments"]].forEach(([value,label])=>{const option=document.createElement("option");option.value=value;option.textContent=label;plan.appendChild(option)});
