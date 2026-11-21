@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 31 Paystack Test Checkout</title>
+<title>TOBAY | Global Marketplace — Version 33 Paystack Display Fix</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -4426,8 +4426,14 @@ async function loadTobayNormalSellerOrders() {
 
     if (order.order_status === "accepted") {
       const method = document.createElement("p");
-      method.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : "Not specified");
+      method.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : order.payment_method === "paystack" ? "Paystack Secure Online Payment (TEST)" : "Not specified");
       card.appendChild(method);
+      if (order.payment_method === "paystack" && order.payment_status !== "paid") {
+        const paystackNote = document.createElement("p");
+        paystackNote.style.cssText = "margin:8px 0;padding:10px 12px;border:1px solid #d9d0f0;border-radius:8px;background:#f7f4ff;color:#49347b;font-size:12px;line-height:1.6;";
+        paystackNote.textContent = "The buyer should complete payment using the Paystack TEST button in their Buyer Dashboard. The order remains unpaid until Paystack verification succeeds.";
+        card.appendChild(paystackNote);
+      }
       if (order.seller_payment_instructions) {
         const instructions = document.createElement("p");
         instructions.textContent = "Buyer instructions: " + order.seller_payment_instructions;
