@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 34 Paystack Verification Fix</title>
+<title>TOBAY | Global Marketplace — Version 35 Buyer Payment Message Fix</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -5112,9 +5112,11 @@ async function loadTobayNormalBuyerOrders(user) {
       notice.textContent = "Your order request has been received. Please wait for the seller to review your order. No payment has been collected yet.";
     } else if (order.order_status === "accepted") {
       notice.textContent = order.payment_method === "paystack"
-        ? (order.payment_status === "pending_verification"
-            ? "Your existing Paystack payment is awaiting confirmation. Use the button below to verify it. Do not pay again."
-            : "Your order has been accepted. Use the button below to complete your secure Paystack payment. Payment status: " + order.payment_status + ".")
+        ? (order.payment_status === "paid"
+            ? "Your payment has been confirmed by Paystack. Your order is accepted and is being processed. Please wait for delivery updates."
+            : order.payment_status === "pending_verification"
+              ? "Your existing Paystack payment is awaiting confirmation. Use the button below to verify it. Do not pay again."
+              : "Your order has been accepted. Complete your secure Paystack payment using the button below. Payment status: " + order.payment_status + ".")
         : "Your order has been accepted! Please follow the seller's payment and delivery instructions. Payment status: " + order.payment_status + ".";
     } else if (order.order_status === "rejected") {
       notice.textContent = "Unfortunately, the seller could not accept your order. Payment status: " + order.payment_status + ". If you need clarification, please contact the seller.";
