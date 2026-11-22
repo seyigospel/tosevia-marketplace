@@ -2081,6 +2081,30 @@ img,video{max-width:100%}
 }
 </style>
 
+<style>
+
+/* TOBAY rotating global identity globe */
+.tobay-world-globe-wrap{display:flex;justify-content:center;align-items:center;padding:4px 0 20px}
+.tobay-world-globe{position:relative;width:clamp(190px,24vw,270px);aspect-ratio:1;border-radius:50%;isolation:isolate;filter:drop-shadow(0 20px 24px rgba(2,12,35,.38))}
+.tobay-world-globe:before{content:"";position:absolute;inset:-12px;border:1px solid #f6c66d55;border-radius:50%;box-shadow:0 0 0 9px #ffffff08,0 0 30px #4b9be955;pointer-events:none}
+.tobay-globe-sphere{position:absolute;inset:0;overflow:hidden;border-radius:50%;background:radial-gradient(circle at 31% 25%,#6dc7f5 0%,#1875b9 31%,#0b356f 72%,#061b43 100%);box-shadow:inset -22px -12px 35px #020e2d99,inset 10px 8px 25px #b8ecff55,0 0 28px #43a8f066}
+.tobay-globe-map{position:absolute;inset:0;display:flex;width:200%;height:100%;animation:tobayGlobeRotate 22s linear infinite}
+.tobay-globe-map svg{width:50%;height:100%;flex:0 0 50%;overflow:visible}
+.tobay-globe-map path{fill:#b9d9a0;stroke:#e5f3c9;stroke-width:2;stroke-linejoin:round;opacity:.96}
+.tobay-globe-map .island{fill:#d2e6ad;stroke:#eff7d8;stroke-width:1.5}
+.tobay-globe-latitude,.tobay-globe-longitude{position:absolute;inset:0;border:1px solid #c5eaff55;border-radius:50%;pointer-events:none}
+.tobay-globe-latitude{inset:22% 0;border-left:0;border-right:0}
+.tobay-globe-latitude:after{content:"";position:absolute;inset:0 0;border-top:1px solid #c5eaff44;transform:scaleY(1.8);border-radius:50%}
+.tobay-globe-longitude{inset:0 27%;border-top:0;border-bottom:0}
+.tobay-globe-longitude:after{content:"";position:absolute;inset:0;border:1px solid #c5eaff44;border-top:0;border-bottom:0;border-radius:50%;transform:scaleX(1.8)}
+.tobay-globe-shine{position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,#fff5 0%,transparent 27% 65%,#020c2a55 100%);pointer-events:none}
+.tobay-globe-brand{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);padding:7px 16px;border:1px solid #ffe0a5;border-radius:7px;background:linear-gradient(100deg,#09234ee8,#174d85e8);box-shadow:0 5px 18px #00132d88;color:#fff;font-size:clamp(22px,3vw,30px);font-weight:950;letter-spacing:4px;text-shadow:0 2px 8px #0008}
+.tobay-globe-caption{margin-top:12px;text-align:center;color:#e9f3ff;font-size:9px;font-weight:900;letter-spacing:2.5px}
+@keyframes tobayGlobeRotate{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.tobay-globe-map{animation:none}}
+@media(max-width:480px){.tobay-world-globe{width:190px}.tobay-world-globe-wrap{padding-bottom:15px}}
+
+</style>
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY GLOBAL MARKETPLACE  •  DISCOVER PRODUCTS, SERVICES &amp; NEW OPPORTUNITIES</div><header>
@@ -2123,6 +2147,25 @@ img,video{max-width:100%}
 <p class="hero-note">Products <span>•</span> Services <span>•</span> Opportunities</p>
 </div>
 <div aria-label="Why explore TOBAY Global Marketplace" class="tobay-hero-visual tobay-feature-panel">
+
+<div class="tobay-world-globe-wrap" aria-label="TOBAY world globe, rotating continuously">
+  <div class="tobay-world-globe" role="img" aria-label="A rotating blue and green globe with TOBAY written across it">
+    <div class="tobay-globe-sphere">
+      <div class="tobay-globe-map" aria-hidden="true">
+        <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
+          <path d="M78 145l35-32 48-8 25 18 40-8 26 23-12 25-32 8-13 26-27 10-8 32-25 9-18-23-30-8-14-29-27-8-11-27z M205 260l30 10 17 29-8 35-20 24-7 47-23 44-20-24 8-40-14-35 7-39z M320 125l30-26 48 8 18 20 38-8 37 19 28-2 28 26-12 23-35-4-21 18-37-9-19 24-28-9-13 29-26 2-18-25-31-3-16-27-28-10-7-25z M350 260l31 4 25 24-7 35-20 27-12 46-25 38-20-20 5-43-16-31 8-39z M475 390l25-12 28 10 10 25-21 20-32-8z" />
+          <path class="island" d="M145 300l12 8-5 17-13-5z M270 210l12 6-4 13-12-4z M425 470l15 6-7 13-13-5z M520 285l12 5-5 12-12-4z"/>
+        </svg>
+        <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
+          <path d="M78 145l35-32 48-8 25 18 40-8 26 23-12 25-32 8-13 26-27 10-8 32-25 9-18-23-30-8-14-29-27-8-11-27z M205 260l30 10 17 29-8 35-20 24-7 47-23 44-20-24 8-40-14-35 7-39z M320 125l30-26 48 8 18 20 38-8 37 19 28-2 28 26-12 23-35-4-21 18-37-9-19 24-28-9-13 29-26 2-18-25-31-3-16-27-28-10-7-25z M350 260l31 4 25 24-7 35-20 27-12 46-25 38-20-20 5-43-16-31 8-39z M475 390l25-12 28 10 10 25-21 20-32-8z" />
+          <path class="island" d="M145 300l12 8-5 17-13-5z M270 210l12 6-4 13-12-4z M425 470l15 6-7 13-13-5z M520 285l12 5-5 12-12-4z"/>
+        </svg>
+      </div>
+      <div class="tobay-globe-latitude"></div><div class="tobay-globe-longitude"></div><div class="tobay-globe-shine"></div>
+    </div>
+    <div class="tobay-globe-brand">TOBAY</div>
+  </div>
+</div>
 <div class="tobay-feature-heading"><span class="tobay-feature-kicker">THE TOBAY EXPERIENCE</span><strong>More ways to discover. More ways to connect.</strong></div>
 <div class="tobay-feature-list">
 <article class="tobay-feature-card"><span aria-hidden="true" class="tobay-feature-icon">🛍️</span><span class="tobay-feature-copy"><strong>One marketplace</strong><small>Shop products and discover services in one place.</small></span><span aria-hidden="true" class="tobay-feature-arrow">↗</span></article>
