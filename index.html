@@ -11,7 +11,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 44 Global Upgrade Connection Fix</title>
+<title>TOBAY | Global Marketplace — Version 44.2 Seller Verification</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -3853,6 +3853,34 @@ window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
 <p id="tobayBusinessProfileMessage"></p>
 
 <hr style="margin:25px 0;">
+    <section id="tobaySellerVerificationPanel" class="tobay-toolkit" aria-labelledby="tobaySellerVerificationTitle">
+      <div class="tobay-toolkit-head">
+        <div><h3 id="tobaySellerVerificationTitle">Seller Verification</h3>
+          <p class="tobay-sub">Submit your business verification details for review by the TOBAY admin team.</p></div>
+        <span id="tobaySellerVerificationBadge" style="padding:7px 11px;border-radius:20px;background:#eef5ff;color:#24527f;font-size:11px;font-weight:800;">Not submitted</span>
+      </div>
+      <div id="tobaySellerVerificationStatus" role="status" aria-live="polite" class="tobay-notice" style="display:block;background:#f7faff;border-color:#dce8f5;color:#52657d;">
+        Your verification status will appear here.
+      </div>
+      <form id="tobaySellerVerificationForm" style="margin-top:16px;">
+        <label for="tobayVerificationBusinessName">Business name</label>
+        <input id="tobayVerificationBusinessName" maxlength="150" required value="${String(application.business_name || "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}">
+        <label for="tobayVerificationDocumentType">Verification document type</label>
+        <select id="tobayVerificationDocumentType" required>
+          <option value="">Select document type</option>
+          <option value="CAC registration">CAC business registration</option>
+          <option value="Government-issued business permit">Government-issued business permit</option>
+          <option value="Tax identification">Tax identification document</option>
+          <option value="Other business document">Other business document</option>
+        </select>
+        <p style="font-size:11px;color:#718096;line-height:1.6;margin:9px 0 13px;">
+          This first stage records your business name and document type only. Do not upload identity documents or enter sensitive personal numbers here. Secure private document storage must be configured before documents can be collected.
+        </p>
+        <button type="submit" id="tobaySubmitSellerVerification">Submit for Verification</button>
+      </form>
+    </section>
+
+    <hr style="margin:25px 0;">
     <p>Add your products or services to the marketplace.</p>
 
     <form id="tobayListingForm">
@@ -3960,6 +3988,83 @@ window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
 <p class="tobay-sub" style="margin:0 0 12px;color:#718096;font-size:12px;">Review buyer and delivery details, choose the payment arrangement when accepting, and mark the order completed only after fulfilment.</p>
 <div id="tobaySellerBuyNowOrders">Loading Buy Now orders...</div>
   `;
+
+// Seller verification: authenticated seller can submit/read only their own record.
+// No document files or sensitive identity numbers are collected in this release.
+const verificationForm = document.getElementById("tobaySellerVerificationForm");
+const verificationStatus = document.getElementById("tobaySellerVerificationStatus");
+const verificationBadge = document.getElementById("tobaySellerVerificationBadge");
+const verificationSubmit = document.getElementById("tobaySubmitSellerVerification");
+async function loadMySellerVerification() {
+  verificationStatus.textContent = "Checking your verification status...";
+  const { data, error } = await supabase
+    .from("tobay_seller_verification")
+    .select("id,business_name,document_type,status,admin_note,created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) {
+    verificationStatus.textContent = "Could not load verification status: " + error.message;
+    verificationSubmit.disabled = true;
+    return;
+  }
+  const record = data && data[0];
+  if (!record) {
+    verificationBadge.textContent = "Not submitted";
+    verificationStatus.textContent = "You have not submitted your business verification details yet.";
+    return;
+  }
+  const labels = { pending: "Pending review", under_review: "Under review", verified: "Verified", rejected: "Rejected" };
+  verificationBadge.textContent = labels[record.status] || record.status;
+  verificationStatus.textContent =
+    "Latest submission: " + (record.business_name || "Business") +
+    " · " + (record.document_type || "Document type not specified") +
+    " · Status: " + (labels[record.status] || record.status) +
+    (record.admin_note ? " · Admin note: " + record.admin_note : "");
+  if (record.status === "pending" || record.status === "under_review" || record.status === "verified") {
+    verificationSubmit.disabled = true;
+    verificationSubmit.textContent = record.status === "verified" ? "Business Verified" : "Submission Received";
+  } else {
+    verificationSubmit.disabled = false;
+    verificationSubmit.textContent = "Resubmit for Verification";
+  }
+}
+verificationForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  const businessName = document.getElementById("tobayVerificationBusinessName").value.trim();
+  const documentType = document.getElementById("tobayVerificationDocumentType").value;
+  if (!businessName || !documentType) {
+    verificationStatus.textContent = "Please enter your business name and select a document type.";
+    return;
+  }
+  verificationSubmit.disabled = true;
+  verificationSubmit.textContent = "Submitting...";
+  verificationStatus.textContent = "";
+  try {
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError) throw authError;
+    if (!authData || !authData.user || authData.user.id !== user.id) {
+      throw new Error("Your sign-in session could not be confirmed. Please sign in again.");
+    }
+    const { error } = await supabase.from("tobay_seller_verification").insert({
+      user_id: user.id,
+      business_name: businessName,
+      document_type: documentType,
+      status: "pending"
+    });
+    if (error) throw error;
+    verificationStatus.textContent = "Your seller verification details have been submitted. The admin team will review your submission.";
+    verificationBadge.textContent = "Pending review";
+    verificationSubmit.textContent = "Submission Received";
+    await loadMySellerVerification();
+  } catch (error) {
+    verificationStatus.textContent = "Submission failed: " + (error.message || "Please try again.");
+    verificationSubmit.disabled = false;
+    verificationSubmit.textContent = "Submit for Verification";
+  }
+});
+loadMySellerVerification();
+
 const saveBusinessButton = document.getElementById("tobaySaveBusinessProfile");
 const businessMessage = document.getElementById("tobayBusinessProfileMessage");
 
