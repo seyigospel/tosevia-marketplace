@@ -11,7 +11,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 43 Automatic Delivery Notifications</title>
+<title>TOBAY | Global Marketplace — Version 44 Global Upgrade Connection Fix</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -7826,10 +7826,16 @@ section p,section li{color:var(--tobay-body)!important}
       catch(e){const ta=section.querySelector("#tguSqlText");ta.focus();ta.select();section.querySelector("#tguSetupStatus").textContent="Select and copy the SQL shown above, then run it in Supabase SQL Editor.";}
     });
 
-    const hasSupabase=typeof window.supabase!=="undefined" && window.supabase && typeof window.supabase.from==="function";
-    // The existing project uses a lexical `supabase` client; use it when available.
-    const client=(()=>{try{return supabase;}catch(e){return hasSupabase?window.supabase:null;}})();
-    if(!client){section.querySelector("#tguSetupStatus").textContent="Supabase client was not found on this page. Existing marketplace features are unchanged.";return;}
+    // Reuse the exact Supabase client created by the main marketplace module.
+    // ES-module `const supabase` is not a window property, so the main app
+    // intentionally exposes the same client as window.tobaySupabase.
+    const client = window.tobaySupabase ||
+      (window.supabase && typeof window.supabase.from === "function" ? window.supabase : null);
+    if(!client || typeof client.from !== "function"){
+      section.querySelector("#tguSetupStatus").textContent =
+        "Supabase connection is not ready yet. Please refresh the admin dashboard. Your existing marketplace data is unchanged.";
+      return;
+    }
 
     const status=section.querySelector("#tguSetupStatus");
     async function fetchRows(table,container,columns,empty,actions){
