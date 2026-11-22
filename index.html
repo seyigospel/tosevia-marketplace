@@ -5397,18 +5397,15 @@ async function loadTobayNormalBuyerOrders(user) {
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
 
-      // Keep the order card visible even if the renderer is absent or fails.
-      const deliveryRenderer = window.tobayRenderDeliveryUpdates;
-      if (typeof deliveryRenderer === "function") {
-        Promise.resolve()
-          .then(() => deliveryRenderer(order.id, deliveryHistory, "buyer"))
-          .catch(error => {
-            console.error("TOBAY delivery history could not load:", error);
-            deliveryHistory.textContent = "Delivery updates could not be loaded: " + (error?.message || "Please refresh this order.");
-          });
-      } else {
-        deliveryHistory.textContent = "Delivery updates are temporarily unavailable. Your order is still listed above.";
-      }
+      // This Buyer Dashboard loader and the renderer live in the same module.
+      // Call the module-scoped function directly instead of relying on a window
+      // property, which may not be available in every deployment/session path.
+      Promise.resolve()
+        .then(() => tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer"))
+        .catch(error => {
+          console.error("TOBAY delivery history could not load:", error);
+          deliveryHistory.textContent = "Delivery updates could not be loaded: " + (error?.message || "Please refresh this order.");
+        });
     }
 
     if (order.order_status === "accepted") {
