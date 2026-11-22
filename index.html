@@ -4477,6 +4477,10 @@ async function tobayRenderDeliveryUpdates(orderId, target, audience = "buyer") {
   return updates;
 }
 
+// Expose the renderer on window so dashboard code can call it reliably
+// across the seller and buyer account flows.
+window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
+
 // Normal Buy Now orders are loaded separately from EasyBuy orders.
 async function loadTobayNormalSellerOrders() {
   const container = document.getElementById("tobaySellerBuyNowOrders");
@@ -4548,7 +4552,7 @@ async function loadTobayNormalSellerOrders() {
       deliveryHistory.className = "tobay-delivery-history";
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
-      void tobayRenderDeliveryUpdates(order.id, deliveryHistory, "seller");
+      void window.tobayRenderDeliveryUpdates(order.id, deliveryHistory, "seller");
 
       if (order.order_status === "accepted") {
         const canPostDelivery = order.payment_method !== "paystack" || order.payment_status === "paid";
@@ -5339,7 +5343,7 @@ async function loadTobayNormalBuyerOrders(user) {
       deliveryHistory.className = "tobay-delivery-history";
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
-      void tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer");
+      void window.tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer");
     }
     if (order.order_status === "accepted") {
       const paymentMethod = document.createElement("p");
