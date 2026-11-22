@@ -4421,7 +4421,8 @@ async function tobayRenderDeliveryUpdates(orderId, target, audience = "buyer") {
     .order("created_at", { ascending: true });
 
   if (error) {
-    target.textContent = "Delivery tracking is not set up yet. Run the TOBAY Delivery Tracking SQL upgrade in Supabase, then refresh this dashboard.";
+    console.error("TOBAY delivery updates query failed:", error);
+    target.textContent = "Delivery updates could not be loaded: " + (error.message || "Unknown database error") + ". Please refresh or contact TOBAY support.";
     return null;
   }
 
@@ -4552,7 +4553,7 @@ async function loadTobayNormalSellerOrders() {
       deliveryHistory.className = "tobay-delivery-history";
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
-      void window.tobayRenderDeliveryUpdates(order.id, deliveryHistory, "seller");
+      void tobayRenderDeliveryUpdates(order.id, deliveryHistory, "seller");
 
       if (order.order_status === "accepted") {
         const canPostDelivery = order.payment_method !== "paystack" || order.payment_status === "paid";
@@ -5391,14 +5392,13 @@ async function loadTobayNormalBuyerOrders(user) {
       deliveryHistory.className = "tobay-delivery-history";
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
-      if (typeof window.tobayRenderDeliveryUpdates === "function") {
-        void window.tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer").catch(error => {
-          console.error("TOBAY delivery history could not load:", error);
-          deliveryHistory.textContent = "Delivery updates could not be loaded. Please refresh this order.";
-        });
-      } else {
-        deliveryHistory.textContent = "Delivery tracking is temporarily unavailable. Please refresh the page.";
-      }
+      // Call the module-scoped renderer directly. Do not depend on a window
+      // property being ready when the buyer dashboard is opened immediately
+      // after login/session restoration.
+      tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer").catch(error => {
+        console.error("TOBAY delivery history could not load:", error);
+        deliveryHistory.textContent = "Delivery updates could not be loaded: " + (error.message || "Please refresh this order.");
+      });
     }
 
     if (order.order_status === "accepted") {
