@@ -4,6 +4,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+<meta name="application-name" content="TOBAY"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
@@ -2060,6 +2064,23 @@ footer{background:#102f30!important;color:#dce8e2!important}footer a:hover{color
 }
 
 </style>
+
+<style id="tobay-global-mobile-polish">
+html{scroll-behavior:smooth}
+body{overflow-x:hidden}
+img,video{max-width:100%}
+@media(max-width:760px){
+  body{font-size:15px}
+  .container,.main-container,.page-container{max-width:100%;padding-left:12px;padding-right:12px}
+  table{display:block;max-width:100%;overflow-x:auto}
+  button,a,.btn{touch-action:manipulation}
+}
+@media(orientation:landscape) and (max-height:520px){
+  header{position:relative}
+  .modal,.modal-content{max-height:88vh;overflow:auto}
+}
+</style>
+
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY GLOBAL MARKETPLACE  •  DISCOVER PRODUCTS, SERVICES &amp; NEW OPPORTUNITIES</div><header>
@@ -7726,6 +7747,161 @@ section p,section li{color:var(--tobay-body)!important}
   render();
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",installSort,{once:true});
   else installSort();
+})();
+</script>
+
+
+<script id="tobay-global-upgrade-centre">
+(function(){
+  "use strict";
+  const SQL = "-- TOBAY GLOBAL MARKETPLACE UPGRADE\n-- Run once in Supabase Dashboard > SQL Editor > New query.\n-- This adds secure database foundations for promotions, refunds, buyer protection\n-- and seller verification. It does NOT move money or issue refunds automatically.\n\ncreate table if not exists public.tobay_promotions (\n  id uuid primary key default gen_random_uuid(),\n  seller_id uuid not null references auth.users(id) on delete cascade,\n  code text not null,\n  discount_type text not null check (discount_type in ('percentage','fixed')),\n  discount_value numeric(12,2) not null check (discount_value > 0),\n  currency text not null default 'NGN',\n  starts_at timestamptz,\n  ends_at timestamptz,\n  usage_limit integer,\n  usage_count integer not null default 0,\n  is_active boolean not null default true,\n  created_at timestamptz not null default now(),\n  unique (seller_id, code),\n  check (ends_at is null or starts_at is null or ends_at > starts_at),\n  check (discount_type <> 'percentage' or discount_value <= 100)\n);\n\ncreate table if not exists public.tobay_refund_requests (\n  id uuid primary key default gen_random_uuid(),\n  order_id text not null,\n  buyer_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid references auth.users(id) on delete set null,\n  reason text not null,\n  requested_amount numeric(12,2),\n  currency text not null default 'NGN',\n  status text not null default 'pending'\n    check (status in ('pending','under_review','approved','rejected','refunded')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\ncreate table if not exists public.tobay_buyer_protection_cases (\n  id uuid primary key default gen_random_uuid(),\n  order_id text not null,\n  buyer_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid references auth.users(id) on delete set null,\n  issue_type text not null,\n  description text not null,\n  status text not null default 'open'\n    check (status in ('open','investigating','resolved_buyer','resolved_seller','closed')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\n-- Store only a private Storage object path here, never public identity-document URLs.\ncreate table if not exists public.tobay_seller_verification (\n  id uuid primary key default gen_random_uuid(),\n  user_id uuid not null references auth.users(id) on delete cascade,\n  business_name text not null,\n  document_type text not null,\n  private_document_path text,\n  status text not null default 'pending'\n    check (status in ('pending','under_review','verified','rejected')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\ncreate index if not exists tobay_promotions_seller_idx on public.tobay_promotions(seller_id);\ncreate index if not exists tobay_refunds_buyer_idx on public.tobay_refund_requests(buyer_id);\ncreate index if not exists tobay_refunds_status_idx on public.tobay_refund_requests(status);\ncreate index if not exists tobay_protection_buyer_idx on public.tobay_buyer_protection_cases(buyer_id);\ncreate index if not exists tobay_verification_user_idx on public.tobay_seller_verification(user_id);\n\nalter table public.tobay_promotions enable row level security;\nalter table public.tobay_refund_requests enable row level security;\nalter table public.tobay_buyer_protection_cases enable row level security;\nalter table public.tobay_seller_verification enable row level security;\n\n-- Admin is determined by the existing admin_users allow-list, never by email or UI state.\ndrop policy if exists \"tobay promotions public active read\" on public.tobay_promotions;\ncreate policy \"tobay promotions public active read\" on public.tobay_promotions\nfor select using (is_active = true and (starts_at is null or starts_at <= now())\n  and (ends_at is null or ends_at > now()));\n\ndrop policy if exists \"tobay promotions seller read own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller read own\" on public.tobay_promotions\nfor select to authenticated using (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions seller insert own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller insert own\" on public.tobay_promotions\nfor insert to authenticated with check (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions seller update own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller update own\" on public.tobay_promotions\nfor update to authenticated using (seller_id = auth.uid()) with check (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions admin all\" on public.tobay_promotions;\ncreate policy \"tobay promotions admin all\" on public.tobay_promotions\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay refunds buyer read own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds buyer read own\" on public.tobay_refund_requests\nfor select to authenticated using (buyer_id = auth.uid());\ndrop policy if exists \"tobay refunds buyer create own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds buyer create own\" on public.tobay_refund_requests\nfor insert to authenticated with check (buyer_id = auth.uid() and status = 'pending');\ndrop policy if exists \"tobay refunds seller read own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds seller read own\" on public.tobay_refund_requests\nfor select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay refunds admin all\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds admin all\" on public.tobay_refund_requests\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay protection buyer read own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection buyer read own\" on public.tobay_buyer_protection_cases\nfor select to authenticated using (buyer_id = auth.uid());\ndrop policy if exists \"tobay protection buyer create own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection buyer create own\" on public.tobay_buyer_protection_cases\nfor insert to authenticated with check (buyer_id = auth.uid() and status = 'open');\ndrop policy if exists \"tobay protection seller read own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection seller read own\" on public.tobay_buyer_protection_cases\nfor select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay protection admin all\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection admin all\" on public.tobay_buyer_protection_cases\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay verification seller read own\" on public.tobay_seller_verification;\ncreate policy \"tobay verification seller read own\" on public.tobay_seller_verification\nfor select to authenticated using (user_id = auth.uid());\ndrop policy if exists \"tobay verification seller create own\" on public.tobay_seller_verification;\ncreate policy \"tobay verification seller create own\" on public.tobay_seller_verification\nfor insert to authenticated with check (user_id = auth.uid() and status = 'pending');\ndrop policy if exists \"tobay verification admin all\" on public.tobay_seller_verification;\ncreate policy \"tobay verification admin all\" on public.tobay_seller_verification\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\n-- Restrict direct grants; RLS remains the final authorization layer.\ngrant select, insert, update, delete on public.tobay_promotions to authenticated;\ngrant select, insert, update on public.tobay_refund_requests to authenticated;\ngrant select, insert, update on public.tobay_buyer_protection_cases to authenticated;\ngrant select, insert, update on public.tobay_seller_verification to authenticated;\ngrant select on public.tobay_promotions to anon;\n";
+  const css = `
+  #tobayGlobalUpgrade{margin:28px 0;padding:22px;border:1px solid #d8e4ef;border-radius:18px;background:linear-gradient(135deg,#f7fbff,#fff);color:#172b4d}
+  #tobayGlobalUpgrade *{box-sizing:border-box}
+  #tobayGlobalUpgrade h3{margin:0 0 8px;color:#142d52}
+  #tobayGlobalUpgrade .tgu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0}
+  #tobayGlobalUpgrade .tgu-card{padding:15px;border:1px solid #dce6f0;border-radius:13px;background:#fff;min-width:0}
+  #tobayGlobalUpgrade .tgu-card strong{display:block;margin-bottom:5px;color:#173d70}
+  #tobayGlobalUpgrade .tgu-muted{font-size:13px;color:#64748b;line-height:1.5}
+  #tobayGlobalUpgrade button{border:0;border-radius:9px;padding:10px 14px;background:#173d70;color:white;font-weight:700;cursor:pointer}
+  #tobayGlobalUpgrade button.secondary{background:#e8eef6;color:#173d70}
+  #tobayGlobalUpgrade input,#tobayGlobalUpgrade select,#tobayGlobalUpgrade textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#172b4d;margin:5px 0 10px}
+  #tobayGlobalUpgrade .tgu-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+  #tobayGlobalUpgrade .tgu-table{width:100%;border-collapse:collapse;font-size:13px}
+  #tobayGlobalUpgrade .tgu-table th,#tobayGlobalUpgrade .tgu-table td{padding:9px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:top}
+  #tobayGlobalUpgrade .tgu-scroll{overflow:auto}
+  #tobayGlobalUpgrade .tgu-status{padding:9px 12px;border-radius:9px;background:#eef5ff;color:#214a79;margin:10px 0}
+  @media(max-width:620px){#tobayGlobalUpgrade{padding:14px}#tobayGlobalUpgrade .tgu-table{min-width:600px}}
+  `;
+  if(!document.getElementById("tobayGlobalUpgradeStyles")){
+    const st=document.createElement("style");st.id="tobayGlobalUpgradeStyles";st.textContent=css;document.head.appendChild(st);
+  }
+
+  const esc = v => String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const money = (v,c="NGN") => { try{return new Intl.NumberFormat(undefined,{style:"currency",currency:c,maximumFractionDigits:2}).format(Number(v||0));}catch(e){return String(v||0)+" "+c;} };
+
+  async function loadAdminModule(panel){
+    if(!panel || panel.querySelector("#tobayGlobalUpgrade")) return;
+    panel.dataset.tguReady="yes";
+    const section=document.createElement("section");
+    section.id="tobayGlobalUpgrade";
+    section.innerHTML=`
+      <h2 style="margin:0 0 6px;color:#142d52">TOBAY Global Marketplace Upgrade Centre</h2>
+      <p class="tgu-muted">Additional controls for global operations. This panel is added only after the existing Supabase admin allow-list check succeeds.</p>
+      <div class="tgu-grid">
+        <div class="tgu-card"><strong>Advanced administration</strong><span class="tgu-muted">Central operations, moderation, exports and marketplace oversight.</span></div>
+        <div class="tgu-card"><strong>Delivery management</strong><span class="tgu-muted">Works with your existing delivery tracking stages and buyer notifications.</span></div>
+        <div class="tgu-card"><strong>Seller verification</strong><span class="tgu-muted">Review verification submissions and status. Keep identity files in private storage.</span></div>
+        <div class="tgu-card"><strong>Buyer protection</strong><span class="tgu-muted">Track order disputes and record resolution decisions.</span></div>
+        <div class="tgu-card"><strong>Refund management</strong><span class="tgu-muted">Review refund requests. Actual money movement must be completed through your payment provider.</span></div>
+        <div class="tgu-card"><strong>Global discovery</strong><span class="tgu-muted">Existing marketplace listings remain searchable; use clear currency and location details on listings.</span></div>
+        <div class="tgu-card"><strong>Seller analytics</strong><span class="tgu-muted">Existing marketplace overview and seller earnings remain available in the current dashboards.</span></div>
+        <div class="tgu-card"><strong>Promotions & discounts</strong><span class="tgu-muted">Create seller promo codes after the database upgrade is installed.</span></div>
+        <div class="tgu-card"><strong>Mobile app readiness</strong><span class="tgu-muted">Responsive layout and install prompt support where the hosting setup meets PWA requirements. Native store builds are a separate release step.</span></div>
+      </div>
+      <div class="tgu-card">
+        <h3>Database upgrade (one-time setup)</h3>
+        <p class="tgu-muted">Run the SQL below in Supabase → SQL Editor. It creates the secure tables and row-level security policies required by promotions, refunds, buyer protection and seller verification. This HTML file cannot safely create database tables by itself.</p>
+        <button type="button" id="tguCopySql">Copy Supabase SQL</button>
+        <details style="margin-top:12px"><summary style="cursor:pointer;font-weight:700">View database SQL</summary><textarea id="tguSqlText" rows="12" readonly></textarea></details>
+        <div class="tgu-status" id="tguSetupStatus">Database tables will be checked below. If you have not run the SQL yet, the new controls will show a setup message.</div>
+      </div>
+      <div class="tgu-grid">
+        <div class="tgu-card"><h3>Promotions</h3><form id="tguPromoForm">
+          <label>Promo code<input id="tguPromoCode" required maxlength="30" placeholder="e.g. WELCOME10"></label>
+          <div class="tgu-row"><label>Discount type<select id="tguPromoType"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed amount</option></select></label><label>Discount value<input id="tguPromoValue" type="number" min="0.01" step="0.01" required></label></div>
+          <div class="tgu-row"><label>Currency<input id="tguPromoCurrency" value="NGN" maxlength="3"></label><label>Usage limit (optional)<input id="tguPromoLimit" type="number" min="1" step="1" placeholder="Unlimited"></label></div>
+          <button type="submit">Create promotion</button>
+        </form><div id="tguPromoList" class="tgu-muted">Loading promotions…</div></div>
+        <div class="tgu-card"><h3>Refund requests</h3><p class="tgu-muted">Record an administrative decision. “Approved” is not proof that funds have been returned.</p><div id="tguRefundList" class="tgu-muted">Loading refund requests…</div></div>
+        <div class="tgu-card"><h3>Buyer protection cases</h3><div id="tguCaseList" class="tgu-muted">Loading cases…</div></div>
+        <div class="tgu-card"><h3>Seller verification queue</h3><div id="tguVerifyList" class="tgu-muted">Loading verification requests…</div></div>
+      </div>
+      <p class="tgu-muted">Security note: private member data and identity documents must never be made public. Keep Storage buckets private and issue short-lived signed URLs only when an authorized reviewer needs access.</p>
+    `;
+    panel.appendChild(section);
+    section.querySelector("#tguSqlText").value=SQL;
+    section.querySelector("#tguCopySql").addEventListener("click",async()=>{
+      try{await navigator.clipboard.writeText(SQL);section.querySelector("#tguSetupStatus").textContent="SQL copied. Open Supabase SQL Editor, paste it, and run it once.";}
+      catch(e){const ta=section.querySelector("#tguSqlText");ta.focus();ta.select();section.querySelector("#tguSetupStatus").textContent="Select and copy the SQL shown above, then run it in Supabase SQL Editor.";}
+    });
+
+    const hasSupabase=typeof window.supabase!=="undefined" && window.supabase && typeof window.supabase.from==="function";
+    // The existing project uses a lexical `supabase` client; use it when available.
+    const client=(()=>{try{return supabase;}catch(e){return hasSupabase?window.supabase:null;}})();
+    if(!client){section.querySelector("#tguSetupStatus").textContent="Supabase client was not found on this page. Existing marketplace features are unchanged.";return;}
+
+    const status=section.querySelector("#tguSetupStatus");
+    async function fetchRows(table,container,columns,empty,actions){
+      const target=section.querySelector(container);
+      const {data,error}=await client.from(table).select(columns).order("created_at",{ascending:false}).limit(50);
+      if(error){target.textContent=/does not exist|schema cache|relation/i.test(error.message)?"Run the database upgrade SQL above to enable this feature.":("Unable to load: "+error.message);return [];}
+      if(!data||!data.length){target.textContent=empty;return [];}
+      const wrap=document.createElement("div");wrap.className="tgu-scroll";
+      const tbl=document.createElement("table");tbl.className="tgu-table";
+      const head=document.createElement("tr");
+      (actions.headers).forEach(h=>{const th=document.createElement("th");th.textContent=h;head.appendChild(th);});
+      const thead=document.createElement("thead");thead.appendChild(head);tbl.appendChild(thead);
+      const body=document.createElement("tbody");
+      data.forEach(row=>{const tr=document.createElement("tr");actions.cells(row).forEach(cell=>{const td=document.createElement("td");if(cell instanceof Node)td.appendChild(cell);else td.textContent=String(cell??"");tr.appendChild(td);});body.appendChild(tr);});
+      tbl.appendChild(body);wrap.appendChild(tbl);target.replaceChildren(wrap);return data;
+    }
+    function actionButtons(row,table,choices){
+      const box=document.createElement("div");
+      choices.forEach(([label,value])=>{const b=document.createElement("button");b.className="secondary";b.style.cssText="margin:2px;padding:6px 8px;font-size:11px";b.textContent=label;b.addEventListener("click",async()=>{
+        b.disabled=true;
+        const {error}=await client.from(table).update({status:value,updated_at:new Date().toISOString()}).eq("id",row.id);
+        if(error){alert("Update failed: "+error.message);b.disabled=false;return;}
+        await refreshAll();
+      });box.appendChild(b);});
+      return box;
+    }
+    async function refreshAll(){
+      const promoTarget=section.querySelector("#tguPromoList");
+      const {data:promos,error:pe}=await client.from("tobay_promotions").select("id,code,discount_type,discount_value,currency,is_active,created_at").order("created_at",{ascending:false}).limit(30);
+      if(pe){promoTarget.textContent=/does not exist|schema cache|relation/i.test(pe.message)?"Run the database upgrade SQL above to enable promotions.":"Unable to load promotions: "+pe.message;}
+      else if(!promos.length)promoTarget.textContent="No promotions created yet.";
+      else {const ul=document.createElement("ul");promos.forEach(p=>{const li=document.createElement("li");li.style.margin="7px 0";li.textContent=p.code+" — "+(p.discount_type==="percentage"?p.discount_value+"%":money(p.discount_value,p.currency))+" — "+(p.is_active?"Active":"Inactive");ul.appendChild(li);});promoTarget.replaceChildren(ul);}
+      const refunds=await fetchRows("tobay_refund_requests","#tguRefundList","id,order_id,reason,requested_amount,currency,status,created_at","No refund requests yet.",{
+        headers:["Order","Reason","Amount","Status","Admin action"],
+        cells:r=>[r.order_id,r.reason,money(r.requested_amount,r.currency),r.status,actionButtons(r,"tobay_refund_requests",[["Review","under_review"],["Approve","approved"],["Reject","rejected"],["Mark refunded","refunded"]])]
+      });
+      const cases=await fetchRows("tobay_buyer_protection_cases","#tguCaseList","id,order_id,issue_type,description,status,created_at","No buyer protection cases yet.",{
+        headers:["Order","Issue","Details","Status","Admin action"],
+        cells:r=>[r.order_id,r.issue_type,r.description,r.status,actionButtons(r,"tobay_buyer_protection_cases",[["Investigate","investigating"],["Resolve for buyer","resolved_buyer"],["Resolve for seller","resolved_seller"],["Close","closed"]])]
+      });
+      await fetchRows("tobay_seller_verification","#tguVerifyList","id,user_id,business_name,document_type,status,created_at","No seller verification submissions yet.",{
+        headers:["Business","User ID","Document type","Status","Admin action"],
+        cells:r=>[r.business_name,r.user_id,r.document_type,r.status,actionButtons(r,"tobay_seller_verification",[["Review","under_review"],["Verify","verified"],["Reject","rejected"]])]
+      });
+      if(!pe && !refunds.length && !cases.length)status.textContent="Database upgrade detected. New management tables are available.";
+      else if(pe)status.textContent="Some upgrade tables are not installed yet. Run the SQL above to activate all modules.";
+    }
+    section.querySelector("#tguPromoForm").addEventListener("submit",async e=>{
+      e.preventDefault();
+      let currentUser=null;
+      try{const {data}=await client.auth.getUser();currentUser=data&&data.user;}catch(err){}
+      if(!currentUser){alert("Please sign in before creating a promotion.");return;}
+      const code=section.querySelector("#tguPromoCode").value.trim().toUpperCase();
+      const type=section.querySelector("#tguPromoType").value;
+      const value=Number(section.querySelector("#tguPromoValue").value);
+      const currency=(section.querySelector("#tguPromoCurrency").value.trim().toUpperCase()||"NGN");
+      const limit=section.querySelector("#tguPromoLimit").value;
+      if(!code||!Number.isFinite(value)||value<=0||(type==="percentage"&&value>100)){alert("Enter a valid promo code and discount.");return;}
+      const {error}=await client.from("tobay_promotions").insert({seller_id:currentUser.id,code,discount_type:type,discount_value:value,currency,usage_limit:limit?Number(limit):null});
+      if(error){alert("Promotion could not be created: "+error.message);return;}
+      e.target.reset();section.querySelector("#tguPromoCurrency").value="NGN";await refreshAll();
+    });
+    await refreshAll();
+  }
+
+  function observe(){
+    const root=document.getElementById("tobayAdminDashboard");
+    if(root && root.style.display!=="none" && !root.querySelector("#tobayGlobalUpgrade"))loadAdminModule(root);
+  }
+  const mo=new MutationObserver(()=>observe());
+  mo.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:["style"]});
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",observe);else observe();
 })();
 </script>
 
