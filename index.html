@@ -3666,6 +3666,92 @@ document.getElementById("tobayForgotPassword").addEventListener("click", async f
   }
 });
 
+// TOBAY Buy Now delivery tracking helpers. Delivery events are stored separately
+// from the main order/payment status so payment verification remains independent.
+const TOBAY_DELIVERY_STAGES = [
+  { value: "preparing", label: "Preparing order" },
+  { value: "packed", label: "Packed and ready" },
+  { value: "shipped", label: "Handed to courier" },
+  { value: "out_for_delivery", label: "Out for delivery" },
+  { value: "delivered", label: "Delivered / fulfilled" }
+];
+
+function tobayDeliveryStageLabel(value) {
+  const found = TOBAY_DELIVERY_STAGES.find(stage => stage.value === String(value || "").toLowerCase());
+  return found ? found.label : "Delivery update";
+}
+
+async function tobayRenderDeliveryUpdates(orderId, target, audience = "buyer") {
+  if (!target || !orderId) return [];
+  target.textContent = "Loading delivery updates...";
+  const { data: updates, error } = await supabase
+    .from("tobay_delivery_updates")
+    .select("status,message,carrier,tracking_number,tracking_url,created_at")
+    .eq("order_id", orderId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("TOBAY delivery updates query failed:", error);
+    target.textContent = "Delivery updates could not be loaded: " + (error.message || "Unknown database error") + ". Please refresh or contact TOBAY support.";
+    return null;
+  }
+
+  target.replaceChildren();
+  if (!updates || updates.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = audience === "seller"
+      ? "No delivery update has been posted for this order yet."
+      : "No delivery updates yet. The seller's updates will appear here as your order is prepared and delivered.";
+    target.appendChild(empty);
+    return [];
+  }
+
+  updates.forEach(update => {
+    const event = document.createElement("div");
+    event.className = "tobay-delivery-event";
+    const heading = document.createElement("strong");
+    heading.textContent = tobayDeliveryStageLabel(update.status);
+    const date = document.createElement("time");
+    const parsedDate = update.created_at ? new Date(update.created_at) : null;
+    date.textContent = parsedDate && !Number.isNaN(parsedDate.getTime())
+      ? parsedDate.toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" })
+      : "Date unavailable";
+    event.append(heading, date);
+
+    if (update.message) {
+      const message = document.createElement("p");
+      message.textContent = update.message;
+      event.appendChild(message);
+    }
+
+    const metadata = [];
+    if (update.carrier) metadata.push("Courier: " + update.carrier);
+    if (update.tracking_number) metadata.push("Tracking number: " + update.tracking_number);
+    if (metadata.length) {
+      const meta = document.createElement("p");
+      meta.className = "tobay-delivery-meta";
+      meta.textContent = metadata.join(" · ");
+      event.appendChild(meta);
+    }
+
+    if (update.tracking_url && /^https?:\/\//i.test(update.tracking_url)) {
+      const link = document.createElement("a");
+      link.href = update.tracking_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open courier tracking";
+      link.style.cssText = "display:inline-block;margin-top:7px;color:#175b9b;font-size:11px;font-weight:800;";
+      event.appendChild(link);
+    }
+    target.appendChild(event);
+  });
+  return updates;
+}
+
+// Expose the renderer on window so dashboard code can call it reliably
+// across the seller and buyer account flows.
+window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
+
   window.loadTobaySellerDashboard = async function(user) {
   const message = document.getElementById("tobayAccountMessage");
 
@@ -4396,91 +4482,7 @@ async function loadTobaySellerOrders() {
 }
 
 
-// TOBAY Buy Now delivery tracking helpers. Delivery events are stored separately
-// from the main order/payment status so payment verification remains independent.
-const TOBAY_DELIVERY_STAGES = [
-  { value: "preparing", label: "Preparing order" },
-  { value: "packed", label: "Packed and ready" },
-  { value: "shipped", label: "Handed to courier" },
-  { value: "out_for_delivery", label: "Out for delivery" },
-  { value: "delivered", label: "Delivered / fulfilled" }
-];
 
-function tobayDeliveryStageLabel(value) {
-  const found = TOBAY_DELIVERY_STAGES.find(stage => stage.value === String(value || "").toLowerCase());
-  return found ? found.label : "Delivery update";
-}
-
-async function tobayRenderDeliveryUpdates(orderId, target, audience = "buyer") {
-  if (!target || !orderId) return [];
-  target.textContent = "Loading delivery updates...";
-  const { data: updates, error } = await supabase
-    .from("tobay_delivery_updates")
-    .select("status,message,carrier,tracking_number,tracking_url,created_at")
-    .eq("order_id", orderId)
-    .order("created_at", { ascending: true });
-
-  if (error) {
-    console.error("TOBAY delivery updates query failed:", error);
-    target.textContent = "Delivery updates could not be loaded: " + (error.message || "Unknown database error") + ". Please refresh or contact TOBAY support.";
-    return null;
-  }
-
-  target.replaceChildren();
-  if (!updates || updates.length === 0) {
-    const empty = document.createElement("p");
-    empty.textContent = audience === "seller"
-      ? "No delivery update has been posted for this order yet."
-      : "No delivery updates yet. The seller's updates will appear here as your order is prepared and delivered.";
-    target.appendChild(empty);
-    return [];
-  }
-
-  updates.forEach(update => {
-    const event = document.createElement("div");
-    event.className = "tobay-delivery-event";
-    const heading = document.createElement("strong");
-    heading.textContent = tobayDeliveryStageLabel(update.status);
-    const date = document.createElement("time");
-    const parsedDate = update.created_at ? new Date(update.created_at) : null;
-    date.textContent = parsedDate && !Number.isNaN(parsedDate.getTime())
-      ? parsedDate.toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" })
-      : "Date unavailable";
-    event.append(heading, date);
-
-    if (update.message) {
-      const message = document.createElement("p");
-      message.textContent = update.message;
-      event.appendChild(message);
-    }
-
-    const metadata = [];
-    if (update.carrier) metadata.push("Courier: " + update.carrier);
-    if (update.tracking_number) metadata.push("Tracking number: " + update.tracking_number);
-    if (metadata.length) {
-      const meta = document.createElement("p");
-      meta.className = "tobay-delivery-meta";
-      meta.textContent = metadata.join(" · ");
-      event.appendChild(meta);
-    }
-
-    if (update.tracking_url && /^https?:\/\//i.test(update.tracking_url)) {
-      const link = document.createElement("a");
-      link.href = update.tracking_url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "Open courier tracking";
-      link.style.cssText = "display:inline-block;margin-top:7px;color:#175b9b;font-size:11px;font-weight:800;";
-      event.appendChild(link);
-    }
-    target.appendChild(event);
-  });
-  return updates;
-}
-
-// Expose the renderer on window so dashboard code can call it reliably
-// across the seller and buyer account flows.
-window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
 
 // Normal Buy Now orders are loaded separately from EasyBuy orders.
 async function loadTobayNormalSellerOrders() {
