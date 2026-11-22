@@ -5274,42 +5274,82 @@ async function tobayVerifyPaystackReturn() {
 }
 
 async function loadTobayNormalBuyerOrders(user) {
-  await tobayVerifyPaystackReturn();
   const container = document.getElementById("tobayBuyerBuyNowOrders");
-  if (!container) return;
+  if (!container) {
+    console.warn("TOBAY Buy Now orders container was not found.");
+    return;
+  }
   container.textContent = "Loading Buy Now orders...";
 
-  const { data: orders, error } = await supabase
-    .from("tobay_orders")
-    .select("id,total_amount,currency,order_status,payment_status,payment_method,paystack_reference,seller_payment_instructions,created_at,listing:listings(title)")
-    .eq("buyer_id", user.id)
-    .order("created_at", { ascending: false });
+  // Paystack callback verification must never prevent the order list from loading.
+  // Run it separately so a delayed callback cannot leave this section blank.
+  if (typeof tobayVerifyPaystackReturn === "function") {
+    void tobayVerifyPaystackReturn().catch(error => {
+      console.warn("TOBAY Paystack return verification could not finish:", error);
+    });
+  }
 
-  if (error) {
-    container.textContent = "Could not load Buy Now orders: " + error.message;
+  const baseColumns = "id,total_amount,currency,order_status,payment_status,payment_method,paystack_reference,seller_payment_instructions,created_at";
+  let orders = null;
+  let queryError = null;
+  try {
+    let result = await supabase
+      .from("tobay_orders")
+      .select(baseColumns + ",listing:listings(title)")
+      .eq("buyer_id", user.id)
+      .order("created_at", { ascending: false });
+    orders = result.data;
+    queryError = result.error;
+
+    // If the optional listing relationship is unavailable, retry the order
+    // records without that relationship so a join issue cannot hide purchases.
+    if (queryError) {
+      console.warn("TOBAY Buy Now order query with listing details failed; retrying without listing details:", queryError);
+      result = await supabase
+        .from("tobay_orders")
+        .select(baseColumns)
+        .eq("buyer_id", user.id)
+        .order("created_at", { ascending: false });
+      orders = result.data;
+      queryError = result.error;
+    }
+  } catch (error) {
+    console.error("TOBAY Buy Now orders request failed:", error);
+    container.textContent = "Could not load Buy Now orders: " + (error?.message || "Unexpected connection error. Please refresh.");
+    return;
+  }
+
+  if (queryError) {
+    console.error("TOBAY Buy Now orders query failed:", queryError);
+    container.textContent = "Could not load Buy Now orders: " + queryError.message;
     return;
   }
 
   container.replaceChildren();
   if (!orders || orders.length === 0) {
-    container.innerHTML = '<div class="buyer-empty">You have not placed any Buy Now orders yet. Your purchases will appear here.</div>';
+    container.innerHTML = '<div class="buyer-empty">No Buy Now orders were found for this buyer account. Check that you are signed in with the same account used to place the order.</div>';
     return;
   }
 
-  orders.forEach(order => {
+  for (const order of orders) {
     const card = document.createElement("div");
     card.className = "buyer-order-card";
+    card.dataset.orderId = order.id;
+
     const heading = document.createElement("h4");
     heading.textContent = order.listing?.title || "Marketplace product";
     const reference = document.createElement("p");
     reference.textContent = "Order reference: " + order.id;
     const amount = document.createElement("p");
-    amount.textContent = "Amount: " + order.currency + " " + order.total_amount;
+    amount.textContent = "Amount: " + (order.currency || "NGN") + " " + Number(order.total_amount || 0).toLocaleString("en-NG");
     const status = document.createElement("p");
     status.textContent = "Order status: " + order.order_status + " | Payment status: " + order.payment_status;
     const date = document.createElement("p");
-    date.textContent = "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
+    date.textContent = order.created_at
+      ? "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" })
+      : "Order date: unavailable";
     const notice = document.createElement("p");
+
     if (order.order_status === "pending") {
       notice.textContent = "Your order request has been received. Please wait for the seller to review your order. No payment has been collected yet.";
     } else if (order.order_status === "accepted") {
@@ -5331,7 +5371,15 @@ async function loadTobayNormalBuyerOrders(user) {
     }
     notice.className = "buyer-notice";
     card.append(heading, reference, amount, status, date, notice);
-    card.appendChild(tobayBuildOrderTimeline(order.order_status));
+
+    try {
+      if (typeof tobayBuildOrderTimeline === "function") {
+        card.appendChild(tobayBuildOrderTimeline(order.order_status));
+      }
+    } catch (error) {
+      console.warn("Could not render TOBAY order timeline:", error);
+    }
+
     if (["accepted", "completed"].includes(order.order_status)) {
       const deliveryPanel = document.createElement("section");
       deliveryPanel.className = "tobay-delivery-panel";
@@ -5343,8 +5391,16 @@ async function loadTobayNormalBuyerOrders(user) {
       deliveryHistory.className = "tobay-delivery-history";
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
-      void window.tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer");
+      if (typeof window.tobayRenderDeliveryUpdates === "function") {
+        void window.tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer").catch(error => {
+          console.error("TOBAY delivery history could not load:", error);
+          deliveryHistory.textContent = "Delivery updates could not be loaded. Please refresh this order.";
+        });
+      } else {
+        deliveryHistory.textContent = "Delivery tracking is temporarily unavailable. Please refresh the page.";
+      }
     }
+
     if (order.order_status === "accepted") {
       const paymentMethod = document.createElement("p");
       paymentMethod.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : order.payment_method === "paystack" ? "Paystack" : "To be confirmed by seller");
@@ -5357,7 +5413,7 @@ async function loadTobayNormalBuyerOrders(user) {
       if (order.payment_status !== "paid" && order.payment_method === "paystack") {
         const payButton = document.createElement("button");
         payButton.type = "button";
-        payButton.textContent = order.payment_status === "pending_verification" ? "Continue / verify Paystack payment" : "Pay securely with Paystack (TEST)";
+        payButton.textContent = order.payment_status === "pending_verification" ? "Verify existing Paystack payment" : "Pay securely with Paystack (TEST)";
         payButton.style.cssText = "display:block;width:100%;max-width:360px;margin:12px 0;padding:12px 16px;border:0;border-radius:9px;background:#4b2b91;color:#fff;font-weight:800;cursor:pointer";
         payButton.addEventListener("click", async () => {
           const client = window.tobaySupabase;
@@ -5380,7 +5436,6 @@ async function loadTobayNormalBuyerOrders(user) {
               await loadTobayNormalBuyerOrders(user);
               return;
             }
-
             payButton.textContent = "Connecting to secure checkout...";
             const { data, error } = await client.functions.invoke("paystack-initialize", {
               body: { order_id: order.id, order_type: "tobay" }
@@ -5403,15 +5458,22 @@ async function loadTobayNormalBuyerOrders(user) {
         card.appendChild(paid);
       }
     }
+
+    // Add the order card before any optional UI work so a tracking-render issue
+    // can never make the entire purchase disappear from the buyer dashboard.
     container.appendChild(card);
-  });
+  }
+
   const buyNowSearch = document.getElementById("tobayBuyNowSearch");
-  if (buyNowSearch) buyNowSearch.addEventListener("input", () => {
-    const term = buyNowSearch.value.toLowerCase().trim();
-    container.querySelectorAll(".buyer-order-card").forEach(card => {
-      card.style.display = card.textContent.toLowerCase().includes(term) ? "block" : "none";
+  if (buyNowSearch && !buyNowSearch.dataset.bound) {
+    buyNowSearch.dataset.bound = "1";
+    buyNowSearch.addEventListener("input", () => {
+      const term = buyNowSearch.value.toLowerCase().trim();
+      container.querySelectorAll(".buyer-order-card").forEach(card => {
+        card.style.display = card.textContent.toLowerCase().includes(term) ? "block" : "none";
+      });
     });
-  });
+  }
 }
 
 async function loadTobayAdminDashboard(user) {
@@ -6381,10 +6443,23 @@ await loadTobayAdminDashboard(user);
 if (adminCheckError) throw adminCheckError;
 
 if (!metadata.business_name && !adminRecord) {
-  await loadTobayBuyerOrders(user);
-  await loadTobayNormalBuyerOrders(user);
-  await loadTobayBuyerOverallSummary(user);
-  await loadTobayWishlist(user);
+  try {
+    await loadTobayBuyerOrders(user);
+  } catch (buyerEasyBuyError) {
+    console.error("TOBAY EasyBuy buyer dashboard failed to load:", buyerEasyBuyError);
+  }
+  // Keep the Buy Now list, combined summary and saved items independent: an
+  // error in one buyer panel must not prevent the others from appearing.
+  const buyerPanelResults = await Promise.allSettled([
+    loadTobayNormalBuyerOrders(user),
+    loadTobayBuyerOverallSummary(user),
+    loadTobayWishlist(user)
+  ]);
+  buyerPanelResults.forEach((result, index) => {
+    if (result.status === "rejected") {
+      console.error("TOBAY buyer panel failed to load (panel " + index + "):", result.reason);
+    }
+  });
 } 
       await loadTobayNotifications(user);
       if (metadata.business_name) {
