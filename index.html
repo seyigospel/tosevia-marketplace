@@ -636,6 +636,23 @@ img,video,iframe{max-width:100%;}
 .tobay-track{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:12px 0;padding:10px;background:#f6f8fb;border-radius:9px}
 .tobay-track-step{font-size:11px;padding:6px 9px;border-radius:20px;background:#e8edf4;color:#64748b;font-weight:700}
 .tobay-track-step.active{background:#d9f4e4;color:#17633a}
+.tobay-delivery-panel{margin:14px 0;padding:14px;border:1px solid #d8e4ee;border-radius:12px;background:#fbfdff;color:#23364c}
+.tobay-delivery-panel h5{margin:0 0 6px;color:#17375f;font-size:14px}
+.tobay-delivery-panel p{margin:6px 0;color:#64748b;font-size:12px;line-height:1.55}
+.tobay-delivery-history{display:grid;gap:9px;margin:12px 0}
+.tobay-delivery-event{padding:11px 12px;border:1px solid #e4eaf2;border-left:3px solid #24734e;border-radius:9px;background:#fff}
+.tobay-delivery-event strong{display:block;color:#17375f;font-size:12px}
+.tobay-delivery-event time{display:block;margin-top:3px;color:#8290a2;font-size:10px}
+.tobay-delivery-event p{margin:7px 0 0;color:#526176;white-space:pre-wrap;overflow-wrap:anywhere}
+.tobay-delivery-meta{font-size:11px!important;color:#526176!important}
+.tobay-delivery-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.tobay-delivery-form label{display:grid;gap:5px;color:#334155;font-size:11px;font-weight:800}
+.tobay-delivery-form input,.tobay-delivery-form select,.tobay-delivery-form textarea{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #d6e0eb;border-radius:8px;background:#fff;color:#26364b;font:inherit;font-weight:500}
+.tobay-delivery-form textarea{min-height:76px;resize:vertical}
+.tobay-delivery-form .wide{grid-column:1/-1}
+.tobay-delivery-submit{grid-column:1/-1;justify-self:start;padding:10px 15px;border:0;border-radius:8px;background:#145943;color:#fff;font-size:12px;font-weight:800;cursor:pointer}
+.tobay-delivery-submit:disabled{opacity:.55;cursor:wait}
+@media(max-width:520px){.tobay-delivery-form{grid-template-columns:1fr}.tobay-delivery-form .wide,.tobay-delivery-submit{grid-column:1}}
 .tobay-notice-item{padding:12px;border:1px solid #e3eaf2;border-radius:10px;margin:8px 0;background:#fff}
 .tobay-notice-item.unread{border-left:4px solid #e99b24;background:#fffaf0}
 .tobay-review-modal{position:fixed;inset:0;z-index:100010;background:#07172dcc;display:flex;align-items:center;justify-content:center;padding:16px}
@@ -4379,6 +4396,87 @@ async function loadTobaySellerOrders() {
 }
 
 
+// TOBAY Buy Now delivery tracking helpers. Delivery events are stored separately
+// from the main order/payment status so payment verification remains independent.
+const TOBAY_DELIVERY_STAGES = [
+  { value: "preparing", label: "Preparing order" },
+  { value: "packed", label: "Packed and ready" },
+  { value: "shipped", label: "Handed to courier" },
+  { value: "out_for_delivery", label: "Out for delivery" },
+  { value: "delivered", label: "Delivered / fulfilled" }
+];
+
+function tobayDeliveryStageLabel(value) {
+  const found = TOBAY_DELIVERY_STAGES.find(stage => stage.value === String(value || "").toLowerCase());
+  return found ? found.label : "Delivery update";
+}
+
+async function tobayRenderDeliveryUpdates(orderId, target, audience = "buyer") {
+  if (!target || !orderId) return [];
+  target.textContent = "Loading delivery updates...";
+  const { data: updates, error } = await supabase
+    .from("tobay_delivery_updates")
+    .select("status,message,carrier,tracking_number,tracking_url,created_at")
+    .eq("order_id", orderId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    target.textContent = "Delivery tracking is not set up yet. Run the TOBAY Delivery Tracking SQL upgrade in Supabase, then refresh this dashboard.";
+    return null;
+  }
+
+  target.replaceChildren();
+  if (!updates || updates.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = audience === "seller"
+      ? "No delivery update has been posted for this order yet."
+      : "No delivery updates yet. The seller's updates will appear here as your order is prepared and delivered.";
+    target.appendChild(empty);
+    return [];
+  }
+
+  updates.forEach(update => {
+    const event = document.createElement("div");
+    event.className = "tobay-delivery-event";
+    const heading = document.createElement("strong");
+    heading.textContent = tobayDeliveryStageLabel(update.status);
+    const date = document.createElement("time");
+    const parsedDate = update.created_at ? new Date(update.created_at) : null;
+    date.textContent = parsedDate && !Number.isNaN(parsedDate.getTime())
+      ? parsedDate.toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" })
+      : "Date unavailable";
+    event.append(heading, date);
+
+    if (update.message) {
+      const message = document.createElement("p");
+      message.textContent = update.message;
+      event.appendChild(message);
+    }
+
+    const metadata = [];
+    if (update.carrier) metadata.push("Courier: " + update.carrier);
+    if (update.tracking_number) metadata.push("Tracking number: " + update.tracking_number);
+    if (metadata.length) {
+      const meta = document.createElement("p");
+      meta.className = "tobay-delivery-meta";
+      meta.textContent = metadata.join(" · ");
+      event.appendChild(meta);
+    }
+
+    if (update.tracking_url && /^https?:\/\//i.test(update.tracking_url)) {
+      const link = document.createElement("a");
+      link.href = update.tracking_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open courier tracking";
+      link.style.cssText = "display:inline-block;margin-top:7px;color:#175b9b;font-size:11px;font-weight:800;";
+      event.appendChild(link);
+    }
+    target.appendChild(event);
+  });
+  return updates;
+}
+
 // Normal Buy Now orders are loaded separately from EasyBuy orders.
 async function loadTobayNormalSellerOrders() {
   const container = document.getElementById("tobaySellerBuyNowOrders");
@@ -4424,14 +4522,14 @@ async function loadTobayNormalSellerOrders() {
     date.textContent = "Order date: " + new Date(order.created_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
     card.append(heading, details, buyer, phone, address, status, date);
 
-    if (order.order_status === "accepted") {
+    if (["accepted", "completed"].includes(order.order_status)) {
       const method = document.createElement("p");
       method.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : order.payment_method === "paystack" ? "Paystack Secure Online Payment (TEST)" : "Not specified");
       card.appendChild(method);
       if (order.payment_method === "paystack" && order.payment_status !== "paid") {
         const paystackNote = document.createElement("p");
         paystackNote.style.cssText = "margin:8px 0;padding:10px 12px;border:1px solid #d9d0f0;border-radius:8px;background:#f7f4ff;color:#49347b;font-size:12px;line-height:1.6;";
-        paystackNote.textContent = "The buyer should complete payment using the Paystack TEST button in their Buyer Dashboard. The order remains unpaid until Paystack verification succeeds.";
+        paystackNote.textContent = "The buyer must complete Paystack payment and have it verified before delivery tracking can be updated.";
         card.appendChild(paystackNote);
       }
       if (order.seller_payment_instructions) {
@@ -4439,31 +4537,131 @@ async function loadTobayNormalSellerOrders() {
         instructions.textContent = "Buyer instructions: " + order.seller_payment_instructions;
         card.appendChild(instructions);
       }
-      const completeButton = document.createElement("button");
-      completeButton.type = "button";
-      completeButton.textContent = "Mark Order Completed";
-      completeButton.style.cssText = "margin:10px 8px 0 0;padding:10px 15px;border:0;border-radius:7px;background:#6653b7;color:#fff;font-weight:700;cursor:pointer;";
-      const completionNote = document.createElement("p");
-      completionNote.style.cssText = "margin-top:8px;font-size:11px;color:#718096;";
-      completionNote.textContent = "Use this only after delivery or fulfilment. Marking an order complete does not verify payment.";
-      completeButton.addEventListener("click", async () => {
-        if (!confirm("Mark this Buy Now order as completed? Only do this after fulfilling the order.")) return;
-        completeButton.disabled = true;
-        completeButton.textContent = "Updating...";
-        const { data: updated, error: updateError } = await supabase.rpc(
-          "complete_tobay_normal_order",
-          { p_order_id: order.id }
-        );
-        if (updateError || updated !== true) {
-          alert("Could not complete this order. Please make sure the TOBAY Seller Order Completion SQL has been run in Supabase. " + (updateError?.message || "The order may no longer be eligible for completion."));
-          completeButton.disabled = false;
-          completeButton.textContent = "Mark Order Completed";
-          return;
+
+      const deliveryPanel = document.createElement("section");
+      deliveryPanel.className = "tobay-delivery-panel";
+      const deliveryTitle = document.createElement("h5");
+      deliveryTitle.textContent = "Delivery tracking updates";
+      const deliveryIntro = document.createElement("p");
+      deliveryIntro.textContent = "Post progress updates here. The buyer can see each update and its date in their Buyer Dashboard.";
+      const deliveryHistory = document.createElement("div");
+      deliveryHistory.className = "tobay-delivery-history";
+      deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
+      card.appendChild(deliveryPanel);
+      void tobayRenderDeliveryUpdates(order.id, deliveryHistory, "seller");
+
+      if (order.order_status === "accepted") {
+        const canPostDelivery = order.payment_method !== "paystack" || order.payment_status === "paid";
+        if (!canPostDelivery) {
+          const lockedNote = document.createElement("p");
+          lockedNote.textContent = "Delivery updates unlock after Paystack confirms payment.";
+          lockedNote.style.cssText = "padding:10px 12px;border:1px solid #ead8b5;border-radius:8px;background:#fff9ed;color:#81520f;font-size:12px;";
+          deliveryPanel.appendChild(lockedNote);
+        } else {
+          const deliveryForm = document.createElement("div");
+          deliveryForm.className = "tobay-delivery-form";
+          const makeDeliveryInput = (labelText, type, placeholder, className = "") => {
+            const label = document.createElement("label");
+            label.textContent = labelText;
+            if (className) label.className = className;
+            const input = document.createElement("input");
+            input.type = type;
+            input.placeholder = placeholder;
+            input.maxLength = 250;
+            label.appendChild(input);
+            deliveryForm.appendChild(label);
+            return input;
+          };
+          const stageLabel = document.createElement("label");
+          stageLabel.textContent = "Delivery stage";
+          stageLabel.className = "wide";
+          const stageSelect = document.createElement("select");
+          TOBAY_DELIVERY_STAGES.forEach(stage => {
+            const option = document.createElement("option");
+            option.value = stage.value;
+            option.textContent = stage.label;
+            stageSelect.appendChild(option);
+          });
+          stageLabel.appendChild(stageSelect);
+          deliveryForm.appendChild(stageLabel);
+
+          const carrierInput = makeDeliveryInput("Courier / delivery company (optional)", "text", "e.g. GIG Logistics");
+          const trackingNumberInput = makeDeliveryInput("Tracking number (optional)", "text", "Enter tracking number");
+          const trackingUrlInput = makeDeliveryInput("Courier tracking link (optional)", "url", "https://...");
+          const messageLabel = document.createElement("label");
+          messageLabel.textContent = "Message for buyer (optional)";
+          messageLabel.className = "wide";
+          const messageInput = document.createElement("textarea");
+          messageInput.maxLength = 600;
+          messageInput.placeholder = "Add a helpful delivery note or expected next step.";
+          messageLabel.appendChild(messageInput);
+          deliveryForm.appendChild(messageLabel);
+
+          const postButton = document.createElement("button");
+          postButton.type = "button";
+          postButton.className = "tobay-delivery-submit";
+          postButton.textContent = "Post delivery update";
+          deliveryForm.appendChild(postButton);
+          deliveryPanel.appendChild(deliveryForm);
+
+          postButton.addEventListener("click", async () => {
+            const trackingUrl = trackingUrlInput.value.trim();
+            if (trackingUrl) {
+              try {
+                const parsed = new URL(trackingUrl);
+                if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error("Use an HTTP or HTTPS link.");
+              } catch (urlError) {
+                alert("Please enter a valid courier tracking link beginning with https:// or http://.");
+                trackingUrlInput.focus();
+                return;
+              }
+            }
+            postButton.disabled = true;
+            postButton.textContent = "Posting update...";
+            const { error: deliveryError } = await supabase.rpc("add_tobay_delivery_update", {
+              p_order_id: order.id,
+              p_status: stageSelect.value,
+              p_message: messageInput.value.trim() || null,
+              p_carrier: carrierInput.value.trim() || null,
+              p_tracking_number: trackingNumberInput.value.trim() || null,
+              p_tracking_url: trackingUrl || null
+            });
+            if (deliveryError) {
+              alert("Could not post delivery update: " + deliveryError.message + ". Confirm that the TOBAY Delivery Tracking SQL has been run in Supabase.");
+              postButton.disabled = false;
+              postButton.textContent = "Post delivery update";
+              return;
+            }
+            await loadTobayNormalSellerOrders();
+          });
         }
-        await loadTobayNormalSellerOrders();
-        await loadTobaySellerOrderOverview();
-      });
-      card.append(completeButton, completionNote);
+
+        const completeButton = document.createElement("button");
+        completeButton.type = "button";
+        completeButton.textContent = "Mark Order Completed";
+        completeButton.style.cssText = "margin:10px 8px 0 0;padding:10px 15px;border:0;border-radius:7px;background:#6653b7;color:#fff;font-weight:700;cursor:pointer;";
+        const completionNote = document.createElement("p");
+        completionNote.style.cssText = "margin-top:8px;font-size:11px;color:#718096;";
+        completionNote.textContent = "Use this only after delivery or fulfilment. This does not verify payment. For shipped goods, post the Delivered / fulfilled update first.";
+        completeButton.addEventListener("click", async () => {
+          if (!confirm("Mark this Buy Now order as completed? Only do this after fulfilling the order.")) return;
+          completeButton.disabled = true;
+          completeButton.textContent = "Updating...";
+          const { data: updated, error: updateError } = await supabase.rpc(
+            "complete_tobay_normal_order",
+            { p_order_id: order.id }
+          );
+          if (updateError || updated !== true) {
+            alert("Could not complete this order. Please make sure the TOBAY Seller Order Completion SQL has been run in Supabase. " + (updateError?.message || "The order may no longer be eligible for completion."));
+            completeButton.disabled = false;
+            completeButton.textContent = "Mark Order Completed";
+            return;
+          }
+          await loadTobayNormalSellerOrders();
+          await loadTobaySellerOrderOverview();
+        });
+        card.append(completeButton, completionNote);
+      }
     }
 
     if (order.order_status === "pending") {
@@ -5130,6 +5328,19 @@ async function loadTobayNormalBuyerOrders(user) {
     notice.className = "buyer-notice";
     card.append(heading, reference, amount, status, date, notice);
     card.appendChild(tobayBuildOrderTimeline(order.order_status));
+    if (["accepted", "completed"].includes(order.order_status)) {
+      const deliveryPanel = document.createElement("section");
+      deliveryPanel.className = "tobay-delivery-panel";
+      const deliveryTitle = document.createElement("h5");
+      deliveryTitle.textContent = "Delivery tracking";
+      const deliveryIntro = document.createElement("p");
+      deliveryIntro.textContent = "Follow the seller's latest preparation, dispatch and delivery updates here.";
+      const deliveryHistory = document.createElement("div");
+      deliveryHistory.className = "tobay-delivery-history";
+      deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
+      card.appendChild(deliveryPanel);
+      void tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer");
+    }
     if (order.order_status === "accepted") {
       const paymentMethod = document.createElement("p");
       paymentMethod.textContent = "Payment method: " + (order.payment_method === "pay_on_delivery" ? "Pay on Delivery" : order.payment_method === "bank_transfer" ? "Bank Transfer" : order.payment_method === "paystack" ? "Paystack" : "To be confirmed by seller");
@@ -6304,7 +6515,7 @@ function tobayBuildOrderTimeline(statusValue) {
     return wrap;
   }
   const steps = ["pending", "accepted", "completed"];
-  const labels = ["1. Received", "2. Accepted", "3. Completed"];
+  const labels = ["1. Order received", "2. Seller accepted", "3. Order completed"];
   const active = Math.max(0, steps.indexOf(status));
   steps.forEach((step, index) => {
     const el = document.createElement("span");
