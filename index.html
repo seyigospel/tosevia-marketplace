@@ -5373,6 +5373,10 @@ async function loadTobayNormalBuyerOrders(user) {
     notice.className = "buyer-notice";
     card.append(heading, reference, amount, status, date, notice);
 
+    // Attach the core order card immediately. Optional timeline and delivery
+    // widgets must never be able to leave the buyer's order list blank.
+    container.appendChild(card);
+
     try {
       if (typeof tobayBuildOrderTimeline === "function") {
         card.appendChild(tobayBuildOrderTimeline(order.order_status));
@@ -5392,13 +5396,19 @@ async function loadTobayNormalBuyerOrders(user) {
       deliveryHistory.className = "tobay-delivery-history";
       deliveryPanel.append(deliveryTitle, deliveryIntro, deliveryHistory);
       card.appendChild(deliveryPanel);
-      // Call the module-scoped renderer directly. Do not depend on a window
-      // property being ready when the buyer dashboard is opened immediately
-      // after login/session restoration.
-      tobayRenderDeliveryUpdates(order.id, deliveryHistory, "buyer").catch(error => {
-        console.error("TOBAY delivery history could not load:", error);
-        deliveryHistory.textContent = "Delivery updates could not be loaded: " + (error.message || "Please refresh this order.");
-      });
+
+      // Keep the order card visible even if the renderer is absent or fails.
+      const deliveryRenderer = window.tobayRenderDeliveryUpdates;
+      if (typeof deliveryRenderer === "function") {
+        Promise.resolve()
+          .then(() => deliveryRenderer(order.id, deliveryHistory, "buyer"))
+          .catch(error => {
+            console.error("TOBAY delivery history could not load:", error);
+            deliveryHistory.textContent = "Delivery updates could not be loaded: " + (error?.message || "Please refresh this order.");
+          });
+      } else {
+        deliveryHistory.textContent = "Delivery updates are temporarily unavailable. Your order is still listed above.";
+      }
     }
 
     if (order.order_status === "accepted") {
@@ -5459,9 +5469,6 @@ async function loadTobayNormalBuyerOrders(user) {
       }
     }
 
-    // Add the order card before any optional UI work so a tracking-render issue
-    // can never make the entire purchase disappear from the buyer dashboard.
-    container.appendChild(card);
   }
 
   const buyNowSearch = document.getElementById("tobayBuyNowSearch");
