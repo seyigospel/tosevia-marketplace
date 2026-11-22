@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="#123c36" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 35 Buyer Payment Message Fix</title>
+<title>TOBAY | Global Marketplace — Version 43 Automatic Delivery Notifications</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -6806,7 +6806,7 @@ async function loadTobayNotifications(user) {
     <div class="tobay-notification-header">
       <div>
         <h3>🔔 Notification Centre</h3>
-        <p>Stay updated on orders and activity on your TOBAY account.</p>
+        <p>Stay updated on orders and activity on your TOBAY account. Delivery-stage notifications appear automatically while you are signed in.</p>
       </div>
       <span class="tobay-unread-counter" id="tobayUnreadCounter" aria-live="polite">0 unread</span>
     </div>
@@ -6981,10 +6981,36 @@ async function loadTobayNotifications(user) {
   };
 
   await refresh();
+  // Keep the in-app Notification Centre fresh while the account is open.
+  // Delivery-stage notifications are inserted securely by the database trigger.
+  const refreshNotificationsSafely = async () => {
+    if (document.visibilityState === "hidden") return;
+    if (!document.getElementById("tobayNotificationCentre")) return;
+    try {
+      await refresh();
+    } catch (error) {
+      console.error("TOBAY notification refresh failed:", error);
+      setFeedback("Notifications could not be refreshed. Please try again.", true);
+    }
+  };
+
   if (window.tobayNotificationRefreshTimer) {
     window.clearInterval(window.tobayNotificationRefreshTimer);
   }
-  window.tobayNotificationRefreshTimer = window.setInterval(refresh, 90000);
+  if (window.tobayNotificationFocusHandler) {
+    window.removeEventListener("focus", window.tobayNotificationFocusHandler);
+  }
+  if (window.tobayNotificationVisibilityHandler) {
+    document.removeEventListener("visibilitychange", window.tobayNotificationVisibilityHandler);
+  }
+
+  window.tobayNotificationFocusHandler = refreshNotificationsSafely;
+  window.addEventListener("focus", window.tobayNotificationFocusHandler);
+  window.tobayNotificationVisibilityHandler = () => {
+    if (document.visibilityState === "visible") refreshNotificationsSafely();
+  };
+  document.addEventListener("visibilitychange", window.tobayNotificationVisibilityHandler);
+  window.tobayNotificationRefreshTimer = window.setInterval(refreshNotificationsSafely, 20000);
 }
 async function loadTobayAdminInsights(panel) {
   const grid=document.getElementById("tobayAdminMetricGrid"); if(!grid)return;
