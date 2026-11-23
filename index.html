@@ -9923,7 +9923,419 @@ body footer a {
     height: auto !important;
   }
 }
- 
+
+  
+/* ==========================================
+   TOBAY — COMPLETE PREMIUM MARKETPLACE REDESIGN
+   WHITE • ROYAL BLUE • GOLD
+   ========================================== */
+
+:root {
+  --tb-bg: #f3f7ff;
+  --tb-surface: #ffffff;
+  --tb-blue: #1746a2;
+  --tb-blue-dark: #103578;
+  --tb-blue-light: #eaf2ff;
+  --tb-gold: #d9a928;
+  --tb-text: #263b59;
+  --tb-heading: #123b83;
+  --tb-muted: #647895;
+  --tb-border: #dce6f3;
+  --tb-shadow: 0 8px 28px rgba(23,70,162,.09);
+}
+
+/* GLOBAL PAGE */
+html, body {
+  background: var(--tb-bg) !important;
+  color: var(--tb-text) !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  overflow-x: hidden;
+}
+
+body * {
+  text-shadow: none !important;
+}
+
+body p,
+body span,
+body label,
+body li,
+body small,
+body td,
+body th,
+body .description,
+body .caption,
+body .subtitle,
+body .helper-text {
+  color: var(--tb-text);
+  opacity: 1 !important;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body .section-title {
+  color: var(--tb-heading) !important;
+  font-weight: 800 !important;
+}
+
+/* HEADER */
+body header {
+  background: #ffffff !important;
+  color: var(--tb-blue) !important;
+  border-bottom: 3px solid var(--tb-gold) !important;
+  box-shadow: var(--tb-shadow) !important;
+}
+
+body header a,
+body nav a {
+  color: var(--tb-blue) !important;
+  font-weight: 700 !important;
+}
+
+/* LOGO */
+.tobay-signature-logo,
+.tobay-logo-type,
+.tobay-logo-type small {
+  color: var(--tb-blue) !important;
+}
+
+/* NAVIGATION */
+body nav,
+body .tobay-quick-nav {
+  background: #ffffff !important;
+  border-color: var(--tb-border) !important;
+}
+
+body nav a:hover,
+body nav a.active {
+  color: var(--tb-gold) !important;
+}
+
+/* HERO AND PROMOTIONAL BANNERS */
+body .hero,
+body .hero-content,
+body .hero-inner {
+  border-radius: 18px !important;
+}
+
+body .hero {
+  background: linear-gradient(120deg, #123b83, #2865c5) !important;
+  color: #ffffff !important;
+  padding: 28px !important;
+  box-shadow: var(--tb-shadow) !important;
+}
+
+body .hero h1,
+body .hero h2,
+body .hero p,
+body .hero span {
+  color: #ffffff !important;
+}
+
+body .hero .gold,
+body .tobay-feature-kicker {
+  color: #ffdf87 !important;
+}
+
+/* SECTIONS */
+body section,
+body .section {
+  background-color: transparent;
+  color: var(--tb-text);
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+/* CATEGORY AND PRODUCT GRIDS */
+#listingGrid,
+.product-grid,
+.listing-grid,
+.categories-grid,
+.category-grid,
+.features-grid,
+.services-grid,
+.tobay-features {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+}
+
+/* PRODUCT AND CATEGORY CARDS */
+#listingGrid > *,
+.product-grid > *,
+.listing-grid > *,
+.categories-grid > *,
+.category-grid > *,
+body .card,
+body .product-card,
+body .category-card {
+  background: #ffffff !important;
+  color: var(--tb-text) !important;
+  border: 1px solid var(--tb-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--tb-shadow) !important;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+#listingGrid > *:hover,
+.product-grid > *:hover,
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(23,70,162,.15) !important;
+}
+
+/* PRODUCT TITLES AND PRICES */
+#listingGrid h3,
+#listingGrid h4,
+.product-card h3,
+.product-card h4 {
+  color: var(--tb-heading) !important;
+}
+
+#listingGrid .price,
+.product-card .price,
+.product-price {
+  color: var(--tb-blue) !important;
+  font-weight: 800 !important;
+}
+
+/* BUYER, SELLER AND ADMIN DASHBOARDS */
+#tobayBuyerDashboard,
+#tobaySellerDashboard,
+#tobayAdminDashboard {
+  background: #f3f7ff !important;
+  color: var(--tb-text) !important;
+  padding: 22px !important;
+  border-radius: 18px !important;
+}
+
+#tobayBuyerDashboard h1,
+#tobayBuyerDashboard h2,
+#tobayBuyerDashboard h3,
+#tobaySellerDashboard h1,
+#tobaySellerDashboard h2,
+#tobaySellerDashboard h3,
+#tobayAdminDashboard h1,
+#tobayAdminDashboard h2,
+#tobayAdminDashboard h3 {
+  color: var(--tb-heading) !important;
+}
+
+#tobayBuyerDashboard .card,
+#tobaySellerDashboard .card,
+#tobayAdminDashboard .card,
+#tobayBuyerDashboard .dashboard-card,
+#tobaySellerDashboard .dashboard-card,
+#tobayAdminDashboard .dashboard-card {
+  background: #ffffff !important;
+  color: var(--tb-text) !important;
+  border: 1px solid var(--tb-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--tb-shadow) !important;
+  padding: 16px !important;
+}
+
+/* DASHBOARD NAVIGATION */
+.dashboard-nav,
+.dashboard-menu {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--tb-border) !important;
+}
+
+/* BUTTONS */
+body button,
+body .btn,
+body input[type="submit"] {
+  background: var(--tb-blue) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--tb-blue) !important;
+  border-radius: 9px !important;
+  font-weight: 700 !important;
+  padding: 11px 16px !important;
+}
+
+body button:hover,
+body .btn:hover {
+  background: var(--tb-blue-dark) !important;
+  color: #ffffff !important;
+}
+
+/* GOLD ACCENTS */
+body .gold,
+body .tobay-gold,
+body .badge-gold {
+  color: #946800 !important;
+  background: #fff4d4 !important;
+  border-color: #e8c76e !important;
+}
+
+/* FORMS */
+body input,
+body select,
+body textarea {
+  background: #ffffff !important;
+  color: var(--tb-text) !important;
+  border: 1px solid #bdcde3 !important;
+  border-radius: 9px !important;
+  font-size: 15px !important;
+}
+
+body input::placeholder,
+body textarea::placeholder {
+  color: #71829a !important;
+  opacity: 1 !important;
+}
+
+/* TABLES */
+body table {
+  background: #ffffff !important;
+  color: var(--tb-text) !important;
+  border-color: var(--tb-border) !important;
+}
+
+body th {
+  background: #eaf2ff !important;
+  color: var(--tb-blue-dark) !important;
+}
+
+body td {
+  color: var(--tb-text) !important;
+  border-color: var(--tb-border) !important;
+}
+
+/* FOOTER */
+body footer {
+  background: #123b83 !important;
+  color: #ffffff !important;
+  border-top: 4px solid var(--tb-gold) !important;
+}
+
+body footer p,
+body footer span,
+body footer a,
+body footer h2,
+body footer h3 {
+  color: #ffffff !important;
+}
+
+/* IMAGES */
+body img {
+  max-width: 100%;
+}
+
+/* MOBILE DESIGN */
+@media screen and (max-width: 768px) {
+
+  body {
+    font-size: 14px !important;
+  }
+
+  body header {
+    padding: 10px !important;
+  }
+
+  #listingGrid,
+  .product-grid,
+  .listing-grid,
+  .categories-grid,
+  .category-grid,
+  .features-grid,
+  .services-grid,
+  .tobay-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  #listingGrid > *,
+  .product-grid > *,
+  .listing-grid > * {
+    min-width: 0 !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+  }
+
+  #tobayBuyerDashboard,
+  #tobaySellerDashboard,
+  #tobayAdminDashboard {
+    padding: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #tobayBuyerDashboard .card,
+  #tobaySellerDashboard .card,
+  #tobayAdminDashboard .card,
+  #tobayBuyerDashboard .dashboard-card,
+  #tobaySellerDashboard .dashboard-card,
+  #tobayAdminDashboard .dashboard-card {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .header-inner,
+  .nav-links,
+  nav,
+  .dashboard-nav,
+  .dashboard-menu {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+  }
+
+  body .hero {
+    padding: 18px !important;
+    border-radius: 14px !important;
+  }
+
+  body h1 {
+    font-size: 25px !important;
+  }
+
+  body h2 {
+    font-size: 21px !important;
+  }
+
+  body h3 {
+    font-size: 17px !important;
+  }
+
+  body p,
+  body span,
+  body small,
+  body label {
+    line-height: 1.55 !important;
+  }
+
+  body button,
+  body .btn {
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  body table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  body input,
+  body select,
+  body textarea {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  body img {
+    height: auto !important;
+  }
+}
+
 </style>
 <script id="tobay-smart-tools-suite">
 (function(){
