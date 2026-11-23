@@ -1,4 +1,4 @@
-
+opened
 <!DOCTYPE html>
 
 <html lang="en">
@@ -9445,7 +9445,174 @@ body footer a {
     background: #ffffff !important;
     padding: 14px !important;
   }
-} 
+}
+
+/* TOBAY MOBILE ONLY — VERTICAL LAYOUT & READABLE TEXT */
+@media screen and (max-width: 768px) {
+
+  /* Make all mobile text easy to read */
+  body,
+  body p,
+  body span,
+  body label,
+  body li,
+  body small,
+  body td,
+  body th,
+  body .description,
+  body .subtitle,
+  body .caption,
+  body .form-text,
+  body .helper-text {
+    color: #172b4d !important;
+    opacity: 1 !important;
+  }
+
+  body h1,
+  body h2,
+  body h3,
+  body h4,
+  body .section-title {
+    color: #123b83 !important;
+    opacity: 1 !important;
+  }
+
+  /* White mobile page */
+  body {
+    background: #f4f7fc !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Stack homepage sections vertically */
+  .container,
+  .header-inner,
+  .hero,
+  .hero-content,
+  .hero-inner,
+  .section,
+  .section-inner,
+  .categories-grid,
+  .category-grid,
+  .product-grid,
+  #listingGrid,
+  .listing-grid,
+  .features-grid,
+  .services-grid,
+  .tobay-features,
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Stack product and category cards */
+  #listingGrid,
+  .product-grid,
+  .listing-grid,
+  .categories-grid,
+  .category-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Dashboard mobile layout */
+  #tobayBuyerDashboard,
+  #tobaySellerDashboard,
+  #tobayAdminDashboard {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    overflow-x: hidden !important;
+    background: #ffffff !important;
+    color: #172b4d !important;
+  }
+
+  #tobayBuyerDashboard > *,
+  #tobaySellerDashboard > *,
+  #tobayAdminDashboard > * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Dashboard cards */
+  #tobayBuyerDashboard .card,
+  #tobaySellerDashboard .card,
+  #tobayAdminDashboard .card,
+  #tobayBuyerDashboard .dashboard-card,
+  #tobaySellerDashboard .dashboard-card,
+  #tobayAdminDashboard .dashboard-card {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+    background: #ffffff !important;
+    color: #172b4d !important;
+    border: 1px solid #d9e3f2 !important;
+    border-radius: 12px !important;
+  }
+
+  /* Navigation and dashboard menus */
+  nav,
+  .nav-links,
+  .dashboard-nav,
+  .dashboard-menu {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Form fields */
+  input,
+  select,
+  textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    color: #172b4d !important;
+    border: 1px solid #b8c9e2 !important;
+    font-size: 16px !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #65758d !important;
+    opacity: 1 !important;
+  }
+
+  /* Tables can scroll instead of squeezing text */
+  #tobayBuyerDashboard table,
+  #tobaySellerDashboard table,
+  #tobayAdminDashboard table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+
+  /* Buttons */
+  button,
+  .btn {
+    max-width: 100% !important;
+    white-space: normal !important;
+    background-color: #1746a2 !important;
+    color: #ffffff !important;
+  }
+
+  /* Keep images within the phone screen */
+  img {
+    max-width: 100% !important;
+    height: auto;
+  }
+
+  /* Prevent mobile horizontal scrolling */
+  html,
+  body,
+  main {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+}
+  
 </style>
 <script id="tobay-smart-tools-suite">
 (function(){
