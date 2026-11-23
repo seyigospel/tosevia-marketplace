@@ -9612,7 +9612,175 @@ body footer a {
     overflow-x: hidden !important;
   }
 }
-  
+ 
+/* TOBAY — MOBILE HORIZONTAL DESIGN & READABLE TEXT */
+@media screen and (max-width: 768px) {
+
+  /* Clear and readable text */
+  body,
+  body p,
+  body span,
+  body label,
+  body li,
+  body small,
+  body td,
+  body th,
+  body a,
+  body .caption,
+  body .description,
+  body .subtitle,
+  body .helper-text,
+  body .form-text {
+    color: #172b4d !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    visibility: visible !important;
+  }
+
+  body h1,
+  body h2,
+  body h3,
+  body h4,
+  body .section-title {
+    color: #103578 !important;
+    opacity: 1 !important;
+  }
+
+  body {
+    background: #f4f7fc !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Homepage horizontal product and category cards */
+  #listingGrid,
+  .product-grid,
+  .listing-grid,
+  .categories-grid,
+  .category-grid,
+  .features-grid,
+  .services-grid,
+  .tobay-features,
+  .dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  /* Horizontal homepage header and navigation */
+  .header-inner,
+  .nav-links,
+  nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+  }
+
+  /* Keep homepage sections within the phone screen */
+  .container,
+  .section,
+  .section-inner,
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Dashboard layout */
+  #tobayBuyerDashboard,
+  #tobaySellerDashboard,
+  #tobayAdminDashboard {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    background: #ffffff !important;
+    color: #172b4d !important;
+    overflow-x: auto !important;
+  }
+
+  /* Dashboard cards in two columns */
+  #tobayBuyerDashboard .card,
+  #tobaySellerDashboard .card,
+  #tobayAdminDashboard .card,
+  #tobayBuyerDashboard .dashboard-card,
+  #tobaySellerDashboard .dashboard-card,
+  #tobayAdminDashboard .dashboard-card {
+    background: #ffffff !important;
+    color: #172b4d !important;
+    border: 1px solid #d9e3f2 !important;
+    border-radius: 12px !important;
+    min-width: 0 !important;
+  }
+
+  /* Horizontal dashboard menus */
+  .dashboard-nav,
+  .dashboard-menu {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+  }
+
+  /* Captions and product details */
+  #listingGrid *,
+  .product-grid *,
+  .listing-grid *,
+  .categories-grid *,
+  .category-grid *,
+  #tobayBuyerDashboard *,
+  #tobaySellerDashboard *,
+  #tobayAdminDashboard * {
+    text-shadow: none !important;
+  }
+
+  /* Form fields */
+  input,
+  select,
+  textarea {
+    background: #ffffff !important;
+    color: #172b4d !important;
+    border: 1px solid #b8c9e2 !important;
+    font-size: 16px !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #65758d !important;
+    opacity: 1 !important;
+  }
+
+  /* Buttons */
+  button,
+  .btn {
+    background: #1746a2 !important;
+    color: #ffffff !important;
+    white-space: normal !important;
+  }
+
+  /* Tables scroll horizontally */
+  #tobayBuyerDashboard table,
+  #tobaySellerDashboard table,
+  #tobayAdminDashboard table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  html,
+  body {
+    max-width: 100% !important;
+  }
+}
+ 
 </style>
 <script id="tobay-smart-tools-suite">
 (function(){
