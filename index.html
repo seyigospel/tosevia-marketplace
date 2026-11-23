@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="#123c36" name="theme-color"/>
+<meta content="#080d19" name="theme-color"/>
 <meta content="TOBAY — Your World. Your Marketplace. Discover products and services from around the world." name="description"/>
-<title>TOBAY | Global Marketplace — Version 44.2 Seller Verification</title>
+<title>TOBAY | Global Marketplace — Version 46 Premium Mobile Upgrade</title>
 
 <style>
 /* TOBAY V29 — professional seller storefront presentation */
@@ -2563,6 +2563,235 @@ header .header-inner{width:min(1200px,96%)!important;min-height:68px!important;d
  .section{padding:14px 0!important}
 }
 @media(prefers-reduced-motion:no-preference){.tobay-market-topline{background-size:200% 100%!important;animation:tobayFestivalSweep 12s linear infinite}@keyframes tobayFestivalSweep{to{background-position:200% 0}}}
+</style>
+
+
+<style id="tobay-black-contrast-accessibility-v47">
+/* TOBAY v47: true black surfaces, readable captions and high-contrast text */
+:root{
+ --tb-bg:#05070b;--tb-surface:#0d1119;--tb-surface2:#141b27;--tb-line:#29364a;
+ --tb-text:#f7f9ff;--tb-muted:#c3cede;--tb-blue:#4d9cff;--tb-purple:#b28aff;
+ --tb-caption:#d4deed;--tb-shadow:0 16px 42px rgba(0,0,0,.48)
+}
+html,body{background:#05070b!important;color:#f7f9ff!important}
+body{
+ background:radial-gradient(ellipse at 12% 0%,rgba(34,83,160,.16),transparent 34%),
+ radial-gradient(ellipse at 88% 12%,rgba(103,55,171,.13),transparent 32%),#05070b!important;
+ color:#f7f9ff!important;font-size:15px;line-height:1.6
+}
+/* Remove white/light page panels and make the entire experience consistently dark. */
+body main,body section,body article,body aside,body nav,body header,body footer,
+body .section,body .container,body .panel,body .card,body .listing,body .listing-card,
+body .product-card,body .seller-card,body .stat-card,body .dashboard-card,
+body .account-panel,body .seller-panel,body .admin-panel,body .buyer-panel,
+body .modal-content,body .dropdown-menu,body .tab-content,body .table-wrap,
+body .tobay-storefront-panel,body .tobay-storefront-listing,
+body .tobay-storefront-stat,body .tobay-steps-grid article,
+body .tobay-reasons-grid article,body .tobay-seller-card,
+body .tobay-showcase-grid .listing{
+ background-color:#0d1119!important;color:#f7f9ff!important;
+ border-color:#29364a!important
+}
+body #tobaySellerDashboard,body #tobayAdminDashboard,body #tobayBuyerDashboard,
+body .dashboard,body .dashboard-card,body .panel,body .card,body .modal-content,
+body .account-panel,body .seller-panel{
+ background:linear-gradient(145deg,#111925,#090d14)!important;
+ color:#f7f9ff!important;border:1px solid #29364a!important;
+ box-shadow:var(--tb-shadow)!important
+}
+body #tobaySellerDashboard *,body #tobayAdminDashboard *,body #tobayBuyerDashboard *,
+body #tobaySmartHub *,body #tobayGlobalUpgrade *,body .dashboard *,body .dashboard-card *{
+ text-shadow:none
+}
+/* Strong readable text defaults; caption/helper text is brighter than muted grey. */
+body,body p,body li,body label,body td,body th,body span,body div,
+body h1,body h2,body h3,body h4,body h5,body h6,body strong,body b,
+body .caption,body .subtitle,body .description,body .helper-text,
+body .form-text,body .small,body small,body figcaption{
+ color:#f1f5fc!important
+}
+body p,body small,body .muted,body .caption,body .subtitle,
+body .description,body .helper-text,body .form-text,body figcaption,
+body .tobay-storefront-location,body .tobay-storefront-stat span,
+body .tobay-community-stat span,body .section-head p,
+body .categories-heading p,body .discover-heading p{
+ color:#d0dbea!important;opacity:1!important
+}
+body h1,body h2,body h3,body h4,body h5,body h6,
+body .section-title,body .section-head h2,body .categories-heading h2,
+body .discover-heading h2{color:#ffffff!important}
+body a{color:#8fc2ff!important;text-decoration-thickness:1px;text-underline-offset:3px}
+body a:hover{color:#c4a5ff!important}
+/* Captions, labels and metadata should not disappear against black surfaces. */
+body .eyebrow,body .kicker,body .tobay-hero-copy .eyebrow,
+body .tobay-community-kicker,body .tobay-storefront-eyebrow,
+body .tobay-storefront-listing-type,body .listing-category,
+body .product-category,body .meta,body .timestamp{
+ color:#b9d5ff!important;font-weight:700!important
+}
+/* Inputs and form controls */
+body input,body select,body textarea,body option{
+ background:#080d15!important;color:#ffffff!important;
+ border:1px solid #42536d!important;caret-color:#ffffff!important
+}
+body input::placeholder,body textarea::placeholder{color:#aebbd0!important;opacity:1!important}
+body select option{background:#080d15!important;color:#ffffff!important}
+body input:focus,body select:focus,body textarea:focus{
+ outline:2px solid #69aaff!important;outline-offset:2px!important;border-color:#69aaff!important
+}
+/* Buttons: retain clear blue/purple action colour and readable white lettering. */
+body button,body .btn,body .button{
+ color:#ffffff!important;border-color:#46618a!important
+}
+body button:not(.btn-outline):not(.tobay-storefront-close),
+body .btn-primary,body .btn-orange,body .btn-red,body .btn-blue{
+ background:linear-gradient(110deg,#2368d8,#7042c4)!important;color:#ffffff!important
+}
+body .btn-outline,body button.secondary,body .tb-secondary{
+ background:#182438!important;color:#f4f7ff!important;border:1px solid #536783!important
+}
+/* Tables, dividers, badges and status chips */
+body table{background:#0b111b!important;color:#f7f9ff!important;border-color:#34445d!important}
+body th{background:#17243a!important;color:#ffffff!important}
+body td{background:#0d1420!important;color:#edf3ff!important;border-color:#29384e!important}
+body hr,body .divider{border-color:#34445d!important}
+body .badge,body .tag,body .chip,body .pill,body .status-badge{
+ background:#1a2b43!important;color:#e7f1ff!important;border:1px solid #405b7e!important
+}
+/* Legacy inline light backgrounds: neutralise common white/ivory inline declarations. */
+body [style*="background:#fff"],body [style*="background: #fff"],
+body [style*="background-color:#fff"],body [style*="background-color: #fff"],
+body [style*="background:white"],body [style*="background: white"],
+body [style*="background-color:white"],body [style*="background-color: white"],
+body [style*="background:#f8fafc"],body [style*="background: #f8fafc"],
+body [style*="background:#f1f5f9"],body [style*="background: #f1f5f9"],
+body [style*="background:#f5f7f3"],body [style*="background: #f5f7f3"]{
+ background:#0d1119!important;color:#f7f9ff!important;border-color:#29364a!important
+}
+/* Keep product photos and logos untouched; ensure image placeholders are dark. */
+body img{background-color:transparent}
+body .tobay-storefront-listing-image,body .tobay-seller-avatar,
+body .tobay-step-icon,body .tobay-reasons-grid article>b{
+ background:#17243a!important;color:#eaf2ff!important
+}
+/* Phone layout: readable type, full-width controls, no clipped dashboard content. */
+@media(max-width:760px){
+ body{font-size:14px;line-height:1.58}
+ body #tobaySellerDashboard,body #tobayAdminDashboard,body #tobayBuyerDashboard{
+  width:calc(100% - 16px)!important;max-width:none!important;margin:9px auto!important;
+  padding:13px!important;overflow-wrap:anywhere
+ }
+ body #tobaySellerDashboard h2,body #tobayAdminDashboard h2,body #tobayBuyerDashboard h2{font-size:20px!important;line-height:1.3!important}
+ body #tobaySellerDashboard p,body #tobayAdminDashboard p,body #tobayBuyerDashboard p,
+ body #tobaySellerDashboard label,body #tobayAdminDashboard label,body #tobayBuyerDashboard label{font-size:13px!important}
+ body #tobaySellerDashboard button,body #tobayAdminDashboard button,body #tobayBuyerDashboard button{
+  min-height:42px!important;white-space:normal!important;overflow-wrap:anywhere
+ }
+ body #tobaySellerDashboard input,body #tobaySellerDashboard select,body #tobaySellerDashboard textarea,
+ body #tobayAdminDashboard input,body #tobayAdminDashboard select,body #tobayAdminDashboard textarea,
+ body #tobayBuyerDashboard input,body #tobayBuyerDashboard select,body #tobayBuyerDashboard textarea{
+  width:100%!important;max-width:100%!important;font-size:16px!important
+ }
+ body #tobaySmartHub{margin:12px 8px!important;padding:13px!important}
+ body #listingGrid{gap:10px!important}
+ body #listingGrid .listing{padding:10px!important}
+ body #listingGrid .listing h3,body #listingGrid .listing p{overflow-wrap:anywhere}
+ body table{font-size:12px!important}
+}
+@media(max-width:380px){body #listingGrid{grid-template-columns:1fr!important}}
+</style>
+
+
+<style id="tobay-konga-inspired-safe-redesign-v49">
+:root{--tb-black:#050505;--tb-pink:#e60070;--tb-pink-dark:#970047;--tb-white:#fff;--tb-muted:#d8d5dc}
+html,body{background:#050505!important;color:#fff!important}
+body{font-family:Arial,Helvetica,sans-serif!important}
+body:before{content:"✦ TOBAY GLOBAL MARKETPLACE     •     THE BIG DISCOVERY EVENT     •     FIND MORE. SAVE MORE. SHOP SMARTER.";display:flex;align-items:center;justify-content:center;min-height:34px;padding:5px 10px;box-sizing:border-box;text-align:center;background:linear-gradient(90deg,#760039,#e60070 48%,#760039);color:#fff;font-size:clamp(9px,1.1vw,13px);font-weight:900;letter-spacing:1px}
+header{background:#d60068!important;color:#fff!important;border:0!important;box-shadow:0 4px 18px #0008!important}
+header .header-inner{max-width:1200px!important;min-height:64px!important;display:flex!important;align-items:center!important;gap:18px!important;padding:9px 16px!important;box-sizing:border-box}
+header .tobay-signature-logo{color:#fff!important;flex-shrink:0}
+header .tobay-logo-type strong{color:#fff!important;font-weight:1000!important}
+header .tobay-logo-type small{color:#ffe1ef!important}
+header .tobay-konga-header-tools{display:flex!important;align-items:center!important;gap:12px!important;flex:1!important;min-width:0}
+header .tobay-header-search{display:flex!important;max-width:480px!important;flex:1!important;height:42px!important;background:#fff!important;border-radius:4px!important;overflow:hidden!important}
+header .tobay-header-search input{background:#fff!important;color:#171720!important;border:0!important;min-width:0!important;padding:0 12px!important}
+header .tobay-header-search input::placeholder{color:#656575!important;opacity:1!important}
+header .tobay-header-search button{background:#ff8a00!important;color:#fff!important;border:0!important;width:52px!important}
+header .tobay-header-shortcuts{display:flex!important;align-items:center!important;gap:12px!important;white-space:nowrap!important}
+header .tobay-header-shortcuts a,header .nav a{color:#fff!important;font-weight:700!important;text-decoration:none!important}
+header .nav{display:flex!important;align-items:center!important;gap:13px!important;white-space:nowrap!important;margin-left:auto!important}
+header .nav a{font-size:12px!important}
+header .nav .btn{background:#97004c!important;border-radius:22px!important;padding:10px 14px!important}
+.tobay-quick-nav{height:46px!important;display:flex!important;align-items:center!important;gap:20px!important;overflow-x:auto!important;white-space:nowrap!important;padding:0 max(calc((100% - 1200px)/2),16px)!important;background:#fff!important;color:#171720!important;border:0!important;scrollbar-width:thin}
+.tobay-quick-nav a{color:#171720!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important}
+.tobay-quick-nav .tobay-all-categories{background:#f0f1f4!important;padding:8px 13px!important;border-radius:22px!important}
+main{background:#050505!important;color:#fff!important}
+.hero.tobay-home-hero{position:relative!important;max-width:1200px!important;margin:16px auto 22px!important;padding:0 16px!important;box-sizing:border-box!important;background:#050505!important;color:#fff!important}
+.hero.tobay-home-hero:before{content:"";display:block;height:0}
+.hero.tobay-home-hero>.container{max-width:none!important;width:100%!important;padding:0!important;margin:0!important}
+.tobay-hero-layout{display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr)!important;gap:16px!important;align-items:stretch!important}
+.tobay-hero-copy{position:relative!important;overflow:hidden!important;min-height:340px!important;padding:34px!important;border:1px solid #34202c!important;border-radius:10px!important;background:radial-gradient(ellipse at 80% 80%,#72003c 0,#30001c 35%,transparent 67%),linear-gradient(110deg,#050505,#090509 65%,#210016)!important;color:#fff!important;box-sizing:border-box!important}
+.tobay-hero-copy .eyebrow{color:#ffb6d6!important;font-weight:900!important;letter-spacing:1.5px!important;font-size:11px!important}
+.tobay-hero-copy h1{color:#fff!important;font-size:clamp(34px,4.2vw,56px)!important;line-height:1!important;letter-spacing:-1.8px!important;font-weight:1000!important}
+.tobay-hero-copy h1 span{color:#ff2991!important}
+.tobay-hero-copy>p{color:#eee!important;max-width:430px!important;line-height:1.6!important}
+.tobay-hero-search{background:#fff!important;border:0!important;border-radius:4px!important;padding:5px!important;max-width:490px!important}
+.tobay-hero-search input{background:#fff!important;color:#171720!important;border:0!important}
+.tobay-hero-search input::placeholder{color:#666!important;opacity:1!important}
+.tobay-hero-search .btn{background:#ff8a00!important;color:#fff!important}
+.tobay-hero-actions .btn-orange{background:#e60070!important;color:#fff!important;border-color:#e60070!important}
+.tobay-hero-secondary{background:transparent!important;border:1px solid #fff!important;color:#fff!important}
+.tobay-hero-copy .hero-note{color:#d8cbd3!important;font-size:11px!important}
+.tobay-hero-visual{min-height:340px!important;padding:18px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:12px!important;background:#08080b!important;border:1px solid #30212b!important;border-radius:10px!important;box-sizing:border-box!important}
+.tobay-world-globe-wrap{max-width:210px!important;max-height:210px!important;margin:0 auto!important}
+.tobay-world-globe{filter:drop-shadow(0 12px 22px #e6007044)!important}
+.tobay-globe-brand{color:#ff4ca4!important;font-weight:1000!important}
+.tobay-feature-heading{color:#fff!important;text-align:center!important}
+.tobay-feature-heading strong{display:block;color:#fff!important;font-size:clamp(16px,2vw,22px)!important;line-height:1.2!important}
+.tobay-feature-kicker{color:#ff76b9!important;font-size:10px!important;font-weight:900!important;letter-spacing:1.5px!important}
+.tobay-feature-list{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+.tobay-feature-card{display:flex!important;align-items:center!important;gap:10px!important;padding:10px 12px!important;background:#171116!important;border:1px solid #392032!important;border-radius:7px!important;color:#fff!important}
+.tobay-feature-copy strong{display:block;color:#fff!important;font-size:13px!important}
+.tobay-feature-copy small{display:block;color:#d8d2d8!important;font-size:11px!important;line-height:1.4!important}
+.tobay-feature-icon{font-size:22px!important}
+.tobay-feature-arrow{color:#ff4ca4!important;margin-left:auto!important}
+.tobay-feature-foot{color:#ffc5df!important;font-size:9px!important;letter-spacing:1.3px!important}
+body .section,body .card,body .panel,body .dashboard-card,body .marketplace-panel,body .stat,body .category,body .tobay-feature-card{background-color:#111116!important;color:#fff!important;border-color:#303039!important}
+body h1,body h2,body h3,body h4,body strong,body b{color:inherit}
+body p,body small,body label,body .caption,body .description{color:#d5d5dc}
+body input,body select,body textarea{background:#19191f!important;color:#fff!important;border:1px solid #4a4a55!important}
+body input::placeholder,body textarea::placeholder{color:#bdbdc7!important;opacity:1}
+@media(max-width:900px){
+ header .header-inner{flex-wrap:wrap!important;gap:9px!important}
+ header .tobay-konga-header-tools{order:3;flex-basis:100%;width:100%}
+ header .nav{margin-left:auto!important;gap:9px!important}
+ .tobay-hero-layout{grid-template-columns:1fr!important}
+ .tobay-hero-visual{min-height:0!important}
+}
+@media(max-width:600px){
+ body:before{min-height:30px;font-size:8px;letter-spacing:.5px}
+ header .header-inner{padding:9px 11px!important}
+ header .tobay-logo-type strong{font-size:22px!important}
+ header .tobay-logo-type small{font-size:8px!important}
+ header .nav{display:none!important}
+ header .tobay-konga-header-tools{gap:8px!important}
+ header .tobay-header-shortcuts{gap:8px!important;font-size:10px!important}
+ header .tobay-header-shortcuts a{font-size:10px!important}
+ .tobay-quick-nav{height:42px!important;gap:16px!important;padding:0 11px!important}
+ .tobay-quick-nav a{font-size:11px!important}
+ .hero.tobay-home-hero{margin:10px auto 16px!important;padding:0 10px!important}
+ .tobay-hero-layout{gap:10px!important}
+ .tobay-hero-copy{min-height:0!important;padding:22px 16px!important}
+ .tobay-hero-copy h1{font-size:clamp(30px,8vw,40px)!important}
+ .tobay-hero-copy>p{font-size:12px!important}
+ .tobay-hero-search{width:100%!important;box-sizing:border-box!important}
+ .tobay-hero-actions{display:flex!important;flex-wrap:wrap!important;gap:8px!important}
+ .tobay-hero-actions .btn{font-size:11px!important;padding:10px 12px!important}
+ .tobay-hero-visual{padding:14px!important}
+ .tobay-world-globe-wrap{max-width:145px!important;max-height:145px!important}
+ .tobay-feature-heading strong{font-size:17px!important}
+ .tobay-feature-list{grid-template-columns:1fr!important}
+}
 </style>
 
 </head>
@@ -8627,6 +8856,481 @@ section p,section li{color:var(--tobay-body)!important}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",observe);else observe();
 })();
 </script>
+
+
+<style id="tobay-premium-mobile-redesign">
+:root{
+ --tb-bg:#080d19;--tb-surface:#111a2b;--tb-surface2:#17243a;--tb-line:rgba(148,163,184,.19);
+ --tb-text:#f4f7ff;--tb-muted:#a9b7ce;--tb-blue:#3b82f6;--tb-purple:#9b6bff;--tb-cyan:#38d5e8;
+ --tb-shadow:0 18px 48px rgba(0,0,0,.28)
+}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 12% 0%,rgba(48,91,174,.22),transparent 34%),radial-gradient(ellipse at 88% 12%,rgba(123,70,206,.17),transparent 32%),var(--tb-bg)!important;color:var(--tb-text)!important}
+body,body *{scrollbar-color:#344867 #0b1322}
+body h1,body h2,body h3,body h4,body h5{color:var(--tb-text)}
+body p,body small,body .muted{color:var(--tb-muted)}
+header,nav,.navbar,.topbar,.hero,.dashboard,.dashboard-card,#tobaySellerDashboard,#tobayAdminDashboard,
+#tobayBuyerDashboard,.seller-dashboard,.admin-dashboard,.buyer-dashboard{
+ color:var(--tb-text)!important
+}
+#tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerDashboard,
+.dashboard,.dashboard-card,.panel,.card,.modal-content,.account-panel,.seller-panel{
+ background:linear-gradient(145deg,rgba(20,31,51,.97),rgba(12,20,35,.98))!important;
+ color:var(--tb-text)!important;border:1px solid var(--tb-line)!important;
+ border-radius:18px!important;box-shadow:var(--tb-shadow)
+}
+#tobaySellerDashboard>h2,#tobayAdminDashboard>h2,#tobayBuyerDashboard>h2{
+ background:linear-gradient(110deg,#173e83,#542c91)!important;color:#fff!important;
+ border:1px solid rgba(147,197,253,.25)!important;border-radius:14px!important
+}
+body input,body select,body textarea{
+ background:#0b1526!important;color:#f4f7ff!important;border:1px solid #344663!important;
+ border-radius:11px!important;min-height:42px
+}
+body input::placeholder,body textarea::placeholder{color:#8293ad!important}
+body button,.btn,.button{
+ border-radius:11px!important;transition:transform .18s ease,filter .18s ease;
+}
+body button:hover,.btn:hover,.button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+a{color:#79b5ff}
+#listingGrid .listing,.listing-card,.product-card{
+ background:linear-gradient(155deg,#142139,#0e1829)!important;color:#f4f7ff!important;
+ border:1px solid rgba(126,160,210,.2)!important;border-radius:16px!important;
+ box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden
+}
+#listingGrid .listing *,#listingGrid .listing-card *{color:inherit}
+#tobayGlobalUpgrade{background:linear-gradient(145deg,#101b30,#0b1424)!important;color:#f4f7ff!important;border:1px solid var(--tb-line)!important}
+#tobayGlobalUpgrade h2,#tobayGlobalUpgrade h3,#tobayGlobalUpgrade strong{color:#f4f7ff!important}
+#tobayGlobalUpgrade .tgu-card{background:#15223a!important;border-color:#344663!important;color:#f4f7ff!important}
+#tobayGlobalUpgrade .tgu-muted{color:#b3c0d5!important}
+#tobayGlobalUpgrade input,#tobayGlobalUpgrade select,#tobayGlobalUpgrade textarea{background:#0b1526!important;color:#fff!important;border-color:#344663!important}
+#tobayGlobalUpgrade .tgu-table th,#tobayGlobalUpgrade .tgu-table td{border-color:#344663!important}
+#tobayGlobalUpgrade button{background:linear-gradient(110deg,#2563eb,#7c3aed)!important;color:#fff!important}
+#tobaySmartHub{max-width:1440px;margin:30px auto;padding:clamp(14px,2.5vw,26px);color:#f4f7ff;
+ background:linear-gradient(145deg,rgba(18,29,49,.98),rgba(9,17,31,.98));border:1px solid var(--tb-line);
+ border-radius:22px;box-shadow:var(--tb-shadow);font-family:inherit}
+#tobaySmartHub *{box-sizing:border-box}
+#tobaySmartHub h2,#tobaySmartHub h3{color:#fff;margin-top:0}
+#tobaySmartHub p,#tobaySmartHub .tb-muted{color:#a9b7ce;line-height:1.55}
+#tobaySmartHub .tb-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#tobaySmartHub .tb-card{min-width:0;padding:17px;border:1px solid #2a3c59;border-radius:15px;background:linear-gradient(145deg,#172640,#101b2e)}
+#tobaySmartHub label{display:block;font-size:13px;font-weight:700;color:#cbd8eb;margin:9px 0 5px}
+#tobaySmartHub input,#tobaySmartHub select,#tobaySmartHub textarea{width:100%;padding:11px 12px;border-radius:10px;background:#0a1425;color:white;border:1px solid #344967;min-height:43px}
+#tobaySmartHub textarea{min-height:80px;resize:vertical}
+#tobaySmartHub button{border:0;background:linear-gradient(110deg,#2563eb,#7c3aed);color:white;padding:11px 15px;font-weight:750;cursor:pointer;margin:5px 5px 0 0}
+#tobaySmartHub button.tb-secondary{background:#263954;border:1px solid #405675}
+#tobaySmartHub .tb-status{padding:10px 12px;border-radius:10px;background:#102d49;border:1px solid #23527c;color:#d7edff;margin:10px 0;font-size:13px}
+#tobaySmartHub .tb-list{display:grid;gap:8px;margin-top:10px}
+#tobaySmartHub .tb-item{padding:10px 12px;border-radius:10px;background:#0d192b;border:1px solid #2c405e;color:#e9f1ff;font-size:13px;overflow-wrap:anywhere}
+#tobaySmartHub .tb-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#tobayCompareBar{position:fixed;z-index:9998;left:50%;bottom:14px;transform:translateX(-50%);width:min(700px,calc(100% - 24px));padding:12px 14px;background:#101c31;border:1px solid #5273a4;border-radius:15px;box-shadow:0 14px 40px #0009;color:#fff;display:none}
+.tb-compare-pick{display:block;width:100%;margin:8px 0 0!important;font-size:12px!important;padding:8px!important}
+@media(max-width:760px){
+ body{padding-bottom:20px}
+ #tobaySmartHub{margin:18px 10px;padding:13px;border-radius:17px}
+ #tobaySmartHub .tb-grid{grid-template-columns:1fr}
+ #tobaySmartHub .tb-card{padding:14px}
+ #tobaySmartHub .tb-two{grid-template-columns:1fr}
+ #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerDashboard{width:calc(100% - 16px)!important;max-width:none!important;margin:10px auto!important;padding:12px!important;border-radius:15px!important}
+ #tobaySellerDashboard table,#tobayAdminDashboard table,#tobayBuyerDashboard table{display:block;max-width:100%;overflow-x:auto}
+ #tobaySellerDashboard button,#tobayAdminDashboard button,#tobayBuyerDashboard button{max-width:100%;white-space:normal}
+ #listingGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ #listingGrid .listing{min-width:0!important}
+ #listingGrid img{max-width:100%;height:auto;object-fit:cover}
+}
+@media(max-width:380px){#listingGrid{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<script id="tobay-smart-tools-suite">
+(function(){
+"use strict";
+const SQL = `-- TOBAY SMART TOOLS SUITE — run once in Supabase SQL Editor.
+-- Secure base tables for buyer/seller messaging, saved addresses and delivery partners.
+-- Coupons continue to use the existing tobay_promotions table.
+create table if not exists public.tobay_messages (
+ id uuid primary key default gen_random_uuid(),
+ sender_id uuid not null references auth.users(id) on delete cascade,
+ recipient_id uuid not null references auth.users(id) on delete cascade,
+ order_id text,
+ message text not null check(char_length(message) between 1 and 4000),
+ created_at timestamptz not null default now(),
+ read_at timestamptz,
+ check(sender_id <> recipient_id)
+);
+create index if not exists tobay_messages_pair_idx on public.tobay_messages(sender_id,recipient_id,created_at desc);
+alter table public.tobay_messages enable row level security;
+drop policy if exists "tobay messages participant read" on public.tobay_messages;
+create policy "tobay messages participant read" on public.tobay_messages for select to authenticated using(auth.uid()=sender_id or auth.uid()=recipient_id);
+drop policy if exists "tobay messages sender insert" on public.tobay_messages;
+create policy "tobay messages sender insert" on public.tobay_messages for insert to authenticated with check(auth.uid()=sender_id and auth.uid()<>recipient_id);
+drop policy if exists "tobay messages recipient read update" on public.tobay_messages;
+create policy "tobay messages recipient read update" on public.tobay_messages for update to authenticated using(auth.uid()=recipient_id) with check(auth.uid()=recipient_id);
+grant select,insert,update on public.tobay_messages to authenticated;
+
+create table if not exists public.tobay_saved_addresses (
+ id uuid primary key default gen_random_uuid(),
+ user_id uuid not null references auth.users(id) on delete cascade,
+ label text not null default 'Home',
+ recipient_name text not null,
+ phone text not null,
+ address text not null,
+ city text,
+ state text,
+ country text not null default 'Nigeria',
+ is_default boolean not null default false,
+ created_at timestamptz not null default now()
+);
+create index if not exists tobay_saved_addresses_user_idx on public.tobay_saved_addresses(user_id,created_at desc);
+alter table public.tobay_saved_addresses enable row level security;
+drop policy if exists "tobay addresses own all" on public.tobay_saved_addresses;
+create policy "tobay addresses own all" on public.tobay_saved_addresses for all to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
+grant select,insert,update,delete on public.tobay_saved_addresses to authenticated;
+
+create table if not exists public.tobay_delivery_partners (
+ id uuid primary key default gen_random_uuid(),
+ user_id uuid not null unique references auth.users(id) on delete cascade,
+ business_name text not null,
+ phone text not null,
+ service_area text not null,
+ vehicle_type text,
+ is_active boolean not null default true,
+ created_at timestamptz not null default now()
+);
+alter table public.tobay_delivery_partners enable row level security;
+drop policy if exists "tobay partner own manage" on public.tobay_delivery_partners;
+create policy "tobay partner own manage" on public.tobay_delivery_partners for all to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
+drop policy if exists "tobay partners public active read" on public.tobay_delivery_partners;
+create policy "tobay partners public active read" on public.tobay_delivery_partners for select to authenticated using(is_active=true or user_id=auth.uid());
+grant select,insert,update,delete on public.tobay_delivery_partners to authenticated;
+
+create table if not exists public.tobay_delivery_assignments (
+ id uuid primary key default gen_random_uuid(),
+ order_id text not null,
+ seller_id uuid not null references auth.users(id) on delete cascade,
+ buyer_id uuid not null references auth.users(id) on delete cascade,
+ partner_id uuid not null references public.tobay_delivery_partners(id) on delete restrict,
+ status text not null default 'requested' check(status in ('requested','accepted','picked_up','in_transit','delivered','cancelled')),
+ tracking_note text,
+ created_at timestamptz not null default now(),
+ updated_at timestamptz not null default now()
+);
+create index if not exists tobay_delivery_assignments_order_idx on public.tobay_delivery_assignments(order_id);
+alter table public.tobay_delivery_assignments enable row level security;
+drop policy if exists "tobay delivery participants read" on public.tobay_delivery_assignments;
+create policy "tobay delivery participants read" on public.tobay_delivery_assignments for select to authenticated using(seller_id=auth.uid() or buyer_id=auth.uid() or exists(select 1 from public.tobay_delivery_partners p where p.id=partner_id and p.user_id=auth.uid()));
+drop policy if exists "tobay seller request delivery" on public.tobay_delivery_assignments;
+create policy "tobay seller request delivery" on public.tobay_delivery_assignments for insert to authenticated with check(seller_id=auth.uid() and exists(select 1 from public.tobay_delivery_partners p where p.id=partner_id and p.is_active=true));
+drop policy if exists "tobay partner update delivery" on public.tobay_delivery_assignments;
+create policy "tobay partner update delivery" on public.tobay_delivery_assignments for update to authenticated using(exists(select 1 from public.tobay_delivery_partners p where p.id=partner_id and p.user_id=auth.uid())) with check(exists(select 1 from public.tobay_delivery_partners p where p.id=partner_id and p.user_id=auth.uid()));
+grant select,insert,update on public.tobay_delivery_assignments to authenticated;
+`;
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=(n,c)=>{try{return new Intl.NumberFormat(undefined,{style:"currency",currency:c||"NGN",maximumFractionDigits:2}).format(n)}catch(e){return Number(n||0).toFixed(2)+" "+(c||"")}};
+let user=null, client=null, compare=[];
+const recentKey="tobay_recently_viewed_v1";
+function status(el,msg){if(el)el.textContent=msg}
+async function init(){
+ client=window.tobaySupabase;
+ if(!client)return;
+ try{const {data}=await client.auth.getUser();user=data?.user||null}catch(e){}
+ const root=document.getElementById("listingGrid")?.parentElement||document.querySelector("main")||document.body;
+ if(document.getElementById("tobaySmartHub"))return;
+ const hub=document.createElement("section");hub.id="tobaySmartHub";
+ hub.innerHTML=`
+ <div style="display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+  <div><div style="font-size:11px;letter-spacing:2px;color:#7eb7ff;font-weight:800">TOBAY CONNECT</div><h2 style="font-size:clamp(21px,3vw,30px);margin:5px 0">Your marketplace tools</h2><p class="tb-muted" style="margin:0">Useful tools for safer shopping, easier delivery and better connections.</p></div>
+  <button id="tbRefresh" type="button">Refresh tools</button>
+ </div>
+ <div class="tb-grid" style="margin-top:18px">
+  <section class="tb-card"><h3>💬 Buyer–Seller Messages</h3><p class="tb-muted">Send a private message using the other person's account ID. Only the two participants can read the conversation.</p>
+   <label for="tbRecipient">Recipient account ID</label><input id="tbRecipient" placeholder="Paste seller or buyer user ID">
+   <label for="tbMessage">Message</label><textarea id="tbMessage" maxlength="4000" placeholder="Write your message..."></textarea>
+   <button id="tbSendMessage" type="button">Send message</button><div id="tbMessages" class="tb-list"></div><div id="tbMessageStatus" class="tb-status" aria-live="polite">Sign in to use private messaging.</div>
+  </section>
+  <section class="tb-card"><h3>🏷️ Coupon checker</h3><p class="tb-muted">Check a seller promotion and preview the discount. Final checkout totals must still be validated by the order/payment flow before charging the buyer.</p>
+   <label for="tbCoupon">Promotion code</label><input id="tbCoupon" placeholder="Enter coupon code">
+   <label for="tbCouponSeller">Seller account ID</label><input id="tbCouponSeller" placeholder="Seller ID from the listing">
+   <div class="tb-two"><div><label for="tbCouponAmount">Eligible subtotal</label><input id="tbCouponAmount" type="number" min="0" step="0.01" placeholder="0.00"></div><div><label for="tbCouponCurrency">Currency</label><select id="tbCouponCurrency"><option>NGN</option><option>USD</option><option>GBP</option><option>EUR</option><option>GHS</option><option>KES</option></select></div></div>
+   <button id="tbCheckCoupon" type="button">Check discount</button><div id="tbCouponResult" class="tb-status" aria-live="polite">Coupon preview only; it does not alter an order total.</div>
+  </section>
+  <section class="tb-card"><h3>📦 Saved delivery addresses</h3><p class="tb-muted">Save and manage your delivery details securely in your account.</p>
+   <label for="tbAddressLabel">Address label</label><input id="tbAddressLabel" placeholder="Home, Work...">
+   <label for="tbAddressName">Recipient name</label><input id="tbAddressName" placeholder="Full name">
+   <div class="tb-two"><div><label for="tbAddressPhone">Phone</label><input id="tbAddressPhone" placeholder="+234..."></div><div><label for="tbAddressCountry">Country</label><input id="tbAddressCountry" value="Nigeria"></div></div>
+   <label for="tbAddressLine">Street / delivery address</label><textarea id="tbAddressLine" placeholder="House number, street, landmark"></textarea>
+   <div class="tb-two"><div><label for="tbAddressCity">City</label><input id="tbAddressCity" placeholder="City"></div><div><label for="tbAddressState">State / region</label><input id="tbAddressState" placeholder="State"></div></div>
+   <button id="tbSaveAddress" type="button">Save address</button><div id="tbAddressList" class="tb-list"></div><div id="tbAddressStatus" class="tb-status">Sign in to save addresses.</div>
+  </section>
+  <section class="tb-card"><h3>🚚 Delivery partner network</h3><p class="tb-muted">Register a delivery business or browse active delivery partners. Seller order assignment is recorded separately from your existing order tracking.</p>
+   <label for="tbPartnerName">Delivery business name</label><input id="tbPartnerName" placeholder="Business name">
+   <div class="tb-two"><div><label for="tbPartnerPhone">Phone</label><input id="tbPartnerPhone" placeholder="Contact phone"></div><div><label for="tbPartnerVehicle">Vehicle type</label><select id="tbPartnerVehicle"><option value="Motorcycle">Motorcycle</option><option value="Car">Car</option><option value="Van">Van</option><option value="Truck">Truck</option><option value="Other">Other</option></select></div></div>
+   <label for="tbPartnerArea">Service area</label><input id="tbPartnerArea" placeholder="City, state or region">
+   <button id="tbRegisterPartner" type="button">Register as delivery partner</button><div id="tbPartnerList" class="tb-list"></div><div id="tbPartnerStatus" class="tb-status">Sign in to register or view partners.</div>
+  </section>
+  <section class="tb-card"><h3>⚖️ Compare products</h3><p class="tb-muted">Use the Compare button on product cards. Compare up to three listings side by side.</p><div id="tbCompareResults" class="tb-list"><div class="tb-item">No products selected yet.</div></div><button id="tbClearCompare" class="tb-secondary" type="button">Clear comparison</button></section>
+  <section class="tb-card"><h3>🕘 Recently viewed</h3><p class="tb-muted">Your recently viewed listings are stored on this device, not shared publicly.</p><div id="tbRecentList" class="tb-list"></div><button id="tbClearRecent" class="tb-secondary" type="button">Clear history</button></section>
+  <section class="tb-card"><h3>🌍 Global display preferences</h3><p class="tb-muted">Choose how prices are displayed in this browser. This is a display preference only; it does not convert the seller's actual checkout currency.</p>
+   <label for="tbDisplayCurrency">Preferred display currency</label><select id="tbDisplayCurrency"><option value="NGN">Nigerian Naira (NGN)</option><option value="USD">US Dollar (USD)</option><option value="GBP">British Pound (GBP)</option><option value="EUR">Euro (EUR)</option><option value="GHS">Ghanaian Cedi (GHS)</option><option value="KES">Kenyan Shilling (KES)</option><option value="ZAR">South African Rand (ZAR)</option></select>
+   <label for="tbCountry">Shopping country</label><select id="tbCountry"><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>United States</option><option>Other</option></select>
+   <button id="tbSavePreferences" type="button">Save preferences</button><div id="tbPreferenceStatus" class="tb-status">Preferences are saved on this device.</div>
+  </section>
+ </div>
+ <div class="tb-status" style="margin-top:14px">Privacy and safety: messaging, saved addresses and delivery partner data require the Supabase SQL upgrade below. Do not share passwords, payment PINs or card details in messages.</div>
+ <details style="margin-top:12px"><summary style="cursor:pointer;color:#b9d4ff;font-weight:800">Database setup — required once</summary><p class="tb-muted">Open Supabase → SQL Editor → New query, copy the SQL below, then run it. This creates the required tables and row-level security rules.</p><button id="tbCopySql" type="button">Copy database SQL</button><pre id="tbSqlPreview" style="white-space:pre-wrap;overflow:auto;max-height:260px;padding:12px;background:#07101e;color:#c7dcff;border:1px solid #314766;border-radius:10px;font-size:11px"></pre></details>`;
+ root.appendChild(hub);
+ const $=id=>hub.querySelector("#"+id);
+ $("tbSqlPreview").textContent=SQL;
+ $("tbCopySql").onclick=async()=>{try{await navigator.clipboard.writeText(SQL);status($("tbPreferenceStatus"),"SQL copied. Paste it into Supabase SQL Editor and run it.")}catch(e){status($("tbPreferenceStatus"),"Clipboard access unavailable. Select and copy the SQL shown above.")}};
+ $("tbRefresh").onclick=()=>{loadAddresses();loadPartners();loadMessages()};
+ $("tbSendMessage").onclick=sendMessage;
+ $("tbSaveAddress").onclick=saveAddress;
+ $("tbRegisterPartner").onclick=registerPartner;
+ $("tbCheckCoupon").onclick=checkCoupon;
+ $("tbClearCompare").onclick=()=>{compare=[];renderCompare()};
+ $("tbClearRecent").onclick=()=>{localStorage.removeItem(recentKey);renderRecent()};
+ $("tbSavePreferences").onclick=()=>{localStorage.setItem("tobay_global_prefs",JSON.stringify({currency:$("tbDisplayCurrency").value,country:$("tbCountry").value}));status($("tbPreferenceStatus"),"Your display preferences have been saved on this device.")};
+ try{const pref=JSON.parse(localStorage.getItem("tobay_global_prefs")||"{}");if(pref.currency)$("tbDisplayCurrency").value=pref.currency;if(pref.country)$("tbCountry").value=pref.country}catch(e){}
+ if(!user){status($("tbMessageStatus"),"Sign in to use private messaging.");status($("tbAddressStatus"),"Sign in to save addresses.");status($("tbPartnerStatus"),"Sign in to register or view delivery partners.");}
+ renderRecent();loadAddresses();loadPartners();loadMessages();installListingTools();
+}
+async function sendMessage(){
+ const $=id=>document.getElementById(id),to=$("tbRecipient").value.trim(),msg=$("tbMessage").value.trim();
+ if(!user){status($("tbMessageStatus"),"Please sign in first.");return}
+ if(!/^[0-9a-f-]{36}$/i.test(to)){status($("tbMessageStatus"),"Enter a valid recipient account UUID.");return}
+ if(to===user.id){status($("tbMessageStatus"),"You cannot message your own account.");return}
+ if(!msg){status($("tbMessageStatus"),"Write a message first.");return}
+ const {error}=await client.from("tobay_messages").insert({sender_id:user.id,recipient_id:to,message:msg});
+ if(error){status($("tbMessageStatus"),"Message not sent: "+error.message+" — check that the SQL setup has been run.");return}
+ $("tbMessage").value="";status($("tbMessageStatus"),"Message sent securely.");loadMessages();
+}
+async function loadMessages(){
+ const el=document.getElementById("tbMessages");if(!el||!user)return;
+ const {data,error}=await client.from("tobay_messages").select("id,sender_id,recipient_id,message,created_at").or("sender_id.eq."+user.id+",recipient_id.eq."+user.id).order("created_at",{ascending:false}).limit(20);
+ if(error){el.innerHTML='<div class="tb-item">Run the database setup to enable messaging.</div>';return}
+ el.innerHTML=(data||[]).map(m=>'<div class="tb-item"><b>'+(m.sender_id===user.id?"You":"Message received")+'</b><br>'+esc(m.message)+'<br><small>'+new Date(m.created_at).toLocaleString()+'</small></div>').join("")||'<div class="tb-item">No messages yet.</div>';
+}
+async function saveAddress(){
+ const $=id=>document.getElementById(id);if(!user){status($("tbAddressStatus"),"Please sign in first.");return}
+ const row={user_id:user.id,label:$("tbAddressLabel").value.trim()||"Home",recipient_name:$("tbAddressName").value.trim(),phone:$("tbAddressPhone").value.trim(),address:$("tbAddressLine").value.trim(),city:$("tbAddressCity").value.trim(),state:$("tbAddressState").value.trim(),country:$("tbAddressCountry").value.trim()||"Nigeria"};
+ if(!row.recipient_name||!row.phone||!row.address){status($("tbAddressStatus"),"Enter recipient name, phone and full delivery address.");return}
+ const {error}=await client.from("tobay_saved_addresses").insert(row);
+ if(error){status($("tbAddressStatus"),"Could not save: "+error.message+" — run the SQL setup first.");return}
+ ["tbAddressName","tbAddressPhone","tbAddressLine","tbAddressCity","tbAddressState"].forEach(id=>$(id).value="");
+ status($("tbAddressStatus"),"Address saved to your private account.");loadAddresses();
+}
+async function loadAddresses(){
+ const el=document.getElementById("tbAddressList");if(!el||!user)return;
+ const {data,error}=await client.from("tobay_saved_addresses").select("id,label,recipient_name,phone,address,city,state,country").eq("user_id",user.id).order("created_at",{ascending:false});
+ if(error){el.innerHTML='<div class="tb-item">Run the database setup to enable saved addresses.</div>';return}
+ el.innerHTML=(data||[]).map(a=>'<div class="tb-item"><b>'+esc(a.label)+" — "+esc(a.recipient_name)+'</b><br>'+esc(a.phone)+'<br>'+esc([a.address,a.city,a.state,a.country].filter(Boolean).join(", "))+'<br><button data-delete-address="'+esc(a.id)+'" class="tb-secondary">Delete</button></div>').join("")||'<div class="tb-item">No saved addresses yet.</div>';
+ el.querySelectorAll("[data-delete-address]").forEach(b=>b.onclick=async()=>{const {error}=await client.from("tobay_saved_addresses").delete().eq("id",b.dataset.deleteAddress).eq("user_id",user.id);status(document.getElementById("tbAddressStatus"),error?"Delete failed: "+error.message:"Address deleted.");loadAddresses()});
+}
+async function registerPartner(){
+ const $=id=>document.getElementById(id);if(!user){status($("tbPartnerStatus"),"Please sign in first.");return}
+ const row={user_id:user.id,business_name:$("tbPartnerName").value.trim(),phone:$("tbPartnerPhone").value.trim(),vehicle_type:$("tbPartnerVehicle").value,service_area:$("tbPartnerArea").value.trim()};
+ if(!row.business_name||!row.phone||!row.service_area){status($("tbPartnerStatus"),"Complete business name, phone and service area.");return}
+ const {error}=await client.from("tobay_delivery_partners").upsert(row,{onConflict:"user_id"});
+ status($("tbPartnerStatus"),error?"Registration failed: "+error.message:"Your delivery partner profile has been saved.");
+ loadPartners();
+}
+async function loadPartners(){
+ const el=document.getElementById("tbPartnerList");if(!el||!user)return;
+ const {data,error}=await client.from("tobay_delivery_partners").select("id,business_name,phone,service_area,vehicle_type").eq("is_active",true).limit(30);
+ if(error){el.innerHTML='<div class="tb-item">Run the database setup to enable delivery partners.</div>';return}
+ el.innerHTML=(data||[]).map(p=>'<div class="tb-item"><b>'+esc(p.business_name)+'</b><br>'+esc(p.service_area)+' · '+esc(p.vehicle_type||"Delivery")+'<br>'+esc(p.phone)+'<br><small>Partner ID: '+esc(p.id)+'</small></div>').join("")||'<div class="tb-item">No active partners have registered yet.</div>';
+}
+async function checkCoupon(){
+ const $=id=>document.getElementById(id),code=$("tbCoupon").value.trim().toUpperCase(),seller=$("tbCouponSeller").value.trim(),subtotal=Number($("tbCouponAmount").value),currency=$("tbCouponCurrency").value,el=$("tbCouponResult");
+ if(!code||!seller||!Number.isFinite(subtotal)||subtotal<=0){status(el,"Enter coupon, seller ID and a valid subtotal.");return}
+ const {data,error}=await client.from("tobay_promotions").select("code,discount_type,discount_value,currency,starts_at,ends_at,usage_limit,usage_count,is_active").eq("seller_id",seller).eq("code",code).maybeSingle();
+ if(error||!data){status(el,"Coupon not found or unavailable. Check the code and seller ID.");return}
+ const now=Date.now(),start=data.starts_at?Date.parse(data.starts_at):0,end=data.ends_at?Date.parse(data.ends_at):Infinity;
+ if(!data.is_active||now<start||now>=end||(data.usage_limit&&data.usage_count>=data.usage_limit)){status(el,"This promotion is inactive, expired or has reached its usage limit.");return}
+ if(data.currency!==currency){status(el,"This promotion is in "+data.currency+". Select that currency to preview it.");return}
+ const discount=Math.min(subtotal,data.discount_type==="percentage"?subtotal*Number(data.discount_value)/100:Number(data.discount_value));
+ status(el,"Valid promotion preview: save "+money(discount,currency)+". Estimated subtotal: "+money(subtotal-discount,currency)+". This is not yet applied to an order or payment.");
+}
+function recentAdd(item){
+ let arr=[];try{arr=JSON.parse(localStorage.getItem(recentKey)||"[]")}catch(e){}
+ arr=arr.filter(x=>x.id!==item.id);arr.unshift(item);localStorage.setItem(recentKey,JSON.stringify(arr.slice(0,12)));renderRecent();
+}
+function renderRecent(){
+ const el=document.getElementById("tbRecentList");if(!el)return;let arr=[];try{arr=JSON.parse(localStorage.getItem(recentKey)||"[]")}catch(e){}
+ el.innerHTML=arr.map(x=>'<div class="tb-item"><b>'+esc(x.title)+'</b><br>'+esc(x.price||"Price shown on listing")+'</div>').join("")||'<div class="tb-item">Your viewed products will appear here.</div>';
+}
+function renderCompare(){
+ const el=document.getElementById("tbCompareResults");if(!el)return;
+ el.innerHTML=compare.length?'<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;min-width:400px"><thead><tr>'+compare.map(x=>'<th style="padding:8px;text-align:left;border-bottom:1px solid #405675">'+esc(x.title)+'</th>').join("")+'</tr></thead><tbody><tr>'+compare.map(x=>'<td style="padding:8px;vertical-align:top;border-bottom:1px solid #405675">'+esc(x.price||"Price not listed")+'<br><small>'+esc(x.details||"Compare listing details on the product page")+'</small></td>').join("")+'</tr></tbody></table></div>':'<div class="tb-item">No products selected yet.</div>';
+}
+function installListingTools(){
+ const grid=document.getElementById("listingGrid");if(!grid||grid.dataset.tbTools==="1")return;grid.dataset.tbTools="1";
+ const scan=()=>grid.querySelectorAll(".listing,.listing-card,.product-card").forEach((card,i)=>{
+  if(card.dataset.tbEnhanced==="1")return;card.dataset.tbEnhanced="1";
+  const title=card.dataset.title||card.querySelector("h2,h3,h4,strong")?.textContent?.trim()||"Marketplace listing";
+  const price=card.dataset.price||card.querySelector("[class*=price],.price")?.textContent?.trim()||"";
+  const id=card.dataset.id||card.dataset.listingId||card.id||("listing-"+i);
+  const item={id:String(id),title:title.slice(0,120),price:String(price).slice(0,80),details:(card.innerText||"").replace(/\s+/g," ").slice(0,240)};
+  const btn=document.createElement("button");btn.type="button";btn.className="tb-compare-pick";btn.textContent="＋ Compare";btn.onclick=()=>{if(compare.some(x=>x.id===item.id))return;if(compare.length>=3){alert("Compare up to three listings. Clear one comparison to add another.");return}compare.push(item);renderCompare()};
+  const action=card.querySelector("button:last-of-type")||card;action.parentNode.appendChild(btn);
+  card.addEventListener("click",e=>{if(e.target.closest("button,a,input,select"))return;recentAdd(item)},{passive:true});
+ });
+ scan();new MutationObserver(scan).observe(grid,{childList:true,subtree:true});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>setTimeout(init,500),{once:true});else setTimeout(init,500);
+})();
+</script>
+
+
+<style id="tobay-gold-white-pink-dashboard">
+/* TOBAY — Gold, White & Pink professional dashboard theme.
+   Visual-only enhancement: existing Supabase and dashboard workflows are preserved. */
+:root{
+  --tobay-gold:#c69a32;
+  --tobay-gold-deep:#9d741c;
+  --tobay-pink:#e65b9a;
+  --tobay-pink-deep:#c83f7e;
+  --tobay-dashboard-ink:#263247;
+  --tobay-dashboard-muted:#68758a;
+  --tobay-dashboard-line:#f0dfc5;
+  --tobay-dashboard-white:#fff;
+}
+#tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerDashboard,
+#tobayBuyerOrders,#tobaySmartHub,#tobayGlobalUpgrade{
+  background:linear-gradient(145deg,#fff 0%,#fffdfb 58%,#fff8fc 100%)!important;
+  color:var(--tobay-dashboard-ink)!important;
+  border:1px solid #eadfcf!important;
+  box-shadow:0 20px 55px rgba(76,52,33,.11)!important;
+}
+#tobaySellerDashboard *,#tobayAdminDashboard *,#tobayBuyerDashboard *,
+#tobayBuyerOrders *,#tobaySmartHub *,#tobayGlobalUpgrade *{
+  text-shadow:none!important;
+}
+#tobaySellerDashboard h1,#tobaySellerDashboard h2,#tobaySellerDashboard h3,
+#tobayAdminDashboard h1,#tobayAdminDashboard h2,#tobayAdminDashboard h3,
+#tobayBuyerDashboard h1,#tobayBuyerDashboard h2,#tobayBuyerDashboard h3,
+#tobayBuyerOrders h1,#tobayBuyerOrders h2,#tobayBuyerOrders h3,
+#tobaySmartHub h1,#tobaySmartHub h2,#tobaySmartHub h3,
+#tobayGlobalUpgrade h1,#tobayGlobalUpgrade h2,#tobayGlobalUpgrade h3{
+  color:var(--tobay-gold-deep)!important;
+}
+#tobaySellerDashboard>h2,#tobayAdminDashboard>h2,#tobayBuyerDashboard>h2,
+#tobayBuyerOrders .buyer-hero{
+  background:linear-gradient(112deg,#a77a20 0%,#d0a844 48%,#e65b9a 100%)!important;
+  color:#fff!important;border:1px solid #e8c878!important;
+  box-shadow:0 12px 28px rgba(198,154,50,.2)!important;
+}
+#tobaySellerDashboard>h2 *,#tobayAdminDashboard>h2 *,
+#tobayBuyerDashboard>h2 *,#tobayBuyerOrders .buyer-hero *{
+  color:#fff!important;
+}
+#tobaySellerDashboard>h3,#tobayAdminDashboard>h3,
+#tobaySellerDashboard h3,#tobayAdminDashboard h3,
+#tobayBuyerDashboard h3,#tobayBuyerOrders h3,
+#tobaySmartHub h3,#tobayGlobalUpgrade h3{
+  letter-spacing:-.2px;
+}
+#tobaySellerDashboard p,#tobayAdminDashboard p,#tobayBuyerDashboard p,
+#tobayBuyerOrders p,#tobaySmartHub p,#tobayGlobalUpgrade p,
+#tobaySellerDashboard small,#tobayAdminDashboard small,
+#tobayBuyerDashboard small{
+  color:var(--tobay-dashboard-muted)!important;
+}
+#tobaySellerDashboard label,#tobayAdminDashboard label,
+#tobayBuyerDashboard label,#tobaySmartHub label,#tobayGlobalUpgrade label{
+  color:#765a31!important;font-weight:750!important;
+}
+#tobaySellerDashboard input:not([type=file]),#tobaySellerDashboard textarea,
+#tobaySellerDashboard select,#tobayAdminDashboard input,
+#tobayAdminDashboard textarea,#tobayAdminDashboard select,
+#tobayBuyerDashboard input,#tobayBuyerDashboard textarea,
+#tobayBuyerDashboard select,#tobayBuyerOrders input,
+#tobaySmartHub input,#tobaySmartHub textarea,#tobaySmartHub select,
+#tobayGlobalUpgrade input,#tobayGlobalUpgrade textarea,#tobayGlobalUpgrade select{
+  background:#fff!important;color:#293449!important;
+  border:1px solid #e8d9c4!important;border-radius:10px!important;
+}
+#tobaySellerDashboard input:focus,#tobaySellerDashboard textarea:focus,
+#tobaySellerDashboard select:focus,#tobayAdminDashboard input:focus,
+#tobayAdminDashboard textarea:focus,#tobayAdminDashboard select:focus,
+#tobayBuyerDashboard input:focus,#tobayBuyerDashboard textarea:focus,
+#tobayBuyerDashboard select:focus,#tobaySmartHub input:focus,
+#tobaySmartHub textarea:focus,#tobaySmartHub select:focus{
+  border-color:var(--tobay-pink)!important;
+  box-shadow:0 0 0 3px rgba(230,91,154,.13)!important;outline:none!important;
+}
+#tobaySellerDashboard button,#tobayAdminDashboard button,
+#tobayBuyerDashboard button,#tobayBuyerOrders button,
+#tobaySmartHub button,#tobayGlobalUpgrade button{
+  background:linear-gradient(110deg,#bd8d2b,#d5ad4d 52%,#e65b9a)!important;
+  color:#fff!important;border:1px solid transparent!important;
+  border-radius:10px!important;font-weight:800!important;
+  box-shadow:0 6px 15px rgba(198,154,50,.17)!important;
+}
+#tobaySellerDashboard button:hover,#tobayAdminDashboard button:hover,
+#tobayBuyerDashboard button:hover,#tobayBuyerOrders button:hover,
+#tobaySmartHub button:hover,#tobayGlobalUpgrade button:hover{
+  filter:brightness(1.04);transform:translateY(-1px);
+}
+#tobaySellerDashboard button.secondary,#tobaySmartHub button.tb-secondary,
+#tobaySellerDashboard #tobaySellerOrderFilters button,
+#tobayBuyerOrders #tobayOrderFilters button{
+  background:#fff!important;color:var(--tobay-pink-deep)!important;
+  border:1px solid #f0c8dc!important;box-shadow:none!important;
+}
+#tobaySellerDashboard .tobay-toolkit,
+#tobaySellerDashboard #tobayListingForm,
+#tobaySellerDashboard #tobayMyListings>div,
+#tobaySellerDashboard [data-seller-order],
+#tobaySellerDashboard #tobaySellerBuyNowOrders>div,
+#tobayAdminDashboard .tobay-toolkit,
+#tobayBuyerOrders .buyer-order-card,
+#tobayBuyerOrders .buyer-stat,
+#tobaySmartHub .tb-card,#tobaySmartHub .tb-item,
+#tobayGlobalUpgrade .tgu-card{
+  background:#fff!important;color:var(--tobay-dashboard-ink)!important;
+  border:1px solid #eee2d1!important;border-radius:14px!important;
+  box-shadow:0 7px 20px rgba(76,52,33,.055)!important;
+}
+#tobaySellerDashboard .tobay-toolkit-stat,
+#tobaySellerDashboard .tobay-overview-card,
+#tobaySellerDashboard #tobaySellerOrderSummary>div{
+  background:linear-gradient(145deg,#fff,#fff8fc)!important;
+  border:1px solid #efdfca!important;
+}
+#tobaySellerDashboard .tobay-toolkit-stat strong,
+#tobaySellerDashboard .tobay-overview-card-value,
+#tobayBuyerOrders .buyer-stat strong,
+#tobayBuyerOrders .buyer-overall-item strong{
+  color:var(--tobay-pink-deep)!important;
+}
+#tobaySellerDashboard .tobay-overview-card.total{
+  background:linear-gradient(115deg,#b58a2d,#d5ad4d 55%,#df6b9f)!important;
+  border-color:#d5ad4d!important;
+}
+#tobaySellerDashboard .tobay-overview-card.total *{color:#fff!important}
+#tobaySellerDashboard hr,#tobayAdminDashboard hr,
+#tobayBuyerDashboard hr{border-color:#eadfcf!important}
+#tobaySellerDashboard table th,#tobayAdminDashboard table th,
+#tobayBuyerDashboard table th,#tobayBuyerOrders table th{
+  background:#fff5e7!important;color:#946c22!important;
+}
+#tobaySellerDashboard table td,#tobayAdminDashboard table td,
+#tobayBuyerDashboard table td,#tobayBuyerOrders table td{
+  color:#455166!important;border-color:#f0e6d9!important;
+}
+#tobaySmartHub .tb-status{background:#fff4f8!important;border-color:#f2c9dc!important;color:#9b3e69!important}
+#tobaySellerDashboard a,#tobayAdminDashboard a,#tobayBuyerDashboard a,
+#tobayBuyerOrders a,#tobaySmartHub a{color:var(--tobay-pink-deep)!important}
+#tobaySellerDashboard :focus-visible,#tobayAdminDashboard :focus-visible,
+#tobayBuyerDashboard :focus-visible,#tobayBuyerOrders :focus-visible{
+  outline:3px solid rgba(230,91,154,.42)!important;outline-offset:2px;
+}
+@media(max-width:700px){
+ #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerDashboard,#tobayBuyerOrders{
+  background:#fff!important;box-shadow:0 10px 28px rgba(76,52,33,.09)!important;
+ }
+}
+</style>
 
 </body>
 </html>
