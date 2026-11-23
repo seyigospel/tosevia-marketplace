@@ -2425,9 +2425,237 @@ img,video{max-width:100%}
 }
 </style>
 
+
+<style id="tobay-compact-marketplace-v448">
+/* Compact, responsive marketplace layout inspired by dense retail dashboards. */
+:root{--tobay-ui-font:12px}
+body{font-size:13px}
+nav a,.nav a,.navbar a{font-size:12px}
+button,input,select,textarea{font-size:12px}
+section h2{letter-spacing:-.25px}
+#tobaySellerDashboard,#tobayAdminDashboard{width:min(1440px,98%)!important;max-width:1440px!important;padding:16px!important;border-radius:14px!important;font-size:12px!important}
+#tobaySellerDashboard>h2,#tobayAdminDashboard>h2{font-size:20px!important;padding:14px 18px!important;margin-bottom:14px!important;border-radius:11px!important}
+#tobaySellerDashboard>h3,#tobayAdminDashboard h3{font-size:14px!important;margin:16px 0 9px!important}
+#tobaySellerDashboard p,#tobayAdminDashboard p{font-size:11px;line-height:1.45}
+#tobaySellerDashboard label,#tobayAdminDashboard label{font-size:11px!important}
+#tobaySellerDashboard input:not([type=file]),#tobaySellerDashboard textarea,#tobaySellerDashboard select{min-height:36px!important;padding:8px 10px!important;font-size:12px!important}
+#tobaySellerDashboard button,#tobayAdminDashboard button{min-height:32px!important;padding:7px 11px!important;font-size:11px!important;border-radius:7px!important}
+#tobaySellerDashboard .tobay-toolkit{padding:14px!important;border-radius:12px!important;margin:12px 0!important}
+#tobaySellerDashboard .tobay-toolkit-head h3{font-size:14px!important}
+#tobaySellerDashboard .tobay-toolkit-stat strong{font-size:18px!important}
+#tobaySellerDashboard #tobayMyListings>div,#tobaySellerDashboard [data-seller-order],#tobaySellerDashboard #tobaySellerBuyNowOrders>div{padding:12px!important;margin:8px 0!important;font-size:11px!important}
+#tobayGlobalUpgrade{font-size:12px!important;padding:16px!important}
+#tobayGlobalUpgrade h2{font-size:19px!important}
+#tobayGlobalUpgrade h3{font-size:14px!important}
+#tobayGlobalUpgrade .tgu-card{padding:12px!important;border-radius:10px!important}
+#tobayGlobalUpgrade .tgu-muted{font-size:11px!important}
+#tobayGlobalUpgrade .tgu-table{font-size:11px!important}
+#tobayGlobalUpgrade .tgu-table th,#tobayGlobalUpgrade .tgu-table td{padding:7px!important}
+@media(min-width:700px){#tobaySellerDashboard .tobay-toolkit-grid,#tobaySellerDashboard .tobay-overview-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:760px){#tobaySellerDashboard,#tobayAdminDashboard{width:99%!important;padding:10px!important}#tobaySellerDashboard .tobay-toolkit-head{gap:8px}#tobaySellerDashboard .tobay-toolkit-head button{width:auto!important}}
+@media(orientation:landscape) and (max-height:600px){#tobaySellerDashboard,#tobayAdminDashboard{width:99%!important;max-width:none!important;padding:8px!important}#tobaySellerDashboard .tobay-toolkit-grid,#tobaySellerDashboard .tobay-overview-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}#tobaySellerDashboard .tobay-toolkit{padding:10px!important;margin:8px 0!important}}
+@media(prefers-reduced-motion:no-preference){.tobay-live-dot{animation:tobayPulse 1.8s infinite}.tobay-ad-ribbon{background-size:200% 100%;animation:tobayRibbon 8s linear infinite}@keyframes tobayPulse{50%{opacity:.35;transform:scale(.82)}}@keyframes tobayRibbon{to{background-position:200% 0}}}
+</style>
+
+
+<style id="tobay-konga-style-v450">
+:root{--tk-pink:#c90068;--tk-pink-dark:#850044;--tk-orange:#f59a00;--tk-ink:#20212a;--tk-muted:#687080;--tk-line:#e6e8ec;--tk-green:#073d32}
+*{box-sizing:border-box}
+body{background:#f4f5f7!important;color:var(--tk-ink)!important;font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important}
+.tobay-market-topline{min-height:34px;display:flex;align-items:center;justify-content:center;padding:7px 12px;background:linear-gradient(90deg,#78003d,#d40070,#78003d)!important;color:#fff!important;font-size:11px!important;font-weight:800;letter-spacing:1.15px;text-align:center}
+header{position:relative!important;background:var(--tk-pink)!important;color:#fff!important;box-shadow:0 2px 8px #0002!important}
+header .header-inner{width:min(1200px,96%)!important;min-height:68px!important;display:flex!important;align-items:center!important;gap:18px!important;padding:9px 0!important;flex-wrap:wrap}
+.logo{flex:0 0 auto!important;color:#fff!important}
+.tobay-logo-mark{width:42px!important;height:42px!important}
+.tobay-logo-type strong{font-size:25px!important;letter-spacing:-1.5px!important;color:#fff!important}
+.tobay-logo-type small{font-size:8px!important;letter-spacing:1.6px!important;color:#ffe4f1!important}
+.tobay-konga-header-tools{display:flex;align-items:center;gap:12px;flex:1 1 430px;min-width:230px}
+.tobay-header-search{display:flex;min-width:180px;flex:1;height:40px;background:#fff;border-radius:4px;overflow:hidden;border:1px solid #eee}
+.tobay-header-search input{width:100%;min-width:0;border:0!important;outline:0!important;padding:0 13px!important;font-size:13px!important;color:#30323a!important;background:#fff!important}
+.tobay-header-search button{width:48px;flex:0 0 48px;border:0!important;border-radius:0!important;background:var(--tk-orange)!important;color:#fff!important;font-size:23px!important;font-weight:700}
+.tobay-header-shortcuts{display:flex;align-items:center;gap:13px;white-space:nowrap}
+.tobay-header-shortcuts a{color:#fff!important;text-decoration:none!important;font-size:11px!important;font-weight:700}
+.nav{display:flex!important;align-items:center!important;gap:12px!important;flex:0 0 auto!important;flex-wrap:wrap!important}
+.nav a{color:#fff!important;font-size:11px!important;font-weight:700!important;padding:6px 2px!important;text-decoration:none!important}
+.nav a.btn{background:#fff!important;color:var(--tk-pink)!important;padding:9px 13px!important;border-radius:20px!important}
+.tobay-quick-nav{position:relative!important;display:flex!important;align-items:center!important;gap:0!important;overflow-x:auto!important;white-space:nowrap!important;background:#fff!important;border-bottom:1px solid #ddd!important;padding:0 max(2%,calc((100% - 1200px)/2))!important;min-height:42px!important;scrollbar-width:thin!important}
+.tobay-quick-nav a{display:inline-flex!important;align-items:center!important;min-height:42px!important;padding:0 13px!important;color:#222!important;font-size:11px!important;font-weight:700!important;text-decoration:none!important;border-right:1px solid #f0f0f0!important}
+.tobay-quick-nav a:hover{color:var(--tk-pink)!important;background:#fff5fa!important}
+.tobay-quick-nav .tobay-all-categories{background:#f4f5f7!important;border-radius:20px!important;margin:5px 8px 5px 0!important;min-height:30px!important;border:0!important}
+.hero.tobay-home-hero{padding:18px 0 14px!important;background:#111!important;color:#fff!important}
+.hero.tobay-home-hero .container{width:min(1200px,96%)!important}
+.hero.tobay-home-hero .tobay-hero-layout{display:grid!important;grid-template-columns:minmax(0,1.7fr) minmax(260px,.85fr)!important;gap:14px!important;align-items:stretch!important}
+.hero.tobay-home-hero .tobay-hero-copy{min-width:0!important;padding:26px!important;border-radius:9px!important;background:linear-gradient(120deg,#79003f 0%,#c90068 58%,#f07818 130%)!important;color:#fff!important;box-shadow:0 5px 18px #0003!important}
+.hero.tobay-home-hero .eyebrow{font-size:10px!important;letter-spacing:1.2px!important;color:#ffe4f1!important}
+.hero.tobay-home-hero .tobay-hero-copy h1{font-size:clamp(28px,4vw,46px)!important;line-height:1.03!important;letter-spacing:-1.4px!important;color:#fff!important;margin:12px 0!important}
+.hero.tobay-home-hero .tobay-hero-copy h1 span{color:#ffe08a!important}
+.hero.tobay-home-hero .tobay-hero-copy>p:not(.hero-note){font-size:14px!important;line-height:1.5!important;color:#fff!important;max-width:500px}
+.hero.tobay-home-hero .tobay-hero-search{max-width:560px!important;display:flex!important;background:#fff!important;border:0!important;border-radius:4px!important;padding:4px!important;gap:4px!important}
+.hero.tobay-home-hero .tobay-hero-search input{min-height:39px!important;font-size:12px!important;color:#222!important}
+.hero.tobay-home-hero .tobay-hero-search button{min-height:39px!important;border-radius:3px!important;background:var(--tk-orange)!important}
+.hero.tobay-home-hero .tobay-hero-actions{gap:8px!important}
+.hero.tobay-home-hero .tobay-hero-actions .btn{font-size:11px!important;padding:10px 14px!important;border-radius:4px!important}
+.hero.tobay-home-hero .tobay-hero-actions .btn-orange{background:#fff!important;color:var(--tk-pink)!important}
+.hero.tobay-home-hero .tobay-hero-secondary{border:1px solid #fff!important;color:#fff!important;background:#ffffff12!important}
+.hero.tobay-home-hero .hero-note{font-size:10px!important;color:#ffe4f1!important}
+.hero.tobay-home-hero .tobay-hero-visual{display:grid!important;grid-template-columns:1fr 1fr!important;align-content:stretch!important;gap:9px!important;padding:12px!important;background:#17131a!important;border-radius:9px!important;border:1px solid #40303a!important;min-width:0!important}
+.hero.tobay-home-hero .tobay-world-globe-wrap{grid-column:1/-1!important;display:flex!important;justify-content:center!important;align-items:center!important;min-height:125px!important;max-height:160px!important;overflow:hidden!important}
+.hero.tobay-home-hero .tobay-world-globe{width:130px!important;height:130px!important}
+.hero.tobay-home-hero .tobay-feature-heading{grid-column:1/-1!important;text-align:center!important;margin:0!important}
+.hero.tobay-home-hero .tobay-feature-heading strong{font-size:13px!important;color:#fff!important}
+.hero.tobay-home-hero .tobay-feature-kicker{font-size:9px!important;color:#ffc1df!important}
+.hero.tobay-home-hero .tobay-feature-list{display:contents!important}
+.hero.tobay-home-hero .tobay-feature-card{min-width:0!important;padding:9px!important;gap:7px!important;border-radius:5px!important;background:#ffffff12!important;border:1px solid #ffffff20!important}
+.hero.tobay-home-hero .tobay-feature-icon{width:27px!important;height:27px!important;flex-basis:27px!important;font-size:15px!important;border-radius:5px!important}
+.hero.tobay-home-hero .tobay-feature-copy strong{font-size:10px!important}
+.hero.tobay-home-hero .tobay-feature-copy small{font-size:9px!important;line-height:1.3!important}
+.hero.tobay-home-hero .tobay-feature-arrow,.hero.tobay-home-hero .tobay-feature-foot{display:none!important}
+.tobay-assurance-row{display:flex!important;justify-content:center!important;gap:26px!important;padding:10px!important;background:#fff!important;border-bottom:1px solid var(--tk-line)!important;flex-wrap:wrap!important}
+.tobay-assurance-item{font-size:11px!important;color:#404552!important}
+.section{padding:26px 0!important}
+.section .container{width:min(1200px,96%)!important}
+.section-head h2,.categories-heading h2,.discover-heading h2{font-size:21px!important;letter-spacing:-.45px!important;color:#252832!important}
+.section-head p,.categories-heading p,.discover-heading p{font-size:11px!important;color:#737987!important}
+.categories-section{background:#fff!important}
+.category-grid{display:flex!important;overflow-x:auto!important;gap:10px!important;padding:5px 1px 12px!important;scroll-snap-type:x mandatory!important}
+.category-grid .category{flex:0 0 145px!important;min-height:125px!important;padding:13px!important;border:1px solid #e7e8eb!important;border-radius:6px!important;scroll-snap-align:start!important;background:#fff!important;box-shadow:0 2px 7px #17203308!important}
+.category h3{font-size:11px!important}.category p{font-size:9px!important;line-height:1.35!important}.category-icon{font-size:23px!important}
+.discover-banner{border-radius:7px!important;background:linear-gradient(110deg,#79003f,#c90068 70%,#ed8a12)!important;padding:20px!important}
+.discover-banner h2{font-size:23px!important;color:#fff!important}.discover-banner p{font-size:11px!important;color:#fff!important}
+.marketplace-panel{padding:12px!important;border-radius:6px!important;background:#fff!important;border:1px solid var(--tk-line)!important}
+.marketplace-tools{gap:8px!important}.marketplace-search-wrap,.marketplace-category-wrap{min-height:38px!important;border-radius:4px!important}
+.listing-grid,.tobay-showcase-grid{display:flex!important;overflow-x:auto!important;gap:12px!important;padding:8px 2px 15px!important;scroll-snap-type:x mandatory!important}
+.listing-grid>* ,.tobay-showcase-grid>*{flex:0 0 190px!important;max-width:190px!important;scroll-snap-align:start!important}
+.tobay-home-additions{background:#f4f5f7!important}
+.tobay-home-additions:nth-of-type(even){background:#fff!important}
+@media(max-width:900px){header .header-inner{gap:10px!important}.nav{gap:8px!important}.nav a{font-size:10px!important}.tobay-header-shortcuts{gap:8px!important}}
+@media(max-width:650px){
+ .tobay-market-topline{font-size:9px!important;letter-spacing:.5px!important;min-height:29px!important}
+ header .header-inner{width:100%!important;padding:8px 10px!important;gap:8px!important}
+ .tobay-logo-mark{width:34px!important;height:34px!important}.tobay-logo-type strong{font-size:21px!important}.tobay-logo-type small{font-size:7px!important}
+ .tobay-konga-header-tools{order:3;flex:1 1 100%;width:100%;gap:8px}
+ .tobay-header-search{height:36px}.tobay-header-search input{font-size:11px!important}.tobay-header-search button{width:40px;flex-basis:40px}
+ .tobay-header-shortcuts a{font-size:10px!important}
+ .nav{margin-left:auto!important;gap:7px!important}.nav a:not(.btn){display:none!important}.nav a.btn{font-size:10px!important;padding:8px 10px!important}
+ .tobay-quick-nav{min-height:38px!important;padding:0 6px!important}.tobay-quick-nav a{min-height:38px!important;padding:0 10px!important;font-size:10px!important}
+ .hero.tobay-home-hero{padding:10px 0!important}.hero.tobay-home-hero .tobay-hero-layout{grid-template-columns:minmax(0,1fr)!important;gap:8px!important}
+ .hero.tobay-home-hero .tobay-hero-copy{padding:17px!important}.hero.tobay-home-hero .tobay-hero-copy h1{font-size:30px!important}
+ .hero.tobay-home-hero .tobay-hero-visual{grid-template-columns:repeat(3,minmax(0,1fr))!important;padding:8px!important;gap:6px!important}
+ .hero.tobay-home-hero .tobay-world-globe-wrap{grid-column:1/-1!important;min-height:95px!important;max-height:105px!important}.hero.tobay-home-hero .tobay-world-globe{width:90px!important;height:90px!important}
+ .hero.tobay-home-hero .tobay-feature-heading{grid-column:1/-1!important}.hero.tobay-home-hero .tobay-feature-card{padding:7px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important}
+ .hero.tobay-home-hero .tobay-feature-icon{width:24px!important;height:24px!important;flex-basis:24px!important}
+ .hero.tobay-home-hero .tobay-feature-copy strong{font-size:9px!important}.hero.tobay-home-hero .tobay-feature-copy small{font-size:8px!important}
+ .tobay-assurance-row{gap:9px 15px!important;font-size:9px!important}.tobay-assurance-item strong{font-size:9px!important}
+ .section{padding:20px 0!important}.section-head h2,.categories-heading h2,.discover-heading h2{font-size:18px!important}
+}
+@media(orientation:landscape) and (max-height:600px){
+ header .header-inner{min-height:54px!important;flex-wrap:nowrap!important;gap:10px!important;padding:5px 0!important}
+ .tobay-logo-mark{width:31px!important;height:31px!important}.tobay-logo-type strong{font-size:19px!important}
+ .tobay-konga-header-tools{flex:1 1 280px!important;min-width:170px!important}.tobay-header-search{height:32px!important}
+ .tobay-header-shortcuts a{font-size:9px!important}.nav{gap:6px!important}.nav a{font-size:9px!important}
+ .tobay-quick-nav,.tobay-quick-nav a{min-height:32px!important}.tobay-quick-nav a{font-size:9px!important}
+ .hero.tobay-home-hero{padding:8px 0!important}.hero.tobay-home-hero .tobay-hero-layout{grid-template-columns:minmax(0,1.6fr) minmax(230px,.9fr)!important;gap:8px!important}
+ .hero.tobay-home-hero .tobay-hero-copy{padding:12px!important}.hero.tobay-home-hero .tobay-hero-copy h1{font-size:26px!important;margin:6px 0!important}
+ .hero.tobay-home-hero .tobay-hero-copy>p:not(.hero-note){font-size:10px!important;margin:5px 0!important}
+ .hero.tobay-home-hero .tobay-hero-search input,.hero.tobay-home-hero .tobay-hero-search button{min-height:30px!important}
+ .hero.tobay-home-hero .tobay-world-globe-wrap{min-height:65px!important;max-height:75px!important}.hero.tobay-home-hero .tobay-world-globe{width:70px!important;height:70px!important}
+ .hero.tobay-home-hero .tobay-feature-card{padding:5px!important}.hero.tobay-home-hero .tobay-feature-copy small{font-size:8px!important}
+ .section{padding:14px 0!important}
+}
+@media(prefers-reduced-motion:no-preference){.tobay-market-topline{background-size:200% 100%!important;animation:tobayFestivalSweep 12s linear infinite}@keyframes tobayFestivalSweep{to{background-position:200% 0}}}
+</style>
+
+
+<style id="tobay-dark-dashboard-redesign">
+/* TOBAY dark marketplace dashboard — visual-only layer; existing IDs, forms and scripts remain intact */
+:root{--td-bg:#070910;--td-panel:#101421;--td-panel2:#151b2c;--td-line:#29334c;--td-blue:#48a5ff;--td-purple:#b78cff;--td-white:#f5f7ff;--td-muted:#aab4ca}
+#tobaySellerDashboard,#tobayBuyerOrders,#tobayAdminDashboard{
+ color:var(--td-white)!important;background:radial-gradient(ellipse at 90% 0%,#202044 0,transparent 38%),linear-gradient(145deg,#080b13,#0d1220 58%,#111026)!important;
+ border:1px solid #303955!important;border-radius:24px!important;box-shadow:0 24px 70px #0009,0 0 32px #6e4bff12!important;
+}
+#tobaySellerDashboard:before{border-color:#35466c!important;box-shadow:0 0 0 28px #17213a,0 0 0 58px #111a2b!important}
+#tobaySellerDashboard>h2,#tobayBuyerOrders .buyer-hero,#tobayAdminDashboard>h2{
+ background:linear-gradient(115deg,#102c55 0%,#174e85 48%,#50327e 100%)!important;color:#fff!important;
+ border:1px solid #5799e7!important;box-shadow:0 14px 34px #02040c88,0 0 24px #5d8fff24!important
+}
+#tobaySellerDashboard>h3,#tobayBuyerOrders .buyer-section-title h3,#tobayAdminDashboard h3,
+#tobaySellerDashboard .tobay-toolkit h3{color:#c7a7ff!important}
+#tobaySellerDashboard>p,#tobaySellerDashboard label,#tobaySellerDashboard .tobay-sub,
+#tobayBuyerOrders p,#tobayBuyerOrders label,#tobayAdminDashboard p{color:var(--td-muted)!important}
+#tobaySellerDashboard .tobay-toolkit,#tobaySellerDashboard .tobay-seller-overview-panel,
+#tobaySellerDashboard #tobayListingForm,#tobaySellerDashboard #tobayMyListings>div,
+#tobaySellerDashboard [data-seller-order],#tobaySellerDashboard #tobaySellerBuyNowOrders>div,
+#tobayBuyerOrders .buyer-overall-summary,#tobayBuyerOrders .buyer-stat,
+#tobayBuyerOrders .buyer-overall-item,#tobayBuyerOrders .buyer-order-card,
+#tobayAdminDashboard #tobayAdminInsights,#tobayAdminDashboard #tobayAdminApplications>div,
+#tobayAdminDashboard #tobayAdminEasyBuyInstallments>div{
+ color:var(--td-white)!important;background:linear-gradient(145deg,#151c2d,#101522)!important;
+ border:1px solid var(--td-line)!important;box-shadow:0 9px 26px #0005!important;border-radius:15px!important
+}
+#tobaySellerDashboard .tobay-toolkit-stat,#tobaySellerDashboard .tobay-overview-card,
+#tobaySellerDashboard #tobaySellerOrderSummary>div{
+ color:var(--td-white)!important;background:linear-gradient(145deg,#1a2236,#111827)!important;border:1px solid #34405d!important
+}
+#tobaySellerDashboard .tobay-toolkit-stat span,#tobaySellerDashboard .tobay-overview-card-label,
+#tobaySellerDashboard #tobaySellerOrderSummary strong{color:#b7c2d8!important}
+#tobaySellerDashboard .tobay-toolkit-stat strong,#tobaySellerDashboard .tobay-overview-card-value,
+#tobaySellerDashboard #tobaySellerOrderSummary h2,#tobayBuyerOrders .buyer-stat strong,
+#tobayBuyerOrders .buyer-overall-item strong{color:#72baff!important}
+#tobaySellerDashboard .tobay-overview-card.total{background:linear-gradient(120deg,#123e73,#55358b)!important;border-color:#648de1!important}
+#tobaySellerDashboard input:not([type=file]),#tobaySellerDashboard textarea,#tobaySellerDashboard select,
+#tobaySellerDashboard .tobay-toolkit input,#tobaySellerDashboard .tobay-toolkit select,
+#tobayBuyerOrders input,#tobayBuyerOrders select,#tobayAdminDashboard input,#tobayAdminDashboard select{
+ color:#f5f7ff!important;background:#0b1020!important;border:1px solid #394664!important;border-radius:10px!important
+}
+#tobaySellerDashboard input::placeholder,#tobaySellerDashboard textarea::placeholder,
+#tobayBuyerOrders input::placeholder,#tobayAdminDashboard input::placeholder{color:#8996b0!important}
+#tobaySellerDashboard button,#tobayBuyerOrders button,#tobayAdminDashboard button{
+ color:#fff!important;background:linear-gradient(110deg,#1767b5,#6844a6)!important;border:1px solid #568bd0!important;
+ border-radius:10px!important;box-shadow:0 6px 16px #0005!important
+}
+#tobaySellerDashboard button.secondary,#tobaySellerDashboard #tobaySellerOrderFilters button{
+ color:#dce8ff!important;background:#19243a!important;border:1px solid #3a4a69!important;box-shadow:none!important
+}
+#tobaySellerDashboard #tobaySellerOrderFilters button:hover,
+#tobaySellerDashboard #tobaySellerOrderFilters button:focus{background:linear-gradient(110deg,#1767b5,#6844a6)!important;color:#fff!important}
+#tobaySellerDashboard .tobay-customer-table th,#tobaySellerDashboard .tobay-customer-table td{
+ color:#dce5f7!important;background:#121a2a!important;border-color:#2b3650!important
+}
+#tobaySellerDashboard .tobay-customer-table th{color:#c5a8ff!important;background:#1a2035!important}
+#tobayBuyerOrders .buyer-overall-summary h3,#tobayBuyerOrders .buyer-hero h2{color:#fff!important}
+#tobayBuyerOrders .buyer-hero p{color:#e2eaff!important}
+#tobayAdminDashboard{max-width:1160px!important;padding:clamp(16px,3vw,32px)!important}
+#tobayAdminDashboard #tobayAdminInsights{background:#121a2b!important}
+#tobayAdminDashboard #tobayAdminInsights h3{color:#c7a7ff!important}
+#tobayAdminDashboard #tobayAdminMetricGrid>div{background:#19233a!important;color:#f5f7ff!important;border:1px solid #344361!important;border-radius:13px!important;padding:15px!important}
+#tobaySellerDashboard img,#tobayBuyerOrders img{border-radius:12px}
+#tobaySellerDashboard hr,#tobayBuyerOrders hr,#tobayAdminDashboard hr{border:0;border-top:1px solid #303a53!important}
+#tobaySellerDashboard :focus-visible,#tobayBuyerOrders :focus-visible,#tobayAdminDashboard :focus-visible{outline:3px solid #9c7cff!important;outline-offset:3px}
+@media(max-width:760px){
+ #tobaySellerDashboard,#tobayBuyerOrders,#tobayAdminDashboard{width:94%!important;margin:18px auto!important;padding:15px!important;border-radius:18px!important}
+ #tobaySellerDashboard>h2,#tobayAdminDashboard>h2{font-size:21px!important;padding:17px!important}
+ #tobaySellerDashboard .tobay-toolkit-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #tobayBuyerOrders .buyer-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:420px){
+ #tobaySellerDashboard,#tobayBuyerOrders,#tobayAdminDashboard{padding:12px!important}
+ #tobaySellerDashboard .tobay-toolkit{padding:13px!important}
+ #tobaySellerDashboard .tobay-toolkit-stat{padding:12px 10px!important}
+ #tobaySellerDashboard .tobay-toolkit-stat strong{font-size:20px!important}
+ #tobayBuyerOrders .buyer-hero{padding:17px!important}
+}
+@media(prefers-reduced-motion:no-preference){
+ #tobaySellerDashboard .tobay-toolkit,#tobaySellerDashboard .tobay-overview-card,
+ #tobayBuyerOrders .buyer-stat{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+ #tobaySellerDashboard .tobay-toolkit:hover,#tobaySellerDashboard .tobay-overview-card:hover,
+ #tobayBuyerOrders .buyer-stat:hover{transform:translateY(-3px);border-color:#667fbd!important;box-shadow:0 14px 28px #0007!important}
+}
+</style>
+
 </head>
 <body>
-<div class="tobay-market-topline">TOBAY GLOBAL MARKETPLACE  •  DISCOVER PRODUCTS, SERVICES &amp; NEW OPPORTUNITIES</div><header>
+<div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
 <div class="container header-inner">
 <a aria-label="TOBAY Global Marketplace home" class="logo tobay-signature-logo" href="#home">
 <svg aria-label="TOBAY symbol" class="tobay-logo-mark" role="img" viewbox="0 0 64 64">
@@ -2437,7 +2665,15 @@ img,video{max-width:100%}
 <path d="M42 35 49 42 42 49l-7-7z" fill="url(#tobayMarkGold)"></path>
 </svg>
 <span class="tobay-logo-type"><strong>TOBAY</strong><small>GLOBAL MARKETPLACE</small></span>
-</a> <nav class="nav">
+</a>
+<div class="tobay-konga-header-tools">
+  <label class="tobay-header-search" aria-label="Search TOBAY marketplace">
+    <input id="tobayHeaderSearch" type="search" placeholder="Search for products, brands and services" onkeydown="if(event.key==='Enter'){const q=this.value;const target=document.getElementById('searchInput');if(target){target.value=q;searchListings();}}" />
+    <button type="button" onclick="const q=document.getElementById('tobayHeaderSearch').value;const target=document.getElementById('searchInput');if(target){target.value=q;searchListings();}">⌕</button>
+  </label>
+  <div class="tobay-header-shortcuts"><a href="#sell">Sell on TOBAY</a><a href="#account">My Account</a><a href="#explore" aria-label="Shop marketplace">🛒 Shop</a></div>
+</div>
+<nav class="nav">
 <a href="#home">Home</a>
 <a href="#categories">Categories</a>
 <a href="#explore">Explore</a>
@@ -2447,7 +2683,7 @@ img,video{max-width:100%}
 <a class="btn btn-orange" href="https://tosevia-marketplace.callingforrepentancesalvation.workers.dev/#sell">Get Started</a>
 </nav>
 </div>
-</header><nav aria-label="Quick marketplace navigation" class="tobay-quick-nav"><a href="#categories">All categories</a><a href="#explore">Products</a><a href="#explore">Services</a><a href="#sell">Become a seller</a><a href="#about">About TOBAY</a></nav>
+</header><nav aria-label="Shop categories" class="tobay-quick-nav"><a class="tobay-all-categories" href="#categories">☰ All Categories</a><a href="#explore">Fashion</a><a href="#explore">Phones &amp; Electronics</a><a href="#explore">Computers</a><a href="#explore">Home &amp; Living</a><a href="#explore">Beauty</a><a href="#explore">Food &amp; Groceries</a><a href="#explore">Services</a><a href="#sell">Sell on TOBAY</a></nav>
 <main>
 <section class="hero tobay-home-hero" id="home">
 <div class="container tobay-hero-layout">
@@ -4340,6 +4576,22 @@ window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
     <hr style="margin:25px 0;">
     <h3>My Listings</h3>
     <div id="tobayMyListings">Loading your listings...</div>
+    <section class="tobay-toolkit" id="tobaySellerAds" style="border:1px solid #f0d6a7;background:linear-gradient(120deg,#fffaf1,#fff);">
+      <div class="tobay-toolkit-head"><div><h3>📣 TOBAY Sponsored Ads</h3><p class="tobay-sub">Promote your store or product to more shoppers. Your advert is reviewed before it can appear.</p></div><span style="font-size:10px;font-weight:800;color:#9a5a08;background:#fff0d4;padding:6px 9px;border-radius:20px">PAID PROMOTION</span></div>
+      <form id="tobaySellerAdForm" class="tobay-toolkit" style="padding:12px;background:#fff">
+        <label>Advert title</label><input id="tobayAdTitle" required maxlength="90" placeholder="e.g. New season fashion collection">
+        <label>What are you promoting?</label><textarea id="tobayAdDescription" required maxlength="500" rows="3" placeholder="Briefly describe your product, service or store"></textarea>
+        <div class="tobay-toolkit-actions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">
+          <label>Ad placement<select id="tobayAdPlacement"><option value="homepage_banner">Homepage banner</option><option value="featured_products">Featured products</option><option value="search_results">Search results</option><option value="category_page">Category page</option></select></label>
+          <label>Duration<select id="tobayAdDuration"><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option></select></label>
+        </div>
+        <label>Destination link (optional)</label><input id="tobayAdUrl" type="url" maxlength="500" placeholder="https://your-store-or-product-link">
+        <button type="submit">Submit advert request</button><p id="tobayAdMessage" role="status" class="tobay-sub"></p>
+      </form>
+      <div id="tobayMyAdRequests" class="tobay-sub">Your advert requests will appear here.</div>
+      <p class="tobay-sub">Submitting a request does not charge you or activate an advert. TOBAY will confirm the price and payment instructions; an advert goes live only after payment is verified and approved.</p>
+    </section>
+
     <section class="tobay-toolkit" id="tobaySellerPerformance">
       <div class="tobay-toolkit-head"><div><h3>Sales Performance</h3><p class="tobay-sub">Order activity and order value across both sales channels. These figures are not confirmed revenue.</p></div><button type="button" id="tobayRefreshPerformance">Refresh</button></div>
       <div id="tobayPerformanceStats" class="tobay-toolkit-grid"><div class="tobay-overview-loading">Loading performance...</div></div>
@@ -4394,6 +4646,31 @@ window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
 <p class="tobay-sub" style="margin:0 0 12px;color:#718096;font-size:12px;">Review buyer and delivery details, choose the payment arrangement when accepting, and mark the order completed only after fulfilment.</p>
 <div id="tobaySellerBuyNowOrders">Loading Buy Now orders...</div>
   `;
+
+// TOBAY Sponsored Ads: seller requests are saved as unpaid and pending review.
+{
+  const adForm=document.getElementById("tobaySellerAdForm");
+  if(adForm){
+    const adMsg=document.getElementById("tobayAdMessage");
+    const adList=document.getElementById("tobayMyAdRequests");
+    const renderMyAds=async()=>{
+      adList.textContent="Loading your advert requests...";
+      const {data,error}=await supabase.from("tobay_advertisements").select("id,title,placement,duration_days,fee_amount,currency,status,payment_status,created_at").eq("advertiser_id",user.id).order("created_at",{ascending:false}).limit(20);
+      if(error){adList.textContent=/does not exist|schema cache|relation/i.test(error.message)?"Advert requests will be available after the TOBAY Sponsored Ads SQL setup is run.":"Unable to load advert requests: "+error.message;return;}
+      if(!data||!data.length){adList.textContent="You have not submitted any advert requests yet.";return;}
+      const wrap=document.createElement("div");wrap.style.cssText="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:10px";
+      data.forEach(a=>{const card=document.createElement("div");card.style.cssText="padding:10px;border:1px solid #e5eaf0;border-radius:9px;background:#fff";const title=document.createElement("strong");title.textContent=a.title;const detail=document.createElement("p");detail.style.cssText="font-size:11px;color:#64748b;margin:5px 0";detail.textContent=a.placement.replaceAll("_"," ")+" · "+a.duration_days+" days";const status=document.createElement("p");status.style.cssText="font-size:11px;font-weight:700;margin:4px 0";status.textContent="Review: "+a.status+" · Payment: "+a.payment_status+(a.fee_amount==null?"":" · "+(a.currency||"NGN")+" "+Number(a.fee_amount).toLocaleString());card.append(title,detail,status);wrap.appendChild(card);});adList.replaceChildren(wrap);
+    };
+    adForm.addEventListener("submit",async ev=>{ev.preventDefault();const submit=adForm.querySelector('button[type="submit"]');submit.disabled=true;adMsg.textContent="Submitting your advert request...";
+      const title=document.getElementById("tobayAdTitle").value.trim(),description=document.getElementById("tobayAdDescription").value.trim(),placement=document.getElementById("tobayAdPlacement").value,duration=Number(document.getElementById("tobayAdDuration").value),url=document.getElementById("tobayAdUrl").value.trim();
+      if(url&&!/^https:\/\//i.test(url)){adMsg.textContent="Please use a secure https:// destination link.";submit.disabled=false;return;}
+      const {error}=await supabase.from("tobay_advertisements").insert({advertiser_id:user.id,title,description,placement,duration_days:duration,destination_url:url||null,status:"pending",payment_status:"unpaid"});
+      if(error){adMsg.textContent=/does not exist|schema cache|relation/i.test(error.message)?"Please run the Sponsored Ads SQL setup first, then try again.":"Request could not be submitted: "+error.message;}else{adForm.reset();adMsg.textContent="Request submitted. TOBAY will review it and confirm the price and payment instructions.";await renderMyAds();}
+      submit.disabled=false;
+    });
+    renderMyAds();
+  }
+}
 
 // Seller verification: authenticated seller can submit/read only their own record.
 // No document files or sensitive identity numbers are collected in this release.
@@ -8266,7 +8543,7 @@ section p,section li{color:var(--tobay-body)!important}
 <script id="tobay-global-upgrade-centre">
 (function(){
   "use strict";
-  const SQL = "-- TOBAY GLOBAL MARKETPLACE UPGRADE\n-- Run once in Supabase Dashboard > SQL Editor > New query.\n-- This adds secure database foundations for promotions, refunds, buyer protection\n-- and seller verification. It does NOT move money or issue refunds automatically.\n\ncreate table if not exists public.tobay_promotions (\n  id uuid primary key default gen_random_uuid(),\n  seller_id uuid not null references auth.users(id) on delete cascade,\n  code text not null,\n  discount_type text not null check (discount_type in ('percentage','fixed')),\n  discount_value numeric(12,2) not null check (discount_value > 0),\n  currency text not null default 'NGN',\n  starts_at timestamptz,\n  ends_at timestamptz,\n  usage_limit integer,\n  usage_count integer not null default 0,\n  is_active boolean not null default true,\n  created_at timestamptz not null default now(),\n  unique (seller_id, code),\n  check (ends_at is null or starts_at is null or ends_at > starts_at),\n  check (discount_type <> 'percentage' or discount_value <= 100)\n);\n\ncreate table if not exists public.tobay_refund_requests (\n  id uuid primary key default gen_random_uuid(),\n  order_id text not null,\n  buyer_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid references auth.users(id) on delete set null,\n  reason text not null,\n  requested_amount numeric(12,2),\n  currency text not null default 'NGN',\n  status text not null default 'pending'\n    check (status in ('pending','under_review','approved','rejected','refunded')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\ncreate table if not exists public.tobay_buyer_protection_cases (\n  id uuid primary key default gen_random_uuid(),\n  order_id text not null,\n  buyer_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid references auth.users(id) on delete set null,\n  issue_type text not null,\n  description text not null,\n  status text not null default 'open'\n    check (status in ('open','investigating','resolved_buyer','resolved_seller','closed')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\n-- Store only a private Storage object path here, never public identity-document URLs.\ncreate table if not exists public.tobay_seller_verification (\n  id uuid primary key default gen_random_uuid(),\n  user_id uuid not null references auth.users(id) on delete cascade,\n  business_name text not null,\n  document_type text not null,\n  private_document_path text,\n  status text not null default 'pending'\n    check (status in ('pending','under_review','verified','rejected')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\ncreate index if not exists tobay_promotions_seller_idx on public.tobay_promotions(seller_id);\ncreate index if not exists tobay_refunds_buyer_idx on public.tobay_refund_requests(buyer_id);\ncreate index if not exists tobay_refunds_status_idx on public.tobay_refund_requests(status);\ncreate index if not exists tobay_protection_buyer_idx on public.tobay_buyer_protection_cases(buyer_id);\ncreate index if not exists tobay_verification_user_idx on public.tobay_seller_verification(user_id);\n\nalter table public.tobay_promotions enable row level security;\nalter table public.tobay_refund_requests enable row level security;\nalter table public.tobay_buyer_protection_cases enable row level security;\nalter table public.tobay_seller_verification enable row level security;\n\n-- Admin is determined by the existing admin_users allow-list, never by email or UI state.\ndrop policy if exists \"tobay promotions public active read\" on public.tobay_promotions;\ncreate policy \"tobay promotions public active read\" on public.tobay_promotions\nfor select using (is_active = true and (starts_at is null or starts_at <= now())\n  and (ends_at is null or ends_at > now()));\n\ndrop policy if exists \"tobay promotions seller read own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller read own\" on public.tobay_promotions\nfor select to authenticated using (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions seller insert own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller insert own\" on public.tobay_promotions\nfor insert to authenticated with check (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions seller update own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller update own\" on public.tobay_promotions\nfor update to authenticated using (seller_id = auth.uid()) with check (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions admin all\" on public.tobay_promotions;\ncreate policy \"tobay promotions admin all\" on public.tobay_promotions\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay refunds buyer read own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds buyer read own\" on public.tobay_refund_requests\nfor select to authenticated using (buyer_id = auth.uid());\ndrop policy if exists \"tobay refunds buyer create own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds buyer create own\" on public.tobay_refund_requests\nfor insert to authenticated with check (buyer_id = auth.uid() and status = 'pending');\ndrop policy if exists \"tobay refunds seller read own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds seller read own\" on public.tobay_refund_requests\nfor select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay refunds admin all\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds admin all\" on public.tobay_refund_requests\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay protection buyer read own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection buyer read own\" on public.tobay_buyer_protection_cases\nfor select to authenticated using (buyer_id = auth.uid());\ndrop policy if exists \"tobay protection buyer create own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection buyer create own\" on public.tobay_buyer_protection_cases\nfor insert to authenticated with check (buyer_id = auth.uid() and status = 'open');\ndrop policy if exists \"tobay protection seller read own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection seller read own\" on public.tobay_buyer_protection_cases\nfor select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay protection admin all\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection admin all\" on public.tobay_buyer_protection_cases\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay verification seller read own\" on public.tobay_seller_verification;\ncreate policy \"tobay verification seller read own\" on public.tobay_seller_verification\nfor select to authenticated using (user_id = auth.uid());\ndrop policy if exists \"tobay verification seller create own\" on public.tobay_seller_verification;\ncreate policy \"tobay verification seller create own\" on public.tobay_seller_verification\nfor insert to authenticated with check (user_id = auth.uid() and status = 'pending');\ndrop policy if exists \"tobay verification admin all\" on public.tobay_seller_verification;\ncreate policy \"tobay verification admin all\" on public.tobay_seller_verification\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\n-- Restrict direct grants; RLS remains the final authorization layer.\ngrant select, insert, update, delete on public.tobay_promotions to authenticated;\ngrant select, insert, update on public.tobay_refund_requests to authenticated;\ngrant select, insert, update on public.tobay_buyer_protection_cases to authenticated;\ngrant select, insert, update on public.tobay_seller_verification to authenticated;\ngrant select on public.tobay_promotions to anon;\n\n-- Seller verification suspension support (safe to run after the original upgrade).\nalter table public.tobay_seller_verification drop constraint if exists tobay_seller_verification_status_check;\nalter table public.tobay_seller_verification add constraint tobay_seller_verification_status_check\n  check (status in ('pending','under_review','verified','rejected','suspended'));\n\n-- Public storefronts can check a verified badge without exposing private seller records.\ncreate or replace function public.tobay_is_verified_seller(p_seller_id uuid)\nreturns boolean\nlanguage sql\nstable\nsecurity definer\nset search_path = public\nas $$\n  select exists (\n    select 1 from public.tobay_seller_verification v\n    where v.user_id = p_seller_id and v.status = 'verified'\n  );\n$$;\nrevoke all on function public.tobay_is_verified_seller(uuid) from public;\ngrant execute on function public.tobay_is_verified_seller(uuid) to anon, authenticated;\n\n-- Buyer/seller report centre. Reports are private to the reporter, affected seller and admins.\ncreate table if not exists public.tobay_seller_reports (\n  id uuid primary key default gen_random_uuid(),\n  reporter_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid not null references auth.users(id) on delete cascade,\n  listing_id uuid,\n  report_type text not null check (report_type in ('suspicious_seller','misleading_listing','fraud_or_scam','other')),\n  description text not null check (char_length(description) between 10 and 2000),\n  status text not null default 'open' check (status in ('open','investigating','resolved','dismissed')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\ncreate index if not exists tobay_seller_reports_status_idx on public.tobay_seller_reports(status,created_at desc);\nalter table public.tobay_seller_reports enable row level security;\ndrop policy if exists \"tobay reports reporter insert own\" on public.tobay_seller_reports;\ncreate policy \"tobay reports reporter insert own\" on public.tobay_seller_reports for insert to authenticated with check (reporter_id = auth.uid() and status = 'open');\ndrop policy if exists \"tobay reports reporter read own\" on public.tobay_seller_reports;\ncreate policy \"tobay reports reporter read own\" on public.tobay_seller_reports for select to authenticated using (reporter_id = auth.uid());\ndrop policy if exists \"tobay reports seller read own\" on public.tobay_seller_reports;\ncreate policy \"tobay reports seller read own\" on public.tobay_seller_reports for select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay reports admin all\" on public.tobay_seller_reports;\ncreate policy \"tobay reports admin all\" on public.tobay_seller_reports for all to authenticated using (exists(select 1 from public.admin_users a where a.user_id = auth.uid())) with check (exists(select 1 from public.admin_users a where a.user_id = auth.uid()));\ngrant select,insert,update on public.tobay_seller_reports to authenticated;\n\n-- Database-level guard: reject new Buy Now/EasyBuy orders to suspended sellers.\ncreate or replace function public.tobay_block_suspended_seller_order() returns trigger\nlanguage plpgsql security definer set search_path=public as $$\nbegin\n  if exists (select 1 from public.tobay_seller_verification v where v.user_id = new.seller_id and v.status = 'suspended') then\n    raise exception 'This seller is currently suspended and cannot receive new orders.';\n  end if;\n  return new;\nend; $$;\nrevoke all on function public.tobay_block_suspended_seller_order() from public;\n-- Attach guards only where the expected seller_id column exists.\ndo $$\nbegin\n  if to_regclass('public.tobay_orders') is not null and exists(select 1 from information_schema.columns where table_schema='public' and table_name='tobay_orders' and column_name='seller_id') then\n    execute 'drop trigger if exists tobay_block_suspended_seller_order on public.tobay_orders';\n    execute 'create trigger tobay_block_suspended_seller_order before insert on public.tobay_orders for each row execute function public.tobay_block_suspended_seller_order()';\n  end if;\n  if to_regclass('public.easybuy_orders') is not null and exists(select 1 from information_schema.columns where table_schema='public' and table_name='easybuy_orders' and column_name='seller_id') then\n    execute 'drop trigger if exists tobay_block_suspended_seller_order on public.easybuy_orders';\n    execute 'create trigger tobay_block_suspended_seller_order before insert on public.easybuy_orders for each row execute function public.tobay_block_suspended_seller_order()';\n  end if;\nend; $$;\n";
+  const SQL = "-- TOBAY GLOBAL MARKETPLACE UPGRADE\n-- Run once in Supabase Dashboard > SQL Editor > New query.\n-- This adds secure database foundations for promotions, refunds, buyer protection\n-- and seller verification. It does NOT move money or issue refunds automatically.\n\ncreate table if not exists public.tobay_promotions (\n  id uuid primary key default gen_random_uuid(),\n  seller_id uuid not null references auth.users(id) on delete cascade,\n  code text not null,\n  discount_type text not null check (discount_type in ('percentage','fixed')),\n  discount_value numeric(12,2) not null check (discount_value > 0),\n  currency text not null default 'NGN',\n  starts_at timestamptz,\n  ends_at timestamptz,\n  usage_limit integer,\n  usage_count integer not null default 0,\n  is_active boolean not null default true,\n  created_at timestamptz not null default now(),\n  unique (seller_id, code),\n  check (ends_at is null or starts_at is null or ends_at > starts_at),\n  check (discount_type <> 'percentage' or discount_value <= 100)\n);\n\ncreate table if not exists public.tobay_refund_requests (\n  id uuid primary key default gen_random_uuid(),\n  order_id text not null,\n  buyer_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid references auth.users(id) on delete set null,\n  reason text not null,\n  requested_amount numeric(12,2),\n  currency text not null default 'NGN',\n  status text not null default 'pending'\n    check (status in ('pending','under_review','approved','rejected','refunded')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\ncreate table if not exists public.tobay_buyer_protection_cases (\n  id uuid primary key default gen_random_uuid(),\n  order_id text not null,\n  buyer_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid references auth.users(id) on delete set null,\n  issue_type text not null,\n  description text not null,\n  status text not null default 'open'\n    check (status in ('open','investigating','resolved_buyer','resolved_seller','closed')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\n-- Store only a private Storage object path here, never public identity-document URLs.\ncreate table if not exists public.tobay_seller_verification (\n  id uuid primary key default gen_random_uuid(),\n  user_id uuid not null references auth.users(id) on delete cascade,\n  business_name text not null,\n  document_type text not null,\n  private_document_path text,\n  status text not null default 'pending'\n    check (status in ('pending','under_review','verified','rejected')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\n\ncreate index if not exists tobay_promotions_seller_idx on public.tobay_promotions(seller_id);\ncreate index if not exists tobay_refunds_buyer_idx on public.tobay_refund_requests(buyer_id);\ncreate index if not exists tobay_refunds_status_idx on public.tobay_refund_requests(status);\ncreate index if not exists tobay_protection_buyer_idx on public.tobay_buyer_protection_cases(buyer_id);\ncreate index if not exists tobay_verification_user_idx on public.tobay_seller_verification(user_id);\n\nalter table public.tobay_promotions enable row level security;\nalter table public.tobay_refund_requests enable row level security;\nalter table public.tobay_buyer_protection_cases enable row level security;\nalter table public.tobay_seller_verification enable row level security;\n\n-- Admin is determined by the existing admin_users allow-list, never by email or UI state.\ndrop policy if exists \"tobay promotions public active read\" on public.tobay_promotions;\ncreate policy \"tobay promotions public active read\" on public.tobay_promotions\nfor select using (is_active = true and (starts_at is null or starts_at <= now())\n  and (ends_at is null or ends_at > now()));\n\ndrop policy if exists \"tobay promotions seller read own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller read own\" on public.tobay_promotions\nfor select to authenticated using (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions seller insert own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller insert own\" on public.tobay_promotions\nfor insert to authenticated with check (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions seller update own\" on public.tobay_promotions;\ncreate policy \"tobay promotions seller update own\" on public.tobay_promotions\nfor update to authenticated using (seller_id = auth.uid()) with check (seller_id = auth.uid());\n\ndrop policy if exists \"tobay promotions admin all\" on public.tobay_promotions;\ncreate policy \"tobay promotions admin all\" on public.tobay_promotions\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay refunds buyer read own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds buyer read own\" on public.tobay_refund_requests\nfor select to authenticated using (buyer_id = auth.uid());\ndrop policy if exists \"tobay refunds buyer create own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds buyer create own\" on public.tobay_refund_requests\nfor insert to authenticated with check (buyer_id = auth.uid() and status = 'pending');\ndrop policy if exists \"tobay refunds seller read own\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds seller read own\" on public.tobay_refund_requests\nfor select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay refunds admin all\" on public.tobay_refund_requests;\ncreate policy \"tobay refunds admin all\" on public.tobay_refund_requests\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay protection buyer read own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection buyer read own\" on public.tobay_buyer_protection_cases\nfor select to authenticated using (buyer_id = auth.uid());\ndrop policy if exists \"tobay protection buyer create own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection buyer create own\" on public.tobay_buyer_protection_cases\nfor insert to authenticated with check (buyer_id = auth.uid() and status = 'open');\ndrop policy if exists \"tobay protection seller read own\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection seller read own\" on public.tobay_buyer_protection_cases\nfor select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay protection admin all\" on public.tobay_buyer_protection_cases;\ncreate policy \"tobay protection admin all\" on public.tobay_buyer_protection_cases\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\ndrop policy if exists \"tobay verification seller read own\" on public.tobay_seller_verification;\ncreate policy \"tobay verification seller read own\" on public.tobay_seller_verification\nfor select to authenticated using (user_id = auth.uid());\ndrop policy if exists \"tobay verification seller create own\" on public.tobay_seller_verification;\ncreate policy \"tobay verification seller create own\" on public.tobay_seller_verification\nfor insert to authenticated with check (user_id = auth.uid() and status = 'pending');\ndrop policy if exists \"tobay verification admin all\" on public.tobay_seller_verification;\ncreate policy \"tobay verification admin all\" on public.tobay_seller_verification\nfor all to authenticated using (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n)) with check (exists (\n  select 1 from public.admin_users a where a.user_id = auth.uid()\n));\n\n-- Restrict direct grants; RLS remains the final authorization layer.\ngrant select, insert, update, delete on public.tobay_promotions to authenticated;\ngrant select, insert, update on public.tobay_refund_requests to authenticated;\ngrant select, insert, update on public.tobay_buyer_protection_cases to authenticated;\ngrant select, insert, update on public.tobay_seller_verification to authenticated;\ngrant select on public.tobay_promotions to anon;\n\n-- Seller verification suspension support (safe to run after the original upgrade).\nalter table public.tobay_seller_verification drop constraint if exists tobay_seller_verification_status_check;\nalter table public.tobay_seller_verification add constraint tobay_seller_verification_status_check\n  check (status in ('pending','under_review','verified','rejected','suspended'));\n\n-- Public storefronts can check a verified badge without exposing private seller records.\ncreate or replace function public.tobay_is_verified_seller(p_seller_id uuid)\nreturns boolean\nlanguage sql\nstable\nsecurity definer\nset search_path = public\nas $$\n  select exists (\n    select 1 from public.tobay_seller_verification v\n    where v.user_id = p_seller_id and v.status = 'verified'\n  );\n$$;\nrevoke all on function public.tobay_is_verified_seller(uuid) from public;\ngrant execute on function public.tobay_is_verified_seller(uuid) to anon, authenticated;\n\n-- Buyer/seller report centre. Reports are private to the reporter, affected seller and admins.\ncreate table if not exists public.tobay_seller_reports (\n  id uuid primary key default gen_random_uuid(),\n  reporter_id uuid not null references auth.users(id) on delete cascade,\n  seller_id uuid not null references auth.users(id) on delete cascade,\n  listing_id uuid,\n  report_type text not null check (report_type in ('suspicious_seller','misleading_listing','fraud_or_scam','other')),\n  description text not null check (char_length(description) between 10 and 2000),\n  status text not null default 'open' check (status in ('open','investigating','resolved','dismissed')),\n  admin_note text,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now()\n);\ncreate index if not exists tobay_seller_reports_status_idx on public.tobay_seller_reports(status,created_at desc);\nalter table public.tobay_seller_reports enable row level security;\ndrop policy if exists \"tobay reports reporter insert own\" on public.tobay_seller_reports;\ncreate policy \"tobay reports reporter insert own\" on public.tobay_seller_reports for insert to authenticated with check (reporter_id = auth.uid() and status = 'open');\ndrop policy if exists \"tobay reports reporter read own\" on public.tobay_seller_reports;\ncreate policy \"tobay reports reporter read own\" on public.tobay_seller_reports for select to authenticated using (reporter_id = auth.uid());\ndrop policy if exists \"tobay reports seller read own\" on public.tobay_seller_reports;\ncreate policy \"tobay reports seller read own\" on public.tobay_seller_reports for select to authenticated using (seller_id = auth.uid());\ndrop policy if exists \"tobay reports admin all\" on public.tobay_seller_reports;\ncreate policy \"tobay reports admin all\" on public.tobay_seller_reports for all to authenticated using (exists(select 1 from public.admin_users a where a.user_id = auth.uid())) with check (exists(select 1 from public.admin_users a where a.user_id = auth.uid()));\ngrant select,insert,update on public.tobay_seller_reports to authenticated;\n\n-- Database-level guard: reject new Buy Now/EasyBuy orders to suspended sellers.\ncreate or replace function public.tobay_block_suspended_seller_order() returns trigger\nlanguage plpgsql security definer set search_path=public as $$\nbegin\n  if exists (select 1 from public.tobay_seller_verification v where v.user_id = new.seller_id and v.status = 'suspended') then\n    raise exception 'This seller is currently suspended and cannot receive new orders.';\n  end if;\n  return new;\nend; $$;\nrevoke all on function public.tobay_block_suspended_seller_order() from public;\n-- Attach guards only where the expected seller_id column exists.\ndo $$\nbegin\n  if to_regclass('public.tobay_orders') is not null and exists(select 1 from information_schema.columns where table_schema='public' and table_name='tobay_orders' and column_name='seller_id') then\n    execute 'drop trigger if exists tobay_block_suspended_seller_order on public.tobay_orders';\n    execute 'create trigger tobay_block_suspended_seller_order before insert on public.tobay_orders for each row execute function public.tobay_block_suspended_seller_order()';\n  end if;\n  if to_regclass('public.easybuy_orders') is not null and exists(select 1 from information_schema.columns where table_schema='public' and table_name='easybuy_orders' and column_name='seller_id') then\n    execute 'drop trigger if exists tobay_block_suspended_seller_order on public.easybuy_orders';\n    execute 'create trigger tobay_block_suspended_seller_order before insert on public.easybuy_orders for each row execute function public.tobay_block_suspended_seller_order()';\n  end if;\nend; $$;\n\n\n-- TOBAY Sponsored Ads: seller requests, admin pricing and manual payment verification.\ncreate table if not exists public.tobay_advertisements (\n  id uuid primary key default gen_random_uuid(),\n  advertiser_id uuid not null references auth.users(id) on delete cascade,\n  title text not null check (char_length(title) between 3 and 90),\n  description text not null check (char_length(description) between 10 and 500),\n  placement text not null check (placement in ('homepage_banner','featured_products','search_results','category_page')),\n  duration_days integer not null check (duration_days in (7,14,30)),\n  destination_url text,\n  fee_amount numeric(12,2),\n  currency text not null default 'NGN',\n  status text not null default 'pending' check (status in ('pending','approved','rejected','paused','expired')),\n  payment_status text not null default 'unpaid' check (payment_status in ('unpaid','paid','refunded')),\n  payment_verified_at timestamptz,\n  starts_at timestamptz,\n  ends_at timestamptz,\n  created_at timestamptz not null default now(),\n  updated_at timestamptz not null default now(),\n  check (fee_amount is null or fee_amount >= 0),\n  check (destination_url is null or destination_url like 'https://%')\n);\ncreate index if not exists tobay_ads_advertiser_idx on public.tobay_advertisements(advertiser_id,created_at desc);\ncreate index if not exists tobay_ads_live_idx on public.tobay_advertisements(status,payment_status,starts_at,ends_at);\nalter table public.tobay_advertisements enable row level security;\ndrop policy if exists \"tobay ads seller insert own\" on public.tobay_advertisements;\ncreate policy \"tobay ads seller insert own\" on public.tobay_advertisements for insert to authenticated with check (advertiser_id=auth.uid() and status='pending' and payment_status='unpaid' and fee_amount is null and payment_verified_at is null);\ndrop policy if exists \"tobay ads seller read own\" on public.tobay_advertisements;\ncreate policy \"tobay ads seller read own\" on public.tobay_advertisements for select to authenticated using (advertiser_id=auth.uid());\ndrop policy if exists \"tobay ads public live read\" on public.tobay_advertisements;\ncreate policy \"tobay ads public live read\" on public.tobay_advertisements for select to anon,authenticated using (status='approved' and payment_status='paid' and (starts_at is null or starts_at<=now()) and (ends_at is null or ends_at>now()));\ndrop policy if exists \"tobay ads admin all\" on public.tobay_advertisements;\ncreate policy \"tobay ads admin all\" on public.tobay_advertisements for all to authenticated using (exists(select 1 from public.admin_users a where a.user_id=auth.uid())) with check (exists(select 1 from public.admin_users a where a.user_id=auth.uid()));\ngrant select,insert,update on public.tobay_advertisements to authenticated;\ngrant select on public.tobay_advertisements to anon;\n\n";
   const css = `
   #tobayGlobalUpgrade{margin:28px 0;padding:22px;border:1px solid #d8e4ef;border-radius:18px;background:linear-gradient(135deg,#f7fbff,#fff);color:#172b4d}
   #tobayGlobalUpgrade *{box-sizing:border-box}
@@ -8329,6 +8606,7 @@ section p,section li{color:var(--tobay-body)!important}
         <div class="tgu-card"><h3>Buyer protection cases</h3><div id="tguCaseList" class="tgu-muted">Loading cases…</div></div>
         <div class="tgu-card"><h3>Seller verification queue</h3><div id="tguVerifyList" class="tgu-muted">Loading verification requests…</div></div>
         <div class="tgu-card"><h3>Buyer & seller reports</h3><p class="tgu-muted">Investigate reports submitted from public seller storefronts.</p><div id="tguReportList" class="tgu-muted">Loading reports…</div></div>
+        <div class="tgu-card" style="grid-column:1/-1"><h3>📣 Sponsored Ads Management</h3><p class="tgu-muted">Set the advertising fee, verify payment separately, then approve the campaign. A request is never treated as paid automatically.</p><div id="tguAdQueue" class="tgu-muted">Loading advert requests…</div></div>
       </div>
       <p class="tgu-muted">Security note: private member data and identity documents must never be made public. Keep Storage buckets private and issue short-lived signed URLs only when an authorized reviewer needs access.</p>
     `;
@@ -8392,6 +8670,16 @@ section p,section li{color:var(--tobay-body)!important}
       await fetchRows("tobay_seller_verification","#tguVerifyList","id,user_id,business_name,document_type,status,created_at","No seller verification submissions yet.",{
         headers:["Business","User ID","Document type","Status","Admin action"],
         cells:r=>[r.business_name,r.user_id,r.document_type,r.status,actionButtons(r,"tobay_seller_verification",[["Review","under_review"],["Verify","verified"],["Reject","rejected"],["Suspend","suspended"],["Reinstate","verified"]])]
+      });
+
+      await fetchRows("tobay_advertisements","#tguAdQueue","id,advertiser_id,title,description,placement,duration_days,fee_amount,currency,status,payment_status,created_at","No sponsored advert requests yet.",{
+        headers:["Advert","Placement / duration","Fee","Payment","Campaign status","Admin actions"],
+        cells:r=>{
+          const fee=document.createElement("div");const feeInput=document.createElement("input");feeInput.type="number";feeInput.min="0";feeInput.step="0.01";feeInput.placeholder="Set fee";feeInput.value=r.fee_amount==null?"":r.fee_amount;feeInput.style.width="95px";const feeSave=document.createElement("button");feeSave.textContent="Save fee";feeSave.className="secondary";feeSave.style.cssText="display:block;margin-top:4px";feeSave.addEventListener("click",async()=>{const n=Number(feeInput.value);if(!Number.isFinite(n)||n<=0){alert("Enter a fee greater than zero.");return;}const {error}=await client.from("tobay_advertisements").update({fee_amount:n,currency:r.currency||"NGN",updated_at:new Date().toISOString()}).eq("id",r.id);if(error)alert("Fee could not be saved: "+error.message);else await refreshAll();});fee.append(feeInput,feeSave);
+          const pay=document.createElement("div");pay.textContent=r.payment_status||"unpaid";const payBtn=document.createElement("button");payBtn.textContent="Confirm payment received";payBtn.className="secondary";payBtn.style.cssText="display:block;margin-top:4px";payBtn.disabled=r.payment_status==="paid";payBtn.addEventListener("click",async()=>{if(!confirm("Have you independently verified that the full advert fee was received?"))return;const {error}=await client.from("tobay_advertisements").update({payment_status:"paid",payment_verified_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq("id",r.id);if(error)alert("Payment status could not be updated: "+error.message);else await refreshAll();});pay.appendChild(payBtn);
+          const statusBtns=document.createElement("div");[["Approve","approved"],["Reject","rejected"],["Pause","paused"]].forEach(([label,value])=>{const b=document.createElement("button");b.className="secondary";b.textContent=label;b.style.cssText="margin:2px;padding:5px 7px;font-size:10px";b.disabled=value==="approved"&&r.payment_status!=="paid";b.title=b.disabled?"Verify payment before approving":"";b.addEventListener("click",async()=>{const {error}=await client.from("tobay_advertisements").update({status:value,updated_at:new Date().toISOString()}).eq("id",r.id);if(error)alert("Campaign update failed: "+error.message);else await refreshAll();});statusBtns.appendChild(b);});
+          const advert=document.createElement("div");advert.textContent=r.title+" · "+r.description;return [advert,r.placement.replaceAll("_"," ")+" · "+r.duration_days+" days",fee,pay,r.status,statusBtns];
+        }
       });
       await fetchRows("tobay_seller_reports","#tguReportList","id,reporter_id,seller_id,report_type,description,status,created_at","No buyer or seller reports yet.",{
         headers:["Report type","Seller ID","Details","Status","Admin action"],
