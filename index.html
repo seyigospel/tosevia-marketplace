@@ -11470,5 +11470,34 @@ html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#toba
 @media(max-width:760px){#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:480px){#tobaySellerDashboard .tobay-seller-overview-panel{padding:19px 14px!important;border-radius:17px!important}#tobaySellerDashboard .tobay-seller-overview-heading h3{font-size:21px!important}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{gap:9px!important}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card{min-height:82px!important;padding:12px 10px!important;gap:8px!important;border-radius:13px!important}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card-icon{width:35px!important;height:35px!important;flex-basis:35px!important;font-size:16px!important}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card-label{font-size:10px!important}#tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-card-value{font-size:24px!important}}
 </style>
+
+<style id="tobay-seller-performance-compact-v2">
+/* Compact, airy Seller Performance overview */
+#tobaySellerDashboard .tobay-seller-overview-panel{margin:18px 0 22px!important;padding:17px 18px 14px!important;border:1px solid #e5dcf4!important;border-radius:15px!important;background:#fbf9ff!important;box-shadow:0 5px 16px rgba(54,24,94,.07)!important}
+#tobaySellerDashboard .tobay-seller-overview-panel:before{display:none!important}
+#tobaySellerDashboard .tobay-seller-overview-heading{margin:0 0 13px!important;gap:10px!important}
+#tobaySellerDashboard .tobay-seller-overview-kicker{margin:0 0 3px!important;color:#9564c5!important;font-size:9px!important;letter-spacing:1.5px!important}
+#tobaySellerDashboard .tobay-seller-overview-heading h3{color:#32105f!important;font-size:18px!important;line-height:1.25!important;letter-spacing:-.2px!important}
+#tobaySellerDashboard .tobay-seller-overview-heading p{margin:3px 0 0!important;color:#655879!important;font-size:11px!important;line-height:1.4!important}
+#tobaySellerDashboard .tobay-overview-heading-icon{flex:0 0 34px!important;width:34px!important;height:34px!important;border:1px solid #e5d8f5!important;border-radius:10px!important;background:#f0e8fb!important;color:#54258a!important;font-size:17px!important;box-shadow:none!important}
+#tobaySellerDashboard .tobay-overview-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+#tobaySellerDashboard .tobay-overview-card{min-height:62px!important;gap:8px!important;padding:10px 11px!important;border:1px solid #e8e1f0!important;border-radius:11px!important;background:#fff!important;box-shadow:0 2px 7px rgba(54,24,94,.045)!important;transition:none!important}
+#tobaySellerDashboard .tobay-overview-card:hover{transform:none!important;box-shadow:0 2px 7px rgba(54,24,94,.045)!important}
+#tobaySellerDashboard .tobay-overview-card-icon{flex:0 0 29px!important;width:29px!important;height:29px!important;border-radius:8px!important;font-size:14px!important}
+#tobaySellerDashboard .tobay-overview-card-label{color:#5c4a70!important;font-size:10px!important;font-weight:750!important;line-height:1.25!important}
+#tobaySellerDashboard .tobay-overview-card-value{margin-top:2px!important;color:#32105f!important;font-size:20px!important;font-weight:850!important;line-height:1.05!important;letter-spacing:0!important}
+#tobaySellerDashboard .tobay-overview-card.total{border-color:#4b2380!important;background:#4b2380!important;box-shadow:none!important}
+#tobaySellerDashboard .tobay-overview-card.total .tobay-overview-card-label{color:#eee4fa!important}
+#tobaySellerDashboard .tobay-overview-card.total .tobay-overview-card-value{color:#fff!important}
+#tobaySellerDashboard .tobay-overview-card.total .tobay-overview-card-icon{background:#ffffff20!important;color:#fff!important}
+#tobaySellerDashboard .tobay-overview-card.pending .tobay-overview-card-icon{background:#fff1d7!important;color:#8a5a00!important}
+#tobaySellerDashboard .tobay-overview-card.accepted .tobay-overview-card-icon{background:#e2f5e9!important;color:#176b3a!important}
+#tobaySellerDashboard .tobay-overview-card.rejected .tobay-overview-card-icon{background:#fde8e8!important;color:#a52d35!important}
+#tobaySellerDashboard .tobay-overview-card.cancelled .tobay-overview-card-icon{background:#eceaf0!important;color:#51485c!important}
+#tobaySellerDashboard .tobay-overview-card.completed .tobay-overview-card-icon{background:#eee7fa!important;color:#54258a!important}
+#tobaySellerDashboard .tobay-overview-note{margin:10px 0 0!important;padding:8px 10px!important;gap:7px!important;border:1px solid #e6def0!important;border-radius:9px!important;background:#f3eef9!important;color:#51445f!important;font-size:10px!important;line-height:1.45!important}
+#tobaySellerDashboard .tobay-overview-note span{color:#54258a!important;font-weight:900!important}
+@media(max-width:520px){#tobaySellerDashboard .tobay-seller-overview-panel{padding:14px 12px 12px!important;margin:14px 0 18px!important}#tobaySellerDashboard .tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}#tobaySellerDashboard .tobay-overview-card{min-height:57px!important;padding:9px 8px!important;gap:7px!important}#tobaySellerDashboard .tobay-overview-card-icon{flex-basis:26px!important;width:26px!important;height:26px!important;font-size:12px!important}#tobaySellerDashboard .tobay-overview-card-label{font-size:9px!important}#tobaySellerDashboard .tobay-overview-card-value{font-size:18px!important}#tobaySellerDashboard .tobay-seller-overview-heading h3{font-size:17px!important}#tobaySellerDashboard .tobay-seller-overview-heading p{font-size:10px!important}}
+</style>
 </body>
 </html>
