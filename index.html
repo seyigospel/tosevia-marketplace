@@ -3947,6 +3947,65 @@ html body ::selection{background:var(--tb-gold)!important;color:#0b123d!importan
 }
 
 </style>
+
+<style id="tobay-all-pages-readable-text">
+/* TOBAY readability update: stronger text contrast without changing the layout or brand palette. */
+body { color: #243247; }
+body p, body li, body label, body small, body figcaption,
+body td, body th, body summary, body .description, body .subtitle {
+  color: #334155;
+}
+body input, body textarea, body select {
+  color: #172b45 !important;
+}
+body input::placeholder, body textarea::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+/* Buyer dashboard and EasyBuy order cards */
+#tobayBuyerOrders .buyer-order-card {
+  background: #ffffff !important;
+  color: #243247 !important;
+}
+#tobayBuyerOrders .buyer-order-card h3,
+#tobayBuyerOrders .buyer-order-card h4 {
+  color: #102b55 !important;
+}
+#tobayBuyerOrders .buyer-order-card p,
+#tobayBuyerOrders .buyer-order-card div,
+#tobayBuyerOrders .buyer-order-card strong,
+#tobayBuyerOrders .buyer-order-card time {
+  color: #334155;
+}
+#tobayBuyerOrders .buyer-order-card .buyer-notice {
+  background: #eaf2fb !important;
+  color: #17375f !important;
+  border: 1px solid #cbdcf0;
+}
+#tobayBuyerOrders .tobay-track {
+  background: #f1f5f9 !important;
+}
+#tobayBuyerOrders .tobay-track-step {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+}
+#tobayBuyerOrders .tobay-track-step.active {
+  background: #d1fae5 !important;
+  color: #14532d !important;
+}
+#tobayBuyerOrders .buyer-order-card button {
+  color: #ffffff !important;
+}
+/* Keep status pills legible on their light backgrounds. */
+#tobayBuyerOrders .buyer-order-card h3 span {
+  color: #17375f !important;
+}
+/* Improve muted empty/loading/help text across account and dashboard panels. */
+#tobayBuyerOrders [id], #tobayBuyerOrders .buyer-empty {
+  text-shadow: none;
+}
+</style>
+
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
