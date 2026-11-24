@@ -4006,6 +4006,69 @@ body input::placeholder, body textarea::placeholder {
 }
 </style>
 
+<style id="tobay-buyer-order-contrast-final">
+/* Final targeted correction: buyer order history cards use a light surface, so every
+   order detail is forced to a dark readable colour, overriding dashboard-wide rules. */
+html body #tobayBuyerOrders .buyer-order-card,
+html body #tobayBuyerOrders .buyer-order-card * {
+  color: #263449 !important;
+  text-shadow: none !important;
+}
+html body #tobayBuyerOrders .buyer-order-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .08) !important;
+}
+html body #tobayBuyerOrders .buyer-order-card h3,
+html body #tobayBuyerOrders .buyer-order-card h4,
+html body #tobayBuyerOrders .buyer-order-card h5 {
+  color: #25104f !important;
+  font-weight: 800 !important;
+}
+html body #tobayBuyerOrders .buyer-order-card p,
+html body #tobayBuyerOrders .buyer-order-card div,
+html body #tobayBuyerOrders .buyer-order-card strong,
+html body #tobayBuyerOrders .buyer-order-card span,
+html body #tobayBuyerOrders .buyer-order-card small,
+html body #tobayBuyerOrders .buyer-order-card time,
+html body #tobayBuyerOrders .buyer-order-card li {
+  color: #263449 !important;
+}
+html body #tobayBuyerOrders .buyer-order-card h3 span {
+  display: inline-block !important;
+  color: #17375f !important;
+  background: #e8eef8 !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+}
+html body #tobayBuyerOrders .buyer-order-card .buyer-notice {
+  color: #17375f !important;
+  background: #eaf2fb !important;
+  border: 1px solid #bfd3ea !important;
+}
+html body #tobayBuyerOrders .buyer-order-card .tobay-track,
+html body #tobayBuyerOrders .buyer-order-card .tobay-track-step,
+html body #tobayBuyerOrders .buyer-order-card .tobay-delivery-panel,
+html body #tobayBuyerOrders .buyer-order-card .tobay-delivery-history {
+  color: #263449 !important;
+  background: #f3f6fb !important;
+  border-color: #d5deea !important;
+}
+html body #tobayBuyerOrders .buyer-order-card .tobay-track-step.active {
+  color: #14532d !important;
+  background: #dcfce7 !important;
+}
+html body #tobayBuyerOrders .buyer-order-card button {
+  color: #ffffff !important;
+}
+html body #tobayBuyerOrders #tobayWishlistItems,
+html body #tobayBuyerOrders #tobayWishlistItems * {
+  color: #263449 !important;
+}
+html body #tobayBuyerOrders #tobayWishlistItems {
+  background: #ffffff !important;
+}
+</style>
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
@@ -11059,6 +11122,97 @@ html body :is(label,th){color:#334b67}
   html,body,*{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .tobay-globe-map{animation:none!important}
 }
+</style>
+
+
+<style id="tobay-admin-seller-readable-contrast-v2">
+/* Targeted readability fix for ADMIN and SELLER dashboards.
+   Pale cards use dark text; dark banners and primary buttons retain white text. */
+:root{
+  --tobay-readable-ink:#281044;
+  --tobay-readable-muted:#57476a;
+  --tobay-readable-border:#e1d8ec;
+  --tobay-readable-surface:#ffffff;
+  --tobay-readable-page:#f7f3fb;
+}
+html body #tobaySellerDashboard,
+html body #tobayAdminDashboard{
+  background:var(--tobay-readable-page)!important;
+  color:var(--tobay-readable-ink)!important;
+  border:1px solid var(--tobay-readable-border)!important;
+}
+/* Make ordinary dashboard copy readable even when older rules set it white. */
+html body #tobaySellerDashboard :is(p,span,small,strong,b,em,li,dt,dd,summary,figcaption),
+html body #tobayAdminDashboard :is(p,span,small,strong,b,em,li,dt,dd,summary,figcaption),
+html body #tobayAdminDashboard [id^="tobayAdmin"] :is(p,span,small,strong,b,em,li,dt,dd,summary,figcaption){
+  color:var(--tobay-readable-ink)!important;
+}
+html body #tobaySellerDashboard :is(h3,h4,h5,h6,label),
+html body #tobayAdminDashboard :is(h3,h4,h5,h6,label),
+html body #tobayAdminDashboard [id^="tobayAdmin"] :is(h3,h4,h5,h6,label){
+  color:#32105f!important;
+}
+/* White/light content cards with dark readable copy. */
+html body #tobaySellerDashboard :is(section,.tobay-toolkit,#tobayListingForm,#tobaySellerOrderSummary>div,#tobayMyListings>div,[data-seller-order],#tobaySellerBuyNowOrders>div,.tobay-toolkit-stat,.tobay-overview-card),
+html body #tobayAdminDashboard :is(section,#tobayAdminInsights,#tobayAdminApplications,#tobayAdminMetricGrid),
+html body #tobayAdminDashboard [id^="tobayAdmin"]{
+  background:var(--tobay-readable-surface)!important;
+  color:var(--tobay-readable-ink)!important;
+  border-color:var(--tobay-readable-border)!important;
+}
+/* Admin application cards and generated metric tiles are often plain divs. */
+html body #tobayAdminDashboard #tobayAdminApplications>div,
+html body #tobayAdminDashboard #tobayAdminMetricGrid>div,
+html body #tobayAdminDashboard #tobayAdminInsights>div>div{
+  background:#fff!important;color:var(--tobay-readable-ink)!important;
+  border:1px solid var(--tobay-readable-border)!important;border-radius:12px!important;
+}
+html body #tobayAdminDashboard #tobayAdminApplications>div *,
+html body #tobayAdminDashboard #tobayAdminMetricGrid>div *,
+html body #tobayAdminDashboard #tobayAdminInsights>div>div *{
+  color:var(--tobay-readable-ink)!important;
+}
+/* Dark dashboard title banners remain white for contrast. */
+html body #tobaySellerDashboard>h2,
+html body #tobayAdminDashboard>h2,
+html body #tobaySellerDashboard>h2 *,
+html body #tobayAdminDashboard>h2 *{
+  color:#fff!important;
+}
+html body #tobaySellerDashboard .tobay-overview-card.total,
+html body #tobaySellerDashboard .tobay-overview-card.total *{
+  color:#fff!important;
+}
+/* Labels and table headings are dark purple on light backgrounds. */
+html body #tobaySellerDashboard label,
+html body #tobayAdminDashboard label,
+html body #tobaySellerDashboard th,
+html body #tobayAdminDashboard th{color:#32105f!important}
+html body #tobaySellerDashboard table,
+html body #tobayAdminDashboard table{background:#fff!important;color:var(--tobay-readable-ink)!important}
+html body #tobaySellerDashboard td,
+html body #tobayAdminDashboard td{background:#fff!important;color:var(--tobay-readable-ink)!important;border-color:var(--tobay-readable-border)!important}
+html body #tobaySellerDashboard input,
+html body #tobaySellerDashboard select,
+html body #tobaySellerDashboard textarea,
+html body #tobayAdminDashboard input,
+html body #tobayAdminDashboard select,
+html body #tobayAdminDashboard textarea{
+  background:#fff!important;color:#281044!important;border:1px solid #cfc1df!important;
+}
+html body #tobaySellerDashboard input::placeholder,
+html body #tobaySellerDashboard textarea::placeholder,
+html body #tobayAdminDashboard input::placeholder,
+html body #tobayAdminDashboard textarea::placeholder{color:#766887!important;opacity:1!important}
+/* Keep primary action buttons white on their dark backgrounds. */
+html body #tobaySellerDashboard button,
+html body #tobayAdminDashboard button{color:#fff!important}
+html body #tobaySellerDashboard button[type="submit"],
+html body #tobaySellerDashboard #tobayUploadProfileImages{color:#24133d!important}
+html body #tobaySellerDashboard a,
+html body #tobayAdminDashboard a{color:#4b2380!important}
+html body #tobaySellerDashboard :focus-visible,
+html body #tobayAdminDashboard :focus-visible{outline:3px solid #9b75cf!important;outline-offset:2px!important}
 </style>
 
 </body>
