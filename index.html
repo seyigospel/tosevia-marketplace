@@ -11677,5 +11677,66 @@ body .tobay-hero-search * {
   body .tobay-hero-copy h1 span{margin-top:6px!important}
 }
 </style>
+<style id="tobay-colour-text-and-rotating-logo">
+/* TOBAY requested effect: text changes colour only; logo alone rotates and changes hue. */
+@keyframes tobayTextOnlyColour {
+  0%,100% { color:#6b43b5; }
+  33% { color:#1682c4; }
+  66% { color:#d49a24; }
+}
+@keyframes tobayLogoFullRotation {
+  from { transform:perspective(1000px) rotateY(0deg); }
+  to   { transform:perspective(1000px) rotateY(360deg); }
+}
+@keyframes tobayLogoHueShift {
+  0%,100% { filter:hue-rotate(0deg) saturate(1.12) drop-shadow(0 4px 8px rgba(48,22,95,.24)); }
+  50% { filter:hue-rotate(180deg) saturate(1.35) drop-shadow(0 6px 12px rgba(23,105,170,.30)); }
+}
+/* Logo: the only item that rotates. */
+body .tobay-signature-logo .tobay-brand-image {
+  display:block!important;
+  transform-origin:center!important;
+  backface-visibility:visible!important;
+  animation:tobayLogoFullRotation 12s linear infinite, tobayLogoHueShift 8s ease-in-out infinite!important;
+}
+/* Text and links: colour changes only; no rotation, tilt, floating or scaling. */
+body .tobay-market-topline,
+body .tobay-header-shortcuts>a,
+body header .nav>a,
+body nav.tobay-quick-nav>a,
+body .categories-section .category h3,
+body .tobay-hero-copy .eyebrow,
+body .tobay-hero-copy h1,
+body .tobay-hero-copy h1 span,
+body .tobay-hero-copy>p:not(.hero-note),
+body .tobay-hero-copy .hero-note,
+body .tobay-hero-copy .hero-note span,
+body .tobay-hero-actions>a {
+  display:revert!important;
+  transform:none!important;
+  animation:tobayTextOnlyColour 8s ease-in-out infinite!important;
+}
+/* Keep search bars and all their contents completely unchanged and still. */
+body .tobay-header-search, body .tobay-header-search *,
+body .tobay-hero-search, body .tobay-hero-search * {
+  animation:none!important; transform:none!important; filter:none!important;
+}
+/* Preserve accessible reduced-motion preferences. */
+@media (prefers-reduced-motion:reduce) {
+  body .tobay-signature-logo .tobay-brand-image,
+  body .tobay-market-topline,
+  body .tobay-header-shortcuts>a,
+  body header .nav>a,
+  body nav.tobay-quick-nav>a,
+  body .categories-section .category h3,
+  body .tobay-hero-copy .eyebrow,
+  body .tobay-hero-copy h1,
+  body .tobay-hero-copy h1 span,
+  body .tobay-hero-copy>p:not(.hero-note),
+  body .tobay-hero-copy .hero-note,
+  body .tobay-hero-copy .hero-note span,
+  body .tobay-hero-actions>a { animation:none!important; }
+}
+</style>
 </body>
 </html>
