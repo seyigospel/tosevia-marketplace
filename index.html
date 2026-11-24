@@ -4069,6 +4069,91 @@ html body #tobayBuyerOrders #tobayWishlistItems {
   background: #ffffff !important;
 }
 </style>
+<style>
+
+/* TOBAY homepage: gentle individual rotation + royal colour cycling.
+   Search fields and search buttons are deliberately excluded. */
+@keyframes tobayGentleTurn {
+  0%, 100% { transform: rotate(-0.45deg); }
+  50% { transform: rotate(0.45deg); }
+}
+@keyframes tobayTextColours {
+  0%, 100% { color: #4b2b91; }
+  33% { color: #1769aa; }
+  66% { color: #b87916; }
+}
+@keyframes tobayFestivalColours {
+  0%, 100% { background-color: #30165f; color: #ffffff; }
+  33% { background-color: #155b91; color: #ffffff; }
+  66% { background-color: #8b5b12; color: #ffffff; }
+}
+@keyframes tobayLogoGlow {
+  0%, 100% { filter: drop-shadow(0 3px 5px rgba(48,22,95,.22)) hue-rotate(0deg); transform: perspective(500px) rotateY(-1deg); }
+  50% { filter: drop-shadow(0 5px 9px rgba(23,105,170,.28)) hue-rotate(7deg); transform: perspective(500px) rotateY(1deg); }
+}
+.tobay-market-topline {
+  animation: tobayFestivalColours 8s ease-in-out infinite, tobayGentleTurn 7s ease-in-out infinite;
+}
+.tobay-signature-logo .tobay-brand-image {
+  animation: tobayLogoGlow 7s ease-in-out infinite;
+  transform-origin: center;
+}
+.tobay-header-shortcuts a {
+  display: inline-block;
+  animation: tobayTextColours 7s ease-in-out infinite, tobayGentleTurn 6s ease-in-out infinite;
+}
+.tobay-header-shortcuts a:nth-child(2), .nav a:nth-child(2), .tobay-quick-nav a:nth-child(2) { animation-delay: .7s; }
+.tobay-header-shortcuts a:nth-child(3), .nav a:nth-child(3), .tobay-quick-nav a:nth-child(3) { animation-delay: 1.4s; }
+.nav a {
+  display: inline-block;
+  animation: tobayTextColours 7s ease-in-out infinite, tobayGentleTurn 6s ease-in-out infinite;
+}
+.nav a.btn { animation: tobayFestivalColours 8s ease-in-out infinite, tobayGentleTurn 6s ease-in-out infinite; }
+.tobay-quick-nav a {
+  display: inline-block;
+  animation: tobayTextColours 7s ease-in-out infinite, tobayGentleTurn 6s ease-in-out infinite;
+}
+.tobay-hero-copy .eyebrow,
+.tobay-hero-copy h1,
+.tobay-hero-copy h1 span,
+.tobay-hero-copy > p:not(.hero-note),
+.tobay-hero-actions .btn,
+.tobay-hero-copy .hero-note,
+.tobay-hero-copy .hero-note span {
+  animation: tobayTextColours 8s ease-in-out infinite, tobayGentleTurn 7s ease-in-out infinite;
+  transform-origin: center;
+}
+.tobay-hero-actions .btn {
+  display: inline-block;
+}
+.tobay-hero-actions .btn.btn-orange {
+  animation: tobayFestivalColours 8s ease-in-out infinite, tobayGentleTurn 7s ease-in-out infinite;
+}
+/* Keep both search bars and every search control completely still and unchanged. */
+.tobay-header-search,
+.tobay-header-search *,
+.tobay-hero-search,
+.tobay-hero-search * {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tobay-market-topline,
+  .tobay-signature-logo .tobay-brand-image,
+  .tobay-header-shortcuts a,
+  .nav a,
+  .tobay-quick-nav a,
+  .tobay-hero-copy .eyebrow,
+  .tobay-hero-copy h1,
+  .tobay-hero-copy h1 span,
+  .tobay-hero-copy > p:not(.hero-note),
+  .tobay-hero-actions .btn,
+  .tobay-hero-copy .hero-note,
+  .tobay-hero-copy .hero-note span { animation: none !important; }
+}
+
+</style>
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
