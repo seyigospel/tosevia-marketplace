@@ -10664,5 +10664,60 @@ button,input,select,textarea{max-width:100%;font:inherit}
 })();
 </script>
 
+
+
+<style id="tobay-mobile-dashboard-visibility-fix-v15">
+/* TOBAY dashboard visibility fix: keep mobile page content in normal document flow. */
+html, body { height:auto!important; min-height:100%!important; overflow-y:auto!important; }
+body { position:relative!important; }
+main { display:block!important; width:100%!important; height:auto!important; min-height:0!important; overflow:visible!important; }
+main > section, main > div { box-sizing:border-box!important; }
+main > section[hidden], main > div[hidden] { display:none!important; }
+main > section:not([hidden]), main > div:not([hidden]) { max-height:none!important; }
+@media (max-width:680px) {
+  body { padding-bottom:calc(82px + env(safe-area-inset-bottom))!important; }
+  #categories:not([hidden]) {
+    display:block!important; position:relative!important; width:100%!important;
+    height:auto!important; min-height:0!important; max-height:none!important;
+    overflow:visible!important; padding:28px 0 34px!important;
+  }
+  #categories .container { display:block!important; width:calc(100% - 28px)!important; max-width:560px!important; height:auto!important; overflow:visible!important; }
+  #categories .categories-heading { display:flex!important; flex-wrap:wrap!important; align-items:flex-start!important; gap:10px!important; height:auto!important; max-height:none!important; overflow:visible!important; margin:0 0 16px!important; }
+  #categories .categories-heading > div { display:block!important; width:100%!important; min-width:0!important; height:auto!important; overflow:visible!important; }
+  #categories .categories-kicker { display:block!important; visibility:visible!important; opacity:1!important; }
+  #categories h2, #categories p { visibility:visible!important; opacity:1!important; max-height:none!important; }
+  #categories .category-grid {
+    display:grid!important; visibility:visible!important; opacity:1!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:10px!important;
+    width:100%!important; height:auto!important; max-height:none!important;
+    overflow:visible!important; padding:0 0 12px!important; margin:0!important;
+  }
+  #categories .category {
+    display:flex!important; visibility:visible!important; opacity:1!important;
+    flex-direction:column!important; align-items:flex-start!important; justify-content:flex-start!important;
+    position:relative!important; width:100%!important; min-width:0!important;
+    min-height:126px!important; height:auto!important; max-height:none!important;
+    overflow:visible!important; padding:13px!important; gap:7px!important;
+    white-space:normal!important; text-decoration:none!important; cursor:pointer!important;
+    border:1px solid #dce3f1!important; border-radius:13px!important;
+    background:#fff!important; box-shadow:0 5px 16px rgba(18,35,75,.08)!important;
+  }
+  #categories .category-icon { display:grid!important; visibility:visible!important; opacity:1!important; flex:0 0 36px!important; width:36px!important; height:36px!important; place-items:center!important; }
+  #categories .category h3 { display:block!important; visibility:visible!important; opacity:1!important; margin:0!important; color:#25356f!important; font-size:12px!important; line-height:1.3!important; overflow-wrap:anywhere!important; }
+  #categories .category p { display:block!important; visibility:visible!important; opacity:1!important; margin:0!important; color:#59657b!important; font-size:10px!important; line-height:1.35!important; overflow-wrap:anywhere!important; }
+  #categories .category-arrow { display:inline-flex!important; visibility:visible!important; opacity:1!important; position:absolute!important; right:10px!important; top:12px!important; }
+  .tobay-mobile-dock { z-index:9999!important; display:grid!important; }
+  .tobay-mobile-dock a { min-height:48px!important; cursor:pointer!important; }
+  header, .tobay-quick-nav { max-width:100%!important; }
+  header .nav, .tobay-quick-nav { overflow-x:auto!important; -webkit-overflow-scrolling:touch!important; }
+  button, a, [role="button"] { -webkit-tap-highlight-color:transparent; }
+}
+@media (max-width:380px) {
+  #categories .category-grid { gap:7px!important; }
+  #categories .category { min-height:132px!important; padding:10px!important; }
+  #categories .category h3 { font-size:11px!important; }
+}
+</style>
+
 </body>
 </html>
