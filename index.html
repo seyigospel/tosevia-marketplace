@@ -10982,5 +10982,84 @@ html body input::placeholder,html body textarea::placeholder{color:#66778c;opaci
 html body :is(label,th){color:#334b67}
 </style>
 
+
+<style id="tobay-dashboard-purple-text-and-no-blinking-v1">
+/* Consistent readable deep-purple typography in both dashboards. */
+:root{
+  --tobay-dashboard-purple:#32105f;
+  --tobay-dashboard-purple-dark:#260849;
+  --tobay-dashboard-purple-muted:#563b73;
+}
+#tobaySellerDashboard,
+#tobayBuyerOrders{
+  color:var(--tobay-dashboard-purple)!important;
+}
+#tobaySellerDashboard :is(h1,h3,h4,h5,h6,label,dt,dd,p,span,small,strong,b,em,li,th,td,summary),
+#tobayBuyerOrders :is(h1,h3,h4,h5,h6,label,dt,dd,p,span,small,strong,b,em,li,th,td,summary){
+  color:var(--tobay-dashboard-purple)!important;
+}
+/* Keep the main dashboard banner wording bright on its dark purple background. */
+#tobaySellerDashboard>h2,
+#tobaySellerDashboard>h2 *,
+#tobayBuyerOrders .buyer-hero,
+#tobayBuyerOrders .buyer-hero *,
+#tobaySellerDashboard .tobay-overview-card.total,
+#tobaySellerDashboard .tobay-overview-card.total *{
+  color:#fff!important;
+}
+#tobaySellerDashboard input:not([type=file]),
+#tobaySellerDashboard textarea,
+#tobaySellerDashboard select,
+#tobayBuyerOrders input,
+#tobayBuyerOrders textarea,
+#tobayBuyerOrders select{
+  color:var(--tobay-dashboard-purple-dark)!important;
+  background-color:#fff!important;
+}
+#tobaySellerDashboard input::placeholder,
+#tobaySellerDashboard textarea::placeholder,
+#tobayBuyerOrders input::placeholder,
+#tobayBuyerOrders textarea::placeholder{
+  color:#75658a!important;opacity:1!important;
+}
+#tobaySellerDashboard button,
+#tobayBuyerOrders button{
+  color:#fff!important;
+}
+#tobaySellerDashboard button.secondary,
+#tobayBuyerOrders button.secondary{
+  color:var(--tobay-dashboard-purple)!important;
+}
+#tobaySellerDashboard a,
+#tobayBuyerOrders a{color:#4b2380!important}
+#tobaySellerDashboard a:hover,
+#tobayBuyerOrders a:hover{color:#7a45b5!important}
+#tobaySellerDashboard :focus-visible,
+#tobayBuyerOrders :focus-visible{
+  outline:3px solid #9b75cf!important;outline-offset:2px!important;
+}
+
+/* Stop decorative blinking/pulsing on laptop and phone.
+   The TOBAY globe keeps its intentional slow rotation. */
+.tobay-live-dot,
+.tobay-ad-ribbon,
+.tobay-market-topline{
+  animation:none!important;
+}
+@media (prefers-reduced-motion: no-preference){
+  html,body,*{
+    animation:none!important;
+  }
+  .tobay-globe-map{
+    animation:tobayGlobeRotate 22s linear infinite!important;
+    will-change:transform;
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  html,body,*{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .tobay-globe-map{animation:none!important}
+}
+</style>
+
 </body>
 </html>
