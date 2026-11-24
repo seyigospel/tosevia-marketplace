@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tosevia-marketplace.callingforrepentancesalvation.workers.dev/sitemap.xml
