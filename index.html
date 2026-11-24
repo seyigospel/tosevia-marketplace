@@ -11215,5 +11215,161 @@ html body #tobaySellerDashboard :focus-visible,
 html body #tobayAdminDashboard :focus-visible{outline:3px solid #9b75cf!important;outline-offset:2px!important}
 </style>
 
+
+<style id="tobay-buyer-admin-table-contrast-fix">
+/* Buyer + Admin: remove dark/black content panels that reduce text contrast. */
+:root{
+  --tobay-table-ink:#281044;
+  --tobay-table-muted:#51435f;
+  --tobay-table-head:#eee7f7;
+  --tobay-table-line:#dcd2e8;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard){
+  color:var(--tobay-table-ink)!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)
+  :is(p,span,small,strong,b,em,li,dt,dd,label,figcaption,summary){
+  color:var(--tobay-table-ink)!important;
+}
+/* Make content cards/panels light instead of black, with readable dark copy. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)
+  :is(section,article,.card,.panel,[class*="card"],[class*="panel"],[class*="list"],[class*="table-wrap"]){
+  background-color:#fff!important;
+  color:var(--tobay-table-ink)!important;
+  border-color:var(--tobay-table-line)!important;
+}
+/* Customer / phone / orders / latest order table: same clear styling in Buyer and Admin. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) .tobay-customer-table,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table{
+  width:100%;
+  background:#fff!important;
+  color:var(--tobay-table-ink)!important;
+  border-collapse:collapse!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) .tobay-customer-table thead,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table thead{
+  background:var(--tobay-table-head)!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) .tobay-customer-table th,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table th{
+  background:var(--tobay-table-head)!important;
+  color:#32105f!important;
+  font-weight:800!important;
+  border:1px solid var(--tobay-table-line)!important;
+  text-align:left!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) .tobay-customer-table td,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table td{
+  background:#fff!important;
+  color:var(--tobay-table-ink)!important;
+  border:1px solid var(--tobay-table-line)!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table tr:nth-child(even) td{
+  background:#faf8fd!important;
+}
+/* Do not let older white-on-black text rules leak into table descendants. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table :is(th,td,th *,td *){
+  color:var(--tobay-table-ink)!important;
+  text-shadow:none!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table th *{
+  color:#32105f!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) input,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) select,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) textarea{
+  background:#fff!important;
+  color:var(--tobay-table-ink)!important;
+  border-color:#cfc1df!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) input::placeholder,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) textarea::placeholder{
+  color:var(--tobay-table-muted)!important;opacity:1!important;
+}
+/* Keep dark title bars and action buttons intentional; their white text remains legible. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) :is(button,.buyer-hero){
+  text-shadow:none!important;
+}
+</style>
+
+
+<style id="tobay-final-buyer-admin-contrast-and-mobile-category-refresh">
+/* BUYER + ADMIN: remove dark text-obscuring surfaces and enforce readable table contrast. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard){
+  color:#281044!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)
+ :is(p,span,small,strong,b,em,li,dt,dd,label,figcaption,summary,th,td){
+  color:#281044!important;text-shadow:none!important;opacity:1!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)
+ :is(section,article,.card,.panel,.dashboard-card,.stat,.metric-card,.order-card,.customer-card,.table-wrap,.table-responsive,[class*="card"],[class*="panel"],[class*="order"],[class*="customer"],[class*="metric"],[class*="table"]){
+  background-color:#fff!important;color:#281044!important;border-color:#ded5e9!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table{
+  width:100%!important;border-collapse:collapse!important;background:#fff!important;color:#281044!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) thead,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) th{
+  background:#eee7f7!important;color:#32105f!important;font-weight:800!important;
+  border:1px solid #dcd2e8!important;text-align:left!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) td{
+  background:#fff!important;color:#281044!important;border:1px solid #e4ddec!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) tr:nth-child(even) td{background:#faf8fd!important}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table :is(th,td,th *,td *){color:#281044!important;text-shadow:none!important}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) table th *{color:#32105f!important}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) :is(input,select,textarea){
+  background:#fff!important;color:#281044!important;border:1px solid #cfc1df!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) :is(input,textarea)::placeholder{color:#6b5a7b!important;opacity:1!important}
+/* Intentional dark title bars and primary buttons keep white text for contrast. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard) :is(button,.btn,[type="submit"]){color:#fff!important}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)>h2,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)>h2 *{color:#fff!important}
+
+/* PHONE CATEGORY DESIGN: horizontal swipeable category tiles instead of cramped stacked boxes. */
+@media(max-width:600px){
+  html body #categories .category-grid,
+  html body .categories-section .category-grid{
+    display:flex!important;flex-flow:row nowrap!important;align-items:stretch!important;
+    gap:10px!important;overflow-x:auto!important;overflow-y:hidden!important;
+    padding:5px 2px 14px!important;margin:0 -2px!important;
+    scroll-snap-type:x mandatory!important;scroll-padding-inline:2px!important;
+    -webkit-overflow-scrolling:touch!important;scrollbar-width:thin!important;
+  }
+  html body #categories .category-grid .category,
+  html body .categories-section .category-grid .category{
+    box-sizing:border-box!important;display:flex!important;flex:0 0 132px!important;
+    flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;
+    gap:9px!important;width:132px!important;min-width:132px!important;min-height:132px!important;
+    height:auto!important;padding:13px!important;margin:0!important;
+    background:linear-gradient(145deg,#fff 0%,#f7f2ff 100%)!important;
+    border:1px solid #e2d7f0!important;border-radius:15px!important;
+    box-shadow:0 4px 12px rgba(49,16,95,.07)!important;
+    scroll-snap-align:start!important;text-decoration:none!important;
+  }
+  html body #categories .category-grid .category-icon,
+  html body .categories-section .category-grid .category-icon{
+    display:grid!important;place-items:center!important;flex:0 0 42px!important;
+    width:42px!important;height:42px!important;margin:0!important;
+    border-radius:12px!important;background:#eee5fa!important;color:#32105f!important;font-size:22px!important;
+  }
+  html body #categories .category-grid .category h3,
+  html body .categories-section .category-grid .category h3{
+    display:block!important;margin:0!important;color:#281044!important;
+    font-size:12px!important;font-weight:800!important;line-height:1.3!important;
+    overflow-wrap:anywhere!important;
+  }
+  html body #categories .category-grid .category p,
+  html body .categories-section .category-grid .category p,
+  html body #categories .category-grid .category .category-arrow,
+  html body .categories-section .category-grid .category .category-arrow{display:none!important}
+  html body #categories .category-grid .category:active,
+  html body .categories-section .category-grid .category:active{transform:scale(.98)!important}
+}
+</style>
+
 </body>
 </html>
