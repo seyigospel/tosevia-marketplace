@@ -11371,5 +11371,63 @@ html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobayAdminDashboard)>h2 *{
 }
 </style>
 
+
+
+<style id="tobay-all-three-dashboards-final-readable-colours">
+/* Consistent readable tables and notices across Buyer, Seller and Admin dashboards. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) .tobay-customer-table,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table {
+  width:100%!important; border-collapse:collapse!important; background:#fff!important;
+  color:#281044!important; border:1px solid #ded5e9!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table thead,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table th {
+  background:#eee7f7!important; color:#32105f!important; font-weight:800!important;
+  text-align:left!important; border:1px solid #d8cce7!important; padding:12px 11px!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table th * {
+  color:#32105f!important; text-shadow:none!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table td {
+  background:#fff!important; color:#281044!important; border:1px solid #e4ddec!important;
+  padding:11px!important; text-shadow:none!important; opacity:1!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table tr:nth-child(even) td {
+  background:#faf8fd!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table td * {
+  color:#281044!important; text-shadow:none!important; opacity:1!important;
+}
+/* PAID PROMOTION label: amber pill with dark text, never white-on-light. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) .tobay-toolkit-head span,
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) [aria-label="PAID PROMOTION"] {
+  background:#fff0cf!important; color:#704000!important; border:1px solid #edc77e!important;
+  text-shadow:none!important; opacity:1!important; font-weight:850!important;
+}
+/* Empty notification message and notification cards. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) .tobay-notification-empty {
+  display:block!important; background:#f5f0fb!important; color:#32105f!important;
+  border:1px solid #d9cbe9!important; border-radius:12px!important;
+  padding:16px!important; line-height:1.65!important; font-weight:650!important;
+  text-shadow:none!important; opacity:1!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) :is(.tobay-notification-card,.tobay-notice-item) {
+  background:#fff!important; color:#281044!important; border:1px solid #ded5e9!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) :is(.tobay-notification-card,.tobay-notice-item) * {
+  text-shadow:none!important; opacity:1!important;
+}
+/* Readable body copy in dashboard content panels; keep action buttons and dark hero bars intact. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard)
+  :is(.tobay-notification-empty,.tobay-notification-card,.tobay-notice-item,.tobay-customer-table) :is(p,span,small,strong,b,em,li,label,div) {
+  color:#281044!important;
+}
+@media(max-width:600px){
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table th,
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table td {
+    padding:9px 8px!important; font-size:12px!important; overflow-wrap:anywhere!important;
+  }
+}
+</style>
 </body>
 </html>
