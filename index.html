@@ -10719,5 +10719,37 @@ main > section:not([hidden]), main > div:not([hidden]) { max-height:none!importa
 }
 </style>
 
+
+
+<style id="tobay-phone-main-navigation-visibility-v20">
+/* Phone-only contrast fix for the main Home/Categories/Explore navigation. */
+@media (max-width:760px){
+  header .nav{
+    background:linear-gradient(100deg,#101b4b 0%,#29216f 58%,#402078 100%)!important;
+    border-top:1px solid rgba(245,207,104,.55)!important;
+    border-bottom:1px solid rgba(245,207,104,.55)!important;
+    padding:8px 10px!important;gap:7px!important;
+  }
+  header .nav a,header .nav a:visited,header .nav a:not(.btn){
+    color:#ffffff!important;background:rgba(255,255,255,.10)!important;
+    border:1px solid rgba(255,255,255,.42)!important;border-radius:9px!important;
+    font-size:11px!important;font-weight:850!important;
+    text-shadow:0 1px 2px rgba(0,0,0,.35)!important;
+  }
+  header .nav a:hover,header .nav a:focus,header .nav a:active{
+    color:#ffe08a!important;background:rgba(255,224,138,.15)!important;
+    border-color:#ffe08a!important;
+  }
+  header .nav a.btn,header .nav a.btn-orange,header .nav a[href*="#sell"].btn{
+    color:#172554!important;background:linear-gradient(110deg,#ffe08a,#f5bd45)!important;
+    border:1px solid #fff0bd!important;text-shadow:none!important;
+    box-shadow:0 3px 10px rgba(0,0,0,.22)!important;
+  }
+  header .nav a.btn:hover,header .nav a.btn:focus{
+    color:#101b4b!important;background:#fff0bd!important;
+  }
+}
+</style>
+
 </body>
 </html>
