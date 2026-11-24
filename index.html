@@ -10428,5 +10428,241 @@ button:hover,.btn:hover{filter:brightness(1.12)}
 }
 </style>
 
+<style id="tobay-mobile-responsive-finish-v1">
+
+/* ==========================================================
+   TOBAY MOBILE RESPONSIVE FINISH — safe additive overrides
+   Preserves existing sections, scripts, branding and globe.
+   ========================================================== */
+html{scroll-padding-top:110px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:320px;overflow-x:hidden}
+img,video,svg,canvas{max-width:100%}
+button,input,select,textarea{max-width:100%;font:inherit}
+.container,.header-inner,main,section,article,aside,footer{min-width:0}
+
+/* Tablet and compact laptop layouts */
+@media (max-width: 900px){
+  .container{width:min(100% - 36px, 820px)}
+  .tobay-hero-layout{grid-template-columns:minmax(0,1fr) minmax(240px,.85fr);gap:20px}
+  .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .listing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .about-grid,.benefit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .contact-grid{grid-template-columns:1fr 1fr}
+  .tobay-account-shell{grid-template-columns:1fr 1fr}
+}
+
+/* Phones: keep every main navigation item reachable by horizontal swipe */
+@media (max-width: 680px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+  body{padding-bottom:calc(66px + env(safe-area-inset-bottom))!important}
+  .container{width:calc(100% - 28px)!important;max-width:560px!important;margin-left:auto!important;margin-right:auto!important}
+  header{position:sticky!important;top:0!important;z-index:1000!important}
+  header .header-inner{
+    width:100%!important;min-height:0!important;display:flex!important;flex-wrap:wrap!important;
+    align-items:center!important;gap:9px!important;padding:10px 14px!important;
+  }
+  .logo{font-size:25px!important;line-height:1.05}
+  .logo small{font-size:9px!important;letter-spacing:2.5px!important}
+  .tobay-header-shortcuts{display:flex!important;flex:1 1 auto!important;justify-content:flex-end!important;gap:10px!important;white-space:nowrap!important}
+  .tobay-header-shortcuts a{font-size:10px!important}
+  .nav{
+    display:flex!important;order:5!important;flex:1 1 100%!important;width:100%!important;
+    min-width:0!important;flex-wrap:nowrap!important;justify-content:flex-start!important;
+    gap:7px!important;overflow-x:auto!important;overflow-y:hidden!important;
+    white-space:nowrap!important;padding:3px 0 7px!important;margin:0!important;
+    scrollbar-width:none!important;-webkit-overflow-scrolling:touch;
+  }
+  .nav::-webkit-scrollbar,.tobay-quick-nav::-webkit-scrollbar{display:none!important}
+  .nav a,.nav a:not(.btn){
+    display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;
+    justify-content:center!important;min-height:38px!important;padding:8px 11px!important;
+    border-radius:9px!important;font-size:11px!important;white-space:nowrap!important;
+  }
+  .nav a.btn{flex:0 0 auto!important;min-height:38px!important;padding:8px 12px!important}
+  .tobay-quick-nav{
+    display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+    width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;
+    white-space:nowrap!important;gap:7px!important;padding:8px 12px!important;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none!important;
+  }
+  .tobay-quick-nav a{display:inline-flex!important;flex:0 0 auto!important;min-height:34px!important;align-items:center!important;padding:7px 10px!important;font-size:10px!important}
+
+  .hero.tobay-home-hero{padding:30px 0 28px!important}
+  .tobay-hero-layout{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:15px!important}
+  .tobay-hero-copy{min-width:0!important;text-align:center!important}
+  .tobay-hero-copy h1{font-size:clamp(32px,8.5vw,43px)!important;line-height:1.1!important;overflow-wrap:anywhere}
+  .tobay-hero-copy>p:not(.hero-note){font-size:14px!important;line-height:1.6!important}
+  .search-panel,.search-panel.tobay-hero-search{width:100%!important;max-width:100%!important;display:flex!important;gap:7px!important;padding:7px!important}
+  .search-panel input{width:100%!important;min-width:0!important;font-size:16px!important}
+  .search-panel button{flex:0 0 auto!important;min-width:76px!important}
+  .tobay-hero-actions{display:flex!important;justify-content:center!important;flex-wrap:wrap!important;gap:8px!important}
+  .tobay-hero-visual{width:100%!important;max-width:420px!important;height:245px!important;margin:0 auto!important;transform:none!important}
+  .hero-orbit-one{width:min(70vw,235px)!important}.hero-orbit-two{width:min(56vw,185px)!important}
+  .hero-globe{width:clamp(112px,34vw,145px)!important;height:clamp(112px,34vw,145px)!important;font-size:clamp(62px,19vw,82px)!important}
+  .tobay-world-globe{width:clamp(170px,55vw,230px)!important}
+  /* Do not pause or replace the rotating globe on mobile. */
+  .tobay-globe-map{animation:tobayGlobeRotate 22s linear infinite!important;will-change:transform}
+
+  .section{padding:38px 0!important}
+  .section-head{display:flex!important;align-items:flex-start!important;flex-wrap:wrap!important;gap:8px!important}
+  .section-head h2,.discover-heading h2{font-size:clamp(21px,6vw,26px)!important;line-height:1.2!important}
+  .category-grid,.categories-section .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .category{min-width:0!important;padding:11px!important;gap:8px!important}
+  .category-icon{width:36px!important;height:36px!important;flex:0 0 36px!important;font-size:19px!important}
+  .category h3{font-size:12px!important;overflow-wrap:anywhere}
+  .category p{font-size:10px!important}
+  .listing-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .listing{min-width:0!important}
+  .listing-art{height:145px!important;min-height:145px!important;padding:6px!important}
+  .listing-art img{width:100%!important;height:100%!important;max-height:133px!important;object-fit:contain!important}
+  .listing-body{padding:10px!important}
+  .listing h3{font-size:12px!important;overflow-wrap:anywhere}
+  .listing-body>p{font-size:10px!important;overflow-wrap:anywhere}
+  .listing-body>strong{font-size:14px!important}
+  .marketplace-panel{width:100%!important;min-width:0!important;padding:12px!important}
+  .marketplace-tools{display:flex!important;flex-wrap:wrap!important;min-width:0!important}
+  .marketplace-search-wrap,.marketplace-category-wrap{width:100%!important;min-width:0!important}
+  .marketplace-filter-row{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;max-width:100%!important;gap:7px!important;scrollbar-width:none!important}
+  .tab,.marketplace-filter-row .tab{flex:0 0 auto!important;min-height:38px!important;font-size:11px!important}
+
+  .discover-banner{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:22px 17px!important;gap:15px!important}
+  .discover-art{max-width:100%!important}
+  .seller-banner{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:20px 16px!important}
+  .about-grid,.benefit-grid,.contact-grid{grid-template-columns:minmax(0,1fr)!important}
+  .tobay-account-shell{grid-template-columns:minmax(0,1fr)!important}
+  .tobay-account-welcome{min-height:0!important;padding:27px 22px!important}
+  .tobay-account-main{min-width:0!important;padding:24px 16px!important}
+  .tobay-account-choices{grid-template-columns:minmax(0,1fr)!important}
+
+  /* Dashboards and seller/buyer workspaces */
+  .dashboard,.dashboard-content,.dashboard-container,.dashboard-main,
+  [class*="dashboard"],[id*="dashboard"],#tobaySmartHub,#tobayGlobalUpgrade,
+  .tobay-toolkit,.tobay-seller-overview-panel{min-width:0!important;max-width:100%!important}
+  .dashboard,.dashboard-content,.dashboard-main,[class*="dashboard-grid"],[class*="stats-grid"]{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .dashboard-card,.stat-card,.metric-card,[class*="dashboard-card"],[class*="stat-card"]{min-width:0!important;overflow-wrap:anywhere}
+  table{max-width:100%!important}
+  .table-wrap,.table-responsive,[style*="overflow:auto"],[style*="overflow-x"]{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  input,select,textarea{min-width:0!important;max-width:100%!important;font-size:16px!important}
+  button,.btn{min-height:42px;max-width:100%;white-space:normal}
+  .tobay-mobile-dock{z-index:1200!important;padding-bottom:calc(7px + env(safe-area-inset-bottom))!important}
+  footer{padding-bottom:28px!important}
+}
+
+/* Very narrow phones */
+@media (max-width: 380px){
+  .container{width:calc(100% - 22px)!important}
+  .tobay-header-shortcuts{gap:7px!important}
+  .tobay-header-shortcuts a{font-size:9px!important}
+  .logo{font-size:22px!important}
+  .listing-grid{gap:7px!important}
+  .listing-art{height:125px!important;min-height:125px!important}
+  .listing-art img{max-height:113px!important}
+  .category{gap:6px!important;padding:9px!important}
+  .category-icon{width:32px!important;height:32px!important;flex-basis:32px!important}
+  .dashboard,.dashboard-content,.dashboard-main,[class*="dashboard-grid"],[class*="stats-grid"]{grid-template-columns:minmax(0,1fr)!important}
+}
+
+</style>
+
+<script id="tobay-page-navigation-router">
+(function () {
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const pageGroups = {
+    home: ['home'],
+    categories: ['categories'],
+    explore: ['explore', 'popular-products', 'featured-services', 'seller-community', 'new-arrivals', 'featured-sellers'],
+    about: ['how-it-works', 'why-tobay', 'about'],
+    sell: ['sell'],
+    contact: ['contact-admin'],
+    account: ['account']
+  };
+
+  const aliases = {
+    'contact-admin': 'contact',
+    'seller-community': 'explore',
+    'popular-products': 'explore',
+    'featured-services': 'explore',
+    'new-arrivals': 'explore',
+    'featured-sellers': 'explore',
+    'how-it-works': 'about',
+    'why-tobay': 'about'
+  };
+
+  const mainItems = Array.from(main.children);
+  const accountSection = document.getElementById('account');
+  const originalDisplay = new Map(mainItems.map(el => [el, el.style.display]));
+  if (accountSection) originalDisplay.set(accountSection, accountSection.style.display);
+
+  function routeForTarget(target) {
+    if (!target) return 'home';
+    if (target === 'account' || (accountSection && accountSection.contains(document.getElementById(target)))) return 'account';
+    return aliases[target] || (pageGroups[target] ? target : 'home');
+  }
+
+  function openPage(page, updateHistory) {
+    page = pageGroups[page] ? page : 'home';
+    const visibleIds = new Set(pageGroups[page]);
+
+    mainItems.forEach(el => {
+      const id = el.id || '';
+      let show = visibleIds.has(id);
+      if (page === 'home' && !id && (el.classList.contains('tobay-assurance-row') || el.classList.contains('quick-stats'))) show = true;
+      if (page === 'sell' && !id && el.matches('section')) show = true;
+      el.hidden = !show;
+      el.style.display = show ? (originalDisplay.get(el) || '') : 'none';
+      el.setAttribute('aria-hidden', show ? 'false' : 'true');
+    });
+
+    if (accountSection) {
+      accountSection.hidden = page !== 'account';
+      accountSection.style.display = page === 'account' ? (originalDisplay.get(accountSection) || '') : 'none';
+      accountSection.setAttribute('aria-hidden', page === 'account' ? 'false' : 'true');
+    }
+
+    document.body.dataset.tobayPage = page;
+    document.querySelectorAll('header .nav a[href^="#"], .tobay-quick-nav a[href^="#"]').forEach(link => {
+      const target = (link.getAttribute('href') || '').slice(1);
+      const linkPage = routeForTarget(target);
+      if (linkPage === page) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+
+    if (updateHistory) history.pushState({ tobayPage: page }, '', '#' + (page === 'contact' ? 'contact-admin' : page));
+    window.scrollTo(0, 0);
+    window.dispatchEvent(new CustomEvent('tobay:pagechange', { detail: { page } }));
+  }
+
+  document.addEventListener('click', function (event) {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = (link.getAttribute('href') || '').slice(1);
+    if (!target || !document.getElementById(target)) return;
+    event.preventDefault();
+    openPage(routeForTarget(target), true);
+  }, true);
+
+  // Existing page actions called scrollIntoView(). Convert those actions into
+  // page changes too, so buttons never animate down the long homepage.
+  Element.prototype.scrollIntoView = function () {
+    const section = this.closest('section[id]') || (this.id ? this : null);
+    if (!section) return;
+    openPage(routeForTarget(section.id), true);
+  };
+
+  window.tobayOpenPage = function (page) { openPage(page, true); };
+  window.addEventListener('popstate', function () {
+    const target = (location.hash || '#home').slice(1);
+    openPage(routeForTarget(target), false);
+  });
+
+  const initialTarget = (location.hash || '#home').slice(1);
+  openPage(routeForTarget(initialTarget), false);
+})();
+</script>
+
 </body>
 </html>
