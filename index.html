@@ -3965,7 +3965,7 @@ html body ::selection{background:var(--tb-gold)!important;color:#0b123d!importan
     <input id="tobayHeaderSearch" type="search" placeholder="Search for products, brands and services" onkeydown="if(event.key==='Enter'){const q=this.value;const target=document.getElementById('searchInput');if(target){target.value=q;searchListings();}}" />
     <button type="button" onclick="const q=document.getElementById('tobayHeaderSearch').value;const target=document.getElementById('searchInput');if(target){target.value=q;searchListings();}">⌕</button>
   </label>
-  <div class="tobay-header-shortcuts"><a href="#sell">Sell on TOBAY</a><a href="#account">My Account</a><a href="#explore" aria-label="Shop marketplace">🛒 Shop</a></div>
+  <div class="tobay-header-shortcuts"><a href="#sell">Sell on TOBAY</a><a href="#register">My Account</a><a href="#explore" aria-label="Shop marketplace">🛒 Shop</a></div>
 </div>
 <nav class="nav">
 <a href="#home">Home</a>
@@ -3974,7 +3974,7 @@ html body ::selection{background:var(--tb-gold)!important;color:#0b123d!importan
 <a href="#about">About</a>
 <a href="#sell">Sell with us</a>
 <a href="#contact-admin">Contact Admin</a>
-<a class="btn btn-orange" href="https://tosevia-marketplace.callingforrepentancesalvation.workers.dev/#sell">Get Started</a>
+<a class="btn btn-orange" href="https://tosevia-marketplace.callingforrepentancesalvation.workers.dev/#register">Get Started</a>
 </nav>
 </div>
 </header><nav aria-label="Shop categories" class="tobay-quick-nav"><a class="tobay-all-categories" href="#categories">☰ All Categories</a><a href="#explore">Fashion</a><a href="#explore">Phones &amp; Electronics</a><a href="#explore">Computers</a><a href="#explore">Home &amp; Living</a><a href="#explore">Beauty</a><a href="#explore">Food &amp; Groceries</a><a href="#explore">Services</a><a href="#sell">Sell on TOBAY</a></nav>
@@ -5452,6 +5452,7 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
 <div aria-hidden="true" class="tobay-account-decoration">T</div>
 </aside>
 <div class="tobay-account-main">
+<button id="tobayAccountBack" class="tobay-account-back" type="button" hidden onclick="closeTobayAccountPage()">← Back to TOBAY</button>
 <div class="tobay-account-heading">
 <span class="tobay-account-eyebrow">GET STARTED</span>
 <h2>Welcome to TOBAY</h2>
@@ -5562,6 +5563,16 @@ window.showTobayForm = function(mode) {
 
   form.style.display = "block";
 
+  // Open the account flow as its own full-page view instead of scrolling.
+  document.body.classList.add("tobay-account-page-open");
+  document.body.classList.toggle("tobay-login-page", mode === "login");
+  document.body.classList.toggle("tobay-register-page", mode !== "login");
+  const choices = document.querySelector(".tobay-account-choices");
+  if (choices) choices.style.display = "none";
+  const back = document.getElementById("tobayAccountBack");
+  if (back) back.hidden = false;
+  history.replaceState(null, "", mode === "login" ? "#login" : "#register");
+
   name.style.display = mode === "login" ? "none" : "block";
   name.required = mode !== "login";
 
@@ -5582,8 +5593,31 @@ window.showTobayForm = function(mode) {
   forgotPassword.style.display = mode === "login" ? "inline-block" : "none";
   message.textContent = "";
 
-  form.scrollIntoView({ behavior: "smooth", block: "center" });
+  window.scrollTo(0, 0);
 };
+
+window.closeTobayAccountPage = function() {
+  document.body.classList.remove("tobay-account-page-open", "tobay-login-page", "tobay-register-page");
+  const choices = document.querySelector(".tobay-account-choices");
+  if (choices) choices.style.display = "grid";
+  const form = document.getElementById("tobayAccountForm");
+  if (form) form.style.display = "none";
+  const back = document.getElementById("tobayAccountBack");
+  if (back) back.hidden = true;
+  history.replaceState(null, "", "#home");
+  window.scrollTo(0, 0);
+};
+
+// Direct links such as /#login and /#register open the account page immediately.
+function handleTobayAccountRoute() {
+  const route = location.hash.toLowerCase();
+  if (route === "#login") window.showTobayForm("login");
+  else if (route === "#register") window.showTobayForm("buyer");
+}
+window.addEventListener("hashchange", handleTobayAccountRoute);
+if (location.hash === "#login" || location.hash === "#register") {
+  window.addEventListener("load", handleTobayAccountRoute, { once: true });
+}
 
 document.getElementById("tobayShowPassword").addEventListener("change", function() {
   document.getElementById("tobayPassword").type = this.checked ? "text" : "password";
@@ -9137,7 +9171,7 @@ async function loadTobayAdminInsights(panel) {
 }
 
 </script>
-<nav aria-label="Mobile marketplace shortcuts" class="tobay-mobile-dock"><a href="#home"><span>⌂</span><small>Home</small></a><a href="#categories"><span>▦</span><small>Categories</small></a><a href="#explore"><span>⌕</span><small>Explore</small></a><a href="#sell"><span>＋</span><small>Sell</small></a><a href="#account"><span>♙</span><small>Account</small></a></nav>
+<nav aria-label="Mobile marketplace shortcuts" class="tobay-mobile-dock"><a href="#home"><span>⌂</span><small>Home</small></a><a href="#categories"><span>▦</span><small>Categories</small></a><a href="#explore"><span>⌕</span><small>Explore</small></a><a href="#sell"><span>＋</span><small>Sell</small></a><a href="#register"><span>♙</span><small>Account</small></a></nav>
 <style id="tobay-phone-all-categories-and-new-colours-v14">
 /* TOBAY refreshed identity: midnight indigo, clear aqua and warm ivory */
 :root{--navy:#202b58!important;--blue:#354783!important;--orange:#e56d55!important;--tobay-ink:#202943!important;--tobay-green:#25356f!important;--tobay-orange:#e56d55!important;--tobay-line:#e4e8f0!important;--tobay-soft:#f4f6fb!important;--ink:#202943!important;--bg:#f4f6fb!important}
@@ -10752,77 +10786,40 @@ main > section:not([hidden]), main > div:not([hidden]) { max-height:none!importa
 </style>
 
 
-<style id="tobay-mobile-bottom-navigation-visibility-fix">
-/* TOBAY: make the five mobile bottom-navigation links clearly visible */
-@media (max-width: 760px) {
-  body {
-    padding-bottom: calc(82px + env(safe-area-inset-bottom)) !important;
-  }
-  nav.tobay-mobile-dock {
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    z-index: 99999 !important;
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    align-items: stretch !important;
-    gap: 2px !important;
-    min-height: 64px !important;
-    padding: 7px 5px calc(7px + env(safe-area-inset-bottom)) !important;
-    background: linear-gradient(105deg, #101b4b 0%, #29216f 58%, #402078 100%) !important;
-    border-top: 2px solid #f5cf68 !important;
-    box-shadow: 0 -5px 20px rgba(8, 15, 45, .28) !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  nav.tobay-mobile-dock a,
-  nav.tobay-mobile-dock a:link,
-  nav.tobay-mobile-dock a:visited {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 3px !important;
-    min-width: 0 !important;
-    min-height: 48px !important;
-    padding: 3px 1px !important;
-    color: #ffffff !important;
-    background: transparent !important;
-    border: 0 !important;
-    text-decoration: none !important;
-    text-align: center !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  nav.tobay-mobile-dock a span {
-    display: block !important;
-    color: #f5cf68 !important;
-    font-size: 22px !important;
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  nav.tobay-mobile-dock a small {
-    display: block !important;
-    color: #ffffff !important;
-    font-size: 10px !important;
-    font-weight: 800 !important;
-    line-height: 1.25 !important;
-    white-space: nowrap !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  nav.tobay-mobile-dock a:hover,
-  nav.tobay-mobile-dock a:focus,
-  nav.tobay-mobile-dock a:active {
-    color: #ffe08a !important;
-    background: rgba(255, 255, 255, .10) !important;
-  }
-}
-@media (min-width: 761px) {
-  nav.tobay-mobile-dock { display: none !important; }
+<style id="tobay-account-pages-and-readable-text-v1">
+/* Account access is presented as a separate page view, never as an in-page scroll target. */
+body.tobay-account-page-open { background:#f3f5ff!important; min-height:100vh!important; }
+body.tobay-account-page-open > :not(#account):not(script):not(style) { display:none!important; }
+body.tobay-account-page-open #account { display:block!important; min-height:100vh!important; padding:28px 14px 48px!important; background:linear-gradient(135deg,#e8edff 0%,#f7f4ff 52%,#fff8e9 100%)!important; }
+body.tobay-account-page-open .tobay-account-shell { display:grid!important; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important; max-width:1040px!important; width:min(100%,1040px)!important; margin:0 auto!important; overflow:visible!important; }
+body.tobay-account-page-open .tobay-account-welcome { background:linear-gradient(145deg,#102b63,#31216f)!important; color:#fff!important; }
+body.tobay-account-page-open .tobay-account-main { background:#fff!important; color:#17243b!important; }
+body.tobay-account-page-open .tobay-account-heading h2, body.tobay-account-page-open .tobay-account-form h3 { color:#14264b!important; }
+body.tobay-account-page-open .tobay-account-heading p, body.tobay-account-page-open .tobay-form-intro { color:#46536b!important; }
+.tobay-account-back { display:inline-flex; align-items:center; gap:8px; margin:0 0 20px; padding:10px 15px; border:1px solid #cbd5ee; border-radius:10px; background:#eef2ff; color:#18366f; font-weight:700; cursor:pointer; }
+.tobay-account-back[hidden] { display:none!important; }
+.tobay-account-form { color:#17243b!important; }
+.tobay-account-form label { display:block!important; color:#263653!important; font-weight:700!important; margin:13px 0 6px!important; }
+.tobay-account-form input:not([type=checkbox]), .tobay-account-form select, .tobay-account-form textarea { width:100%!important; min-height:46px!important; padding:12px 13px!important; color:#17243b!important; background:#fff!important; border:1px solid #aebbd3!important; border-radius:9px!important; font-size:15px!important; }
+.tobay-account-form input::placeholder, .tobay-account-form textarea::placeholder { color:#68758b!important; opacity:1!important; }
+.tobay-account-form input:focus, .tobay-account-form textarea:focus { outline:3px solid rgba(50,91,180,.18)!important; border-color:#315bb4!important; }
+.tobay-account-form #tobayCaptchaHelp, #tobayAccountMessage { color:#263653!important; line-height:1.6!important; }
+.tobay-submit { background:linear-gradient(135deg,#f0cf78,#d5a83e)!important; color:#172b50!important; font-weight:800!important; min-height:48px!important; }
+/* Improve reading contrast across light-background content without changing dark hero panels. */
+body:not(.tobay-account-page-open) .section:not(.hero) p,
+body:not(.tobay-account-page-open) .section:not(.hero) li,
+body:not(.tobay-account-page-open) .section:not(.hero) small,
+body:not(.tobay-account-page-open) .section:not(.hero) label { color:#34435b; }
+body:not(.tobay-account-page-open) .section:not(.hero) h2,
+body:not(.tobay-account-page-open) .section:not(.hero) h3 { color:#142b50; }
+@media(max-width:760px) {
+ body.tobay-account-page-open #account { padding:12px 10px 28px!important; }
+ body.tobay-account-page-open .tobay-account-shell { display:flex!important; flex-direction:column!important; width:100%!important; }
+ body.tobay-account-page-open .tobay-account-welcome { padding:22px 18px!important; }
+ body.tobay-account-page-open .tobay-account-welcome h2 { font-size:25px!important; }
+ body.tobay-account-page-open .tobay-account-welcome p, body.tobay-account-page-open .tobay-account-benefits span { font-size:13px!important; line-height:1.55!important; }
+ body.tobay-account-page-open .tobay-account-main { padding:22px 17px!important; }
+ .tobay-account-form label { font-size:14px!important; }
 }
 </style>
 
