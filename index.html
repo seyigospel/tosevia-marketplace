@@ -10751,5 +10751,80 @@ main > section:not([hidden]), main > div:not([hidden]) { max-height:none!importa
 }
 </style>
 
+
+<style id="tobay-mobile-bottom-navigation-visibility-fix">
+/* TOBAY: make the five mobile bottom-navigation links clearly visible */
+@media (max-width: 760px) {
+  body {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+  }
+  nav.tobay-mobile-dock {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 99999 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 2px !important;
+    min-height: 64px !important;
+    padding: 7px 5px calc(7px + env(safe-area-inset-bottom)) !important;
+    background: linear-gradient(105deg, #101b4b 0%, #29216f 58%, #402078 100%) !important;
+    border-top: 2px solid #f5cf68 !important;
+    box-shadow: 0 -5px 20px rgba(8, 15, 45, .28) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  nav.tobay-mobile-dock a,
+  nav.tobay-mobile-dock a:link,
+  nav.tobay-mobile-dock a:visited {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    padding: 3px 1px !important;
+    color: #ffffff !important;
+    background: transparent !important;
+    border: 0 !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  nav.tobay-mobile-dock a span {
+    display: block !important;
+    color: #f5cf68 !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  nav.tobay-mobile-dock a small {
+    display: block !important;
+    color: #ffffff !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  nav.tobay-mobile-dock a:hover,
+  nav.tobay-mobile-dock a:focus,
+  nav.tobay-mobile-dock a:active {
+    color: #ffe08a !important;
+    background: rgba(255, 255, 255, .10) !important;
+  }
+}
+@media (min-width: 761px) {
+  nav.tobay-mobile-dock { display: none !important; }
+}
+</style>
+
 </body>
 </html>
