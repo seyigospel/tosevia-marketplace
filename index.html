@@ -12663,6 +12663,56 @@ html body #tobayAdminDashboard #tobayAdminMetricGrid *{color:#21171d!important;t
 }
 </style>
 
+\n<style id="tobay-jumia-inspired-admin-dashboard">
+/* Jumia-inspired admin workspace: orange accents, clean light surfaces, compact horizontal navigation */
+#tobayAdminDashboard,#admin-dashboard,.admin-dashboard,[id^="tobayAdmin"]{
+  --tobay-jumia-orange:#f68b1e; --tobay-jumia-dark:#282828; --tobay-jumia-bg:#f4f5f7; --tobay-jumia-border:#e4e6eb;
+  color:#292929!important;background:var(--tobay-jumia-bg)!important;border:1px solid var(--tobay-jumia-border)!important;
+  border-radius:12px!important;padding:16px!important;box-sizing:border-box!important;box-shadow:none!important;
+  font-family:Arial,Helvetica,sans-serif!important;overflow-x:auto!important;
+}
+#tobayAdminDashboard *,#admin-dashboard *, .admin-dashboard *,[id^="tobayAdmin"] *{
+  color:#292929!important;writing-mode:horizontal-tb!important;text-orientation:mixed!important;
+  transform:none!important;text-shadow:none!important;box-shadow:none!important;letter-spacing:normal!important;
+  font-weight:650!important;box-sizing:border-box!important;max-width:100%;
+}
+#tobayAdminDashboard h1,#tobayAdminDashboard h2,#admin-dashboard h1,#admin-dashboard h2,.admin-dashboard h1,.admin-dashboard h2{
+  background:#fff!important;color:#292929!important;border-left:6px solid var(--tobay-jumia-orange)!important;
+  padding:15px 18px!important;border-radius:8px!important;font-size:clamp(20px,3vw,28px)!important;font-weight:900!important;line-height:1.3!important;
+}
+#tobayAdminDashboard h3,#tobayAdminDashboard h4,#admin-dashboard h3,.admin-dashboard h3{
+  color:#292929!important;font-weight:850!important;font-size:16px!important;line-height:1.35!important;margin:14px 0 10px!important;
+}
+#tobayAdminDashboard section,#tobayAdminDashboard .card,#tobayAdminDashboard .panel,#tobayAdminDashboard .dashboard-card,
+#admin-dashboard section,#admin-dashboard .card,.admin-dashboard section,.admin-dashboard .card,[id^="tobayAdmin"] section{
+  background:#fff!important;border:1px solid var(--tobay-jumia-border)!important;border-radius:9px!important;padding:14px!important;margin:8px 0!important;
+}
+#tobayAdminDashboard button,#admin-dashboard button,.admin-dashboard button,[id^="tobayAdmin"] button{
+  background:#f68b1e!important;color:#fff!important;border:1px solid #e77e12!important;border-radius:6px!important;
+  padding:9px 14px!important;min-height:38px!important;font-weight:850!important;cursor:pointer!important;
+}
+#tobayAdminDashboard button:hover,#admin-dashboard button:hover,.admin-dashboard button:hover{background:#e77e12!important}
+#tobayAdminDashboard input,#tobayAdminDashboard select,#tobayAdminDashboard textarea,#admin-dashboard input,#admin-dashboard select,#admin-dashboard textarea,.admin-dashboard input,.admin-dashboard select,.admin-dashboard textarea{
+  background:#fff!important;color:#292929!important;border:1px solid #cfd3da!important;border-radius:6px!important;padding:9px 10px!important;font-size:14px!important;min-width:0!important;
+}
+#tobayAdminDashboard table,#admin-dashboard table,.admin-dashboard table,[id^="tobayAdmin"] table{width:100%!important;border-collapse:collapse!important;background:#fff!important}
+#tobayAdminDashboard th,#admin-dashboard th,.admin-dashboard th,[id^="tobayAdmin"] th{background:#f1f3f5!important;color:#333!important;font-weight:900!important}
+#tobayAdminDashboard td,#tobayAdminDashboard th,#admin-dashboard td,#admin-dashboard th,.admin-dashboard td,.admin-dashboard th{padding:10px!important;border:1px solid #e5e7eb!important;text-align:left!important;vertical-align:middle!important;white-space:normal!important}
+#tobayAdminDashboard #tobayAdminMetricGrid,#tobayAdminDashboard [class*="grid"],#tobayAdminDashboard .dashboard-grid,#admin-dashboard [class*="grid"],.admin-dashboard [class*="grid"]{
+  display:grid!important;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))!important;gap:12px!important;align-items:stretch!important;
+}
+#tobayAdminDashboard #tobayAdminMetricGrid>*{background:#fff!important;border:1px solid #e4e6eb!important;border-top:4px solid #f68b1e!important;border-radius:8px!important;padding:12px!important;min-width:0!important;}
+#tobayAdminDashboard nav,#admin-dashboard nav,.admin-dashboard nav,[id^="tobayAdmin"] nav{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;gap:8px!important;align-items:center!important}
+#tobayAdminDashboard a,#admin-dashboard a,.admin-dashboard a{color:#d97706!important;font-weight:800!important}
+@media(max-width:767px){
+ #tobayAdminDashboard,#admin-dashboard,.admin-dashboard,[id^="tobayAdmin"]{padding:10px!important;margin:5px auto!important;width:calc(100% - 10px)!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+ #tobayAdminDashboard #tobayAdminMetricGrid,#tobayAdminDashboard [class*="grid"],#tobayAdminDashboard .dashboard-grid,#admin-dashboard [class*="grid"],.admin-dashboard [class*="grid"]{grid-template-columns:repeat(2,minmax(145px,1fr))!important;gap:8px!important}
+ #tobayAdminDashboard table,#admin-dashboard table,.admin-dashboard table{min-width:620px!important}
+ #tobayAdminDashboard button,#admin-dashboard button,.admin-dashboard button{white-space:normal!important;min-width:max-content!important}
+ #tobayAdminDashboard h2,#admin-dashboard h2,.admin-dashboard h2{font-size:20px!important}
+}
+</style>
+
 </body>
 </html>
 
