@@ -4161,6 +4161,67 @@ body.tobay-dashboard-mode #tobayLogoutButton{display:inline-flex!important;align
 }
 </style>
 
+<style id="tobay-mobile-dashboard-readability">
+
+/* TOBAY mobile captcha + readable role dashboards: final accessibility layer */
+#tobayCaptchaWrap{box-sizing:border-box;width:100%;max-width:100%;overflow:hidden;padding:12px!important}
+#tobayCaptcha{width:100%;max-width:100%;min-height:0;overflow:hidden}
+#tobayCaptcha iframe{max-width:100%!important}
+#tobayCaptchaHelp{font-size:13px!important;line-height:1.55!important;color:#40536d!important}
+#tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{
+  box-sizing:border-box!important;color:#172b45!important;font-size:15px!important;line-height:1.65!important;
+  width:min(1160px,calc(100% - 28px))!important;max-width:1160px!important;margin:22px auto!important;
+  padding:clamp(16px,3vw,30px)!important;overflow-wrap:anywhere
+}
+#tobaySellerDashboard h2,#tobayAdminDashboard h2,#tobayBuyerOrders h2{
+  font-size:clamp(22px,3vw,30px)!important;line-height:1.25!important
+}
+#tobaySellerDashboard h3,#tobayAdminDashboard h3,#tobayBuyerOrders h3{
+  font-size:clamp(17px,2vw,21px)!important;line-height:1.35!important;color:#15375f!important
+}
+#tobaySellerDashboard p,#tobayAdminDashboard p,#tobayBuyerOrders p,
+#tobaySellerDashboard li,#tobayAdminDashboard li,#tobayBuyerOrders li,
+#tobaySellerDashboard label,#tobayAdminDashboard label,#tobayBuyerOrders label,
+#tobaySellerDashboard td,#tobayAdminDashboard td,#tobayBuyerOrders td{
+  font-size:14px!important;line-height:1.65!important;color:#40536d
+}
+#tobaySellerDashboard input:not([type=file]),#tobaySellerDashboard textarea,#tobaySellerDashboard select,
+#tobayAdminDashboard input,#tobayAdminDashboard textarea,#tobayAdminDashboard select,
+#tobayBuyerOrders input,#tobayBuyerOrders select{
+  box-sizing:border-box!important;max-width:100%;min-height:46px!important;font-size:16px!important;color:#172b45!important
+}
+#tobaySellerDashboard button,#tobayAdminDashboard button,#tobayBuyerOrders button{
+  min-height:42px!important;font-size:14px!important;line-height:1.35!important;white-space:normal!important
+}
+#tobayAdminDashboard [id^="tobayAdmin"],#tobaySellerDashboard [id^="tobaySeller"],#tobayBuyerOrders [id^="tobayBuyer"]{min-width:0;max-width:100%}
+#tobayAdminDashboard table,#tobaySellerDashboard table,#tobayBuyerOrders table{width:100%;border-collapse:collapse}
+#tobayAdminDashboard th,#tobayAdminDashboard td,#tobaySellerDashboard th,#tobaySellerDashboard td,#tobayBuyerOrders th,#tobayBuyerOrders td{
+  padding:10px!important;vertical-align:top;border-bottom:1px solid #e5ebf3;overflow-wrap:anywhere
+}
+#tobayAdminDashboard section,#tobaySellerDashboard section,#tobayBuyerOrders section{max-width:100%;min-width:0}
+@media(max-width:700px){
+  #tobayCaptchaWrap{margin:8px 0 16px!important;padding:10px!important}
+  #tobayCaptcha{display:flex;justify-content:flex-start;align-items:flex-start}
+  #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{width:calc(100% - 16px)!important;margin:12px auto!important;padding:15px!important;border-radius:15px!important}
+  #tobaySellerDashboard h2,#tobayAdminDashboard h2,#tobayBuyerOrders h2{font-size:22px!important}
+  #tobaySellerDashboard h3,#tobayAdminDashboard h3,#tobayBuyerOrders h3{font-size:18px!important}
+  #tobaySellerDashboard p,#tobayAdminDashboard p,#tobayBuyerOrders p,
+  #tobaySellerDashboard label,#tobayAdminDashboard label,#tobayBuyerOrders label,
+  #tobaySellerDashboard td,#tobayAdminDashboard td,#tobayBuyerOrders td{font-size:14px!important}
+  #tobayAdminMetricGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #tobaySellerDashboard .tobay-toolkit-grid,#tobaySellerDashboard .tobay-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #tobaySellerDashboard .tobay-toolkit-head{align-items:stretch!important}
+  #tobaySellerDashboard .tobay-toolkit-head button{width:100%!important}
+  #tobayAdminDashboard table{display:block;overflow-x:auto;white-space:normal}
+}
+@media(max-width:380px){
+  #tobayCaptchaWrap{padding:8px!important}
+  #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{width:calc(100% - 12px)!important;padding:12px!important}
+  #tobayAdminMetricGrid{grid-template-columns:1fr 1fr!important;gap:7px!important}
+  #tobaySellerDashboard .tobay-toolkit-grid,#tobaySellerDashboard .tobay-overview-grid{grid-template-columns:1fr 1fr!important}
+}
+
+</style>
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
@@ -5714,8 +5775,10 @@ document.getElementById("searchInput").addEventListener("keydown", event => {
   window.onTobayHCaptchaLoad = function () {
     const target = document.getElementById("tobayCaptcha");
     if (!target || !window.hcaptcha || window.tobayCaptchaWidgetId !== null) return;
+    const isSmallScreen = window.matchMedia && window.matchMedia("(max-width: 540px)").matches;
     window.tobayCaptchaWidgetId = window.hcaptcha.render(target, {
       sitekey: "0c1a7ba2-4716-4942-9da6-fef8e500253a",
+      size: isSmallScreen ? "compact" : "normal",
       callback: function (token) { window.tobayCaptchaToken = token || ""; },
       "expired-callback": function () { window.tobayCaptchaToken = ""; },
       "error-callback": function () { window.tobayCaptchaToken = ""; }
