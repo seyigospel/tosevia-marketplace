@@ -12491,6 +12491,95 @@ html body #tobayAdminDashboard #tobayAdminMetricGrid *{color:#21171d!important;t
 }
 </style>
 
+
+<style id="tobay-three-dashboards-wide-bold-final">
+/* TOBAY: full-width Buyer, Seller and Admin dashboards on laptop and phone */
+:root { --tobay-dashboard-gutter: clamp(8px, 1.4vw, 22px); }
+#buyer-dashboard,
+#seller-dashboard,
+#admin-dashboard,
+#tobayBuyerDashboard,
+#tobaySellerDashboard,
+#tobayAdminDashboard,
+.buyer-dashboard,
+.seller-dashboard,
+.admin-dashboard,
+.dashboard-container,
+.dashboard-main,
+.dashboard-content {
+  width: calc(100% - (var(--tobay-dashboard-gutter) * 2)) !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+#buyer-dashboard, #seller-dashboard, #admin-dashboard,
+#tobayBuyerDashboard, #tobaySellerDashboard, #tobayAdminDashboard,
+.buyer-dashboard, .seller-dashboard, .admin-dashboard {
+  min-width: 0 !important;
+}
+#buyer-dashboard *, #seller-dashboard *, #admin-dashboard *,
+#tobayBuyerDashboard *, #tobaySellerDashboard *, #tobayAdminDashboard *,
+.buyer-dashboard *, .seller-dashboard *, .admin-dashboard *,
+.dashboard-container *, .dashboard-main *, .dashboard-content * {
+  font-weight: 700 !important;
+}
+#buyer-dashboard h1, #buyer-dashboard h2, #buyer-dashboard h3,
+#seller-dashboard h1, #seller-dashboard h2, #seller-dashboard h3,
+#admin-dashboard h1, #admin-dashboard h2, #admin-dashboard h3,
+#tobayBuyerDashboard h1, #tobayBuyerDashboard h2, #tobayBuyerDashboard h3,
+#tobaySellerDashboard h1, #tobaySellerDashboard h2, #tobaySellerDashboard h3,
+#tobayAdminDashboard h1, #tobayAdminDashboard h2, #tobayAdminDashboard h3 {
+  font-weight: 800 !important;
+  letter-spacing: .01em;
+}
+#buyer-dashboard .stats-grid, #seller-dashboard .stats-grid, #admin-dashboard .stats-grid,
+#buyer-dashboard .buyer-overall-grid, #seller-dashboard .buyer-overall-grid,
+#admin-dashboard .buyer-overall-grid {
+  width: 100% !important;
+  max-width: none !important;
+}
+#buyer-dashboard table, #seller-dashboard table, #admin-dashboard table,
+#tobayBuyerDashboard table, #tobaySellerDashboard table, #tobayAdminDashboard table {
+  width: 100% !important;
+}
+#buyer-dashboard .table-wrap, #seller-dashboard .table-wrap, #admin-dashboard .table-wrap,
+#buyer-dashboard .table-responsive, #seller-dashboard .table-responsive, #admin-dashboard .table-responsive {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+@media (min-width: 768px) {
+  #buyer-dashboard, #seller-dashboard, #admin-dashboard,
+  #tobayBuyerDashboard, #tobaySellerDashboard, #tobayAdminDashboard,
+  .buyer-dashboard, .seller-dashboard, .admin-dashboard {
+    padding-left: clamp(12px, 1.5vw, 26px) !important;
+    padding-right: clamp(12px, 1.5vw, 26px) !important;
+  }
+}
+@media (max-width: 767px) {
+  #buyer-dashboard, #seller-dashboard, #admin-dashboard,
+  #tobayBuyerDashboard, #tobaySellerDashboard, #tobayAdminDashboard,
+  .buyer-dashboard, .seller-dashboard, .admin-dashboard,
+  .dashboard-container, .dashboard-main, .dashboard-content {
+    width: calc(100% - 12px) !important;
+    max-width: none !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  #buyer-dashboard .card, #seller-dashboard .card, #admin-dashboard .card,
+  #buyer-dashboard .dashboard-card, #seller-dashboard .dashboard-card, #admin-dashboard .dashboard-card {
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #buyer-dashboard button, #seller-dashboard button, #admin-dashboard button,
+  #tobayBuyerDashboard button, #tobaySellerDashboard button, #tobayAdminDashboard button {
+    font-weight: 800 !important;
+  }
+}
+</style>
+
 </body>
 </html>
 
