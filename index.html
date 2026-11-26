@@ -5714,6 +5714,142 @@ if (typeof window.loadTobayMarketplace === "function") {
     "Marketplace function not found.";
 }
   
+// TOBAY ROLE-BASED, SEPARATE DASHBOARD PAGES
+function tobayEnsureDashboardPage() {
+  let page = document.getElementById("tobayDashboardPage");
+  if (!page) {
+    page = document.createElement("main");
+    page.id = "tobayDashboardPage";
+    page.style.cssText = "display:none;min-height:100vh;padding:28px 16px 60px;background:#080d19;color:#f4f7ff;";
+    const style = document.createElement("style");
+    style.id = "tobayDashboardPageStyles";
+    style.textContent = `
+      body.tobay-dashboard-mode{background:#080d19!important}
+      body.tobay-dashboard-mode>:not(#tobayDashboardPage):not(script):not(style):not(link){display:none!important}
+      body.tobay-dashboard-mode>#tobayDashboardPage{display:block!important}
+      #tobayDashboardPage .tobay-dashboard-top{width:min(1120px,100%);margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+      #tobayDashboardPage .tobay-dashboard-brand{font-size:13px;font-weight:900;letter-spacing:2px;color:#a9c9ff}
+      #tobayDashboardPage .tobay-dashboard-heading{width:min(1120px,100%);margin:0 auto 22px;padding:24px 26px;border:1px solid #293b58;border-radius:18px;background:linear-gradient(115deg,#102b55,#1d5b91);box-shadow:0 14px 35px #0005}
+      #tobayDashboardPage .tobay-dashboard-heading h1{margin:0 0 7px;color:#fff;font-size:clamp(23px,4vw,32px)}
+      #tobayDashboardPage .tobay-dashboard-heading p{margin:0;color:#e0ebff}
+      #tobayDashboardContent{width:min(1120px,100%);margin:0 auto}
+      #tobayDashboardPage .tobay-dashboard-back{padding:11px 16px;border:1px solid #55739b;border-radius:10px;background:#172943;color:#fff;font-weight:800;cursor:pointer}
+      #tobayDashboardPage #tobayLogoutButton{display:inline-block!important;margin:0!important}
+      #tobayDashboardContent>#tobaySellerDashboard,#tobayDashboardContent>#tobayBuyerOrders,#tobayDashboardContent>#tobayAdminDashboard,#tobayDashboardContent>#tobayNotificationCentre{display:block!important;width:100%;max-width:none!important;margin:0 auto 22px!important}
+      @media(max-width:600px){#tobayDashboardPage{padding:16px 10px 40px!important}#tobayDashboardPage .tobay-dashboard-heading{padding:19px}#tobayDashboardPage .tobay-dashboard-top{align-items:stretch}}
+    `;
+    document.head.appendChild(style);
+    document.body.appendChild(page);
+  }
+  return page;
+}
+
+window.tobayDashboardHost = function() {
+  const page = tobayEnsureDashboardPage();
+  let host = document.getElementById("tobayDashboardContent");
+  if (!host) {
+    host = document.createElement("div");
+    host.id = "tobayDashboardContent";
+    page.appendChild(host);
+  }
+  return host;
+};
+
+window.openTobayDashboardPage = function(role, user) {
+  const page = tobayEnsureDashboardPage();
+  page.replaceChildren();
+  const top = document.createElement("div");
+  top.className = "tobay-dashboard-top";
+  top.innerHTML = '<span class="tobay-dashboard-brand">TOBAY GLOBAL MARKETPLACE</span>';
+  const back = document.createElement("button");
+  back.type = "button";
+  back.className = "tobay-dashboard-back";
+  back.textContent = "← Back to Marketplace";
+  back.addEventListener("click", function() {
+    document.body.classList.remove("tobay-dashboard-mode");
+    page.style.display = "none";
+    window.location.hash = "";
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+  top.appendChild(back);
+
+  const titles = {
+    buyer: ["Buyer Dashboard", "Manage your purchases, saved items and order updates."],
+    seller: ["Seller Dashboard", "Manage your business, products, services and customer orders."],
+    admin: ["Admin Dashboard", "Manage marketplace activity, seller applications and platform operations."]
+  };
+  const details = titles[role] || titles.buyer;
+  const heading = document.createElement("section");
+  heading.className = "tobay-dashboard-heading";
+  heading.innerHTML = '<h1></h1><p></p>';
+  heading.querySelector("h1").textContent = details[0];
+  heading.querySelector("p").textContent = user && user.email ? "Signed in as " + user.email + " · " + details[1] : details[1];
+  const host = document.createElement("div");
+  host.id = "tobayDashboardContent";
+  page.append(top, heading, host);
+  page.style.display = "block";
+  document.body.classList.add("tobay-dashboard-mode");
+  window.location.hash = role + "-dashboard";
+  if (typeof tobayLogoutButton !== "undefined") host.appendChild(tobayLogoutButton);
+  return host;
+};
+
+// Resolve dashboard permissions from trusted database records, never from a
+// role selector or editable user metadata alone.
+window.routeTobayUserToDashboard = async function(user) {
+  if (!user || !user.id) throw new Error("Please sign in again to continue.");
+
+  const { data: adminRecord, error: adminError } = await supabase
+    .from("admin_users").select("user_id").eq("user_id", user.id).maybeSingle();
+  if (adminError) throw adminError;
+
+  if (adminRecord) {
+    window.openTobayDashboardPage("admin", user);
+    await loadTobayAdminDashboard(user);
+    await loadTobayNotifications(user);
+    return "admin";
+  }
+
+  const { data: sellerRecord, error: sellerCheckError } = await supabase
+    .from("seller_applications").select("id,status").eq("user_id", user.id).limit(1).maybeSingle();
+  if (sellerCheckError) throw sellerCheckError;
+
+  const metadata = user.user_metadata || {};
+  if (sellerRecord || metadata.business_name) {
+    if (!sellerRecord && metadata.business_name) {
+      const { error: applicationError } = await supabase.from("seller_applications").insert({
+        user_id: user.id,
+        business_name: metadata.business_name,
+        business_description: metadata.business_description || "",
+        business_location: metadata.business_location || "",
+        whatsapp_number: metadata.whatsapp_number || "",
+        contact_email: user.email,
+        status: "pending"
+      });
+      if (applicationError) throw applicationError;
+    }
+    window.openTobayDashboardPage("seller", user);
+    await window.loadTobaySellerDashboard(user);
+    await loadTobayNotifications(user);
+    return "seller";
+  }
+
+  window.openTobayDashboardPage("buyer", user);
+  const buyerResults = await Promise.allSettled([
+    loadTobayBuyerOrders(user),
+    loadTobayNormalBuyerOrders(user),
+    loadTobayBuyerOverallSummary(user),
+    loadTobayWishlist(user),
+    loadTobayNotifications(user)
+  ]);
+  buyerResults.forEach((item, index) => {
+    if (item.status === "rejected") {
+      console.error("TOBAY buyer dashboard section failed to load (" + index + "):", item.reason);
+    }
+  });
+  return "buyer";
+};
+
 // TOBAY REGISTRATION AND LOGIN
 
 let tobayAccountMode = "buyer";
@@ -5962,7 +6098,7 @@ window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
     panel.id = "tobaySellerDashboard";
     panel.style.cssText =
       "display:none;margin:30px auto;padding:25px;background:#fff;border:2px solid #174b91;border-radius:12px;max-width:1000px;";
-    document.getElementById("tobayAccountForm").after(panel);
+    window.tobayDashboardHost().appendChild(panel);
   }
 
   panel.style.display = "block";
@@ -7341,7 +7477,7 @@ async function loadTobayBuyerOverallSummary(user) {
       "background:#fff;border:1px solid #ddd;" +
       "border-radius:12px;max-width:1000px;";
 
-    document.getElementById("tobayAccountForm").after(panel);
+    window.tobayDashboardHost().appendChild(panel);
   }
 
   panel.style.display = "block";
@@ -7839,7 +7975,7 @@ async function loadTobayAdminDashboard(user) {
     panel.id = "tobayAdminDashboard";
     panel.style.cssText =
       "display:none;margin:30px auto;padding:25px;background:#fff;border:2px solid #e99b24;border-radius:12px;max-width:1000px;";
-    document.getElementById("tobayAccountForm").after(panel);
+    window.tobayDashboardHost().appendChild(panel);
   }
 
   panel.style.display = "block";
@@ -8743,8 +8879,7 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
   const message = document.getElementById("tobayAccountMessage");
   const submit = document.getElementById("tobaySubmit");
 
-  if (tobayAccountMode === "seller" &&
-      (!business || !description || !location)) {
+  if (tobayAccountMode === "seller" && (!business || !description || !location)) {
     message.textContent = "Please complete all business details.";
     return;
   }
@@ -8759,82 +8894,17 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
   submit.disabled = true;
 
   try {
-    let result;
-
     if (tobayAccountMode === "login") {
-      result = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
         options: { captchaToken }
       });
-
-      if (result.error) throw result.error;
-
-      const user = result.data.user;
-      const metadata = user.user_metadata || {};
-     await window.loadTobaySellerDashboard(user);
-await loadTobayAdminDashboard(user);
-     const { data: adminRecord, error: adminCheckError } = await supabase
-  .from("admin_users")
-  .select("user_id")
-  .eq("user_id", user.id)
-  .maybeSingle();
-
-if (adminCheckError) throw adminCheckError;
-
-if (!metadata.business_name && !adminRecord) {
-  try {
-    await loadTobayBuyerOrders(user);
-  } catch (buyerEasyBuyError) {
-    console.error("TOBAY EasyBuy buyer dashboard failed to load:", buyerEasyBuyError);
-  }
-  // Keep the Buy Now list, combined summary and saved items independent: an
-  // error in one buyer panel must not prevent the others from appearing.
-  const buyerPanelResults = await Promise.allSettled([
-    loadTobayNormalBuyerOrders(user),
-    loadTobayBuyerOverallSummary(user),
-    loadTobayWishlist(user)
-  ]);
-  buyerPanelResults.forEach((result, index) => {
-    if (result.status === "rejected") {
-      console.error("TOBAY buyer panel failed to load (panel " + index + "):", result.reason);
-    }
-  });
-} 
-      await loadTobayNotifications(user);
-      if (metadata.business_name) {
-        const { data: existing, error: checkError } = await supabase
-          .from("seller_applications")
-          .select("id")
-          .eq("user_id", user.id)
-          .limit(1);
-
-        if (checkError) throw checkError;
-
-        if (!existing || existing.length === 0) {
-          const { error: applicationError } = await supabase
-            .from("seller_applications")
-            .insert({
-              user_id: user.id,
-              business_name: metadata.business_name,
-              business_description: metadata.business_description || "",
-              business_location: metadata.business_location || "",
-              whatsapp_number: metadata.whatsapp_number || "",
-              contact_email: user.email,
-              status: "pending"
-            });
-
-          if (applicationError) throw applicationError;
-        }
-
-        message.textContent =
-          "Login successful! Your seller application is pending approval.";
-      } else {
-        message.textContent = "Login successful. Welcome to TOBAY!";
-      }
-
+      if (error) throw error;
+      const role = await window.routeTobayUserToDashboard(data.user);
+      message.textContent = "Login successful. Opening your " + role + " dashboard...";
     } else {
-      result = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -8843,45 +8913,35 @@ if (!metadata.business_name && !adminRecord) {
             full_name: name,
             business_name: tobayAccountMode === "seller" ? business : "",
             business_description: tobayAccountMode === "seller" ? description : "",
-business_location: tobayAccountMode === "seller" ? location : "",
-whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
+            business_location: tobayAccountMode === "seller" ? location : "",
+            whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
           }
         }
       });
+      if (error) throw error;
 
-      if (result.error) throw result.error;
-
-      if (tobayAccountMode === "seller") {
-        if (result.data.session) {
-          const user = result.data.user;
-
-          const { error: applicationError } = await supabase
-            .from("seller_applications")
-            .insert({
-              user_id: user.id,
-              business_name: business,
-              business_description: description,
-              business_location: location,
-              whatsapp_number: whatsapp,
-              contact_email: user.email,
-              status: "pending"
-            });
-
-          if (applicationError) throw applicationError;
-
-          message.textContent =
-            "Seller account created. Your application is pending approval.";
-        } else {
-          message.textContent =
-            "Registration received. Confirm your email, then log in to submit your seller application.";
-        }
+      if (!data.session || !data.user) {
+        message.textContent = tobayAccountMode === "seller"
+          ? "Registration received. Please confirm your email, then sign in. Your Seller Dashboard will open after sign-in."
+          : "Registration received. Please check your email to confirm your account, then sign in to open your Buyer Dashboard.";
+      } else if (tobayAccountMode === "seller") {
+        const { error: applicationError } = await supabase.from("seller_applications").insert({
+          user_id: data.user.id,
+          business_name: business,
+          business_description: description,
+          business_location: location,
+          whatsapp_number: whatsapp,
+          contact_email: data.user.email,
+          status: "pending"
+        });
+        if (applicationError) throw applicationError;
+        await window.routeTobayUserToDashboard(data.user);
+        message.textContent = "Seller registration successful. Your application is pending approval.";
       } else {
-        message.textContent = result.data.session
-          ? "Buyer account created successfully!"
-          : "Registration received. Please check your email to confirm your account.";
+        await window.routeTobayUserToDashboard(data.user);
+        message.textContent = "Buyer account created successfully. Welcome to TOBAY!";
       }
     }
-
   } catch (error) {
     message.textContent = error.message || "Something went wrong. Please try again.";
   } finally {
@@ -8892,13 +8952,14 @@ whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
 // TOBAY LOG OUT BUTTON
 const tobayLogoutButton = document.createElement("button");
 
+tobayLogoutButton.id = "tobayLogoutButton";
 tobayLogoutButton.textContent = "Log Out";
 tobayLogoutButton.style.cssText =
   "display:none;margin:15px;padding:12px 25px;" +
   "background:#b42318;color:white;border:0;" +
   "border-radius:8px;cursor:pointer;font-weight:bold;";
 
-document.getElementById("tobayAccountForm").after(tobayLogoutButton);
+window.tobayDashboardHost().appendChild(tobayLogoutButton);
 
 supabase.auth.onAuthStateChange((event, session) => {
   tobayLogoutButton.style.display =
@@ -8913,6 +8974,8 @@ tobayLogoutButton.addEventListener("click", async () => {
     return;
   }
 
+  document.body.classList.remove("tobay-dashboard-mode");
+  window.location.hash = "";
   alert("You have logged out successfully.");
   window.location.reload();
 });
@@ -9132,7 +9195,7 @@ async function loadTobayNotifications(user) {
     panel = document.createElement("section");
     panel.id = "tobayNotificationCentre";
     panel.className = "tobay-upgrade-panel";
-    document.getElementById("tobayAccountForm").after(panel);
+    window.tobayDashboardHost().appendChild(panel);
   }
 
   panel.innerHTML = `
