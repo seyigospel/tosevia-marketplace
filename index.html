@@ -4222,6 +4222,64 @@ body.tobay-dashboard-mode #tobayLogoutButton{display:inline-flex!important;align
 }
 
 </style>
+
+<style id="tobay-three-dashboard-premium-style">
+/* TOBAY — consistent premium typography and visual identity across all role dashboards */
+:root{--tb-ink:#172b4d;--tb-muted:#60718a;--tb-blue:#1746a2;--tb-blue-deep:#103578;--tb-blue-pale:#edf4ff;--tb-gold:#d99a27;--tb-line:#dce5f0;--tb-card:#fff}
+body.tobay-dashboard-mode,body.tobay-dashboard-mode #account,
+body.tobay-dashboard-mode #account *{font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;letter-spacing:normal}
+body.tobay-dashboard-mode #account{color:var(--tb-ink)!important}
+body.tobay-dashboard-mode #account .tobay-account-shell{border:1px solid var(--tb-line)!important;box-shadow:0 18px 48px rgba(20,48,88,.10)!important;overflow:visible!important}
+#tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{box-sizing:border-box!important;color:var(--tb-ink)!important;font-size:15px!important;line-height:1.55!important;background:#fff!important;border:1px solid var(--tb-line)!important;border-radius:20px!important;box-shadow:0 12px 34px rgba(23,55,95,.08)!important}
+#tobaySellerDashboard h1,#tobaySellerDashboard h2,#tobayAdminDashboard h1,#tobayAdminDashboard h2,#tobayBuyerOrders h1,#tobayBuyerOrders h2{color:var(--tb-blue-deep)!important;font-weight:800!important;letter-spacing:-.45px!important;line-height:1.2!important}
+#tobaySellerDashboard h3,#tobayAdminDashboard h3,#tobayBuyerOrders h3{color:#183c70!important;font-weight:750!important;letter-spacing:-.2px!important}
+#tobaySellerDashboard p,#tobayAdminDashboard p,#tobayBuyerOrders p{color:var(--tb-muted)!important;line-height:1.6!important}
+#tobaySellerDashboard section,#tobayAdminDashboard section,#tobayBuyerOrders section{box-sizing:border-box;min-width:0}
+#tobaySellerDashboard button,#tobayAdminDashboard button,#tobayBuyerOrders button{border-radius:10px!important;font-weight:700!important;box-shadow:none!important}
+#tobaySellerDashboard input,#tobaySellerDashboard select,#tobaySellerDashboard textarea,#tobayAdminDashboard input,#tobayAdminDashboard select,#tobayAdminDashboard textarea,#tobayBuyerOrders input,#tobayBuyerOrders select,#tobayBuyerOrders textarea{border:1px solid #cbd7e6!important;border-radius:10px!important;background:#fff!important;color:var(--tb-ink)!important;box-shadow:none!important}
+#tobaySellerDashboard table,#tobayAdminDashboard table,#tobayBuyerOrders table{border-collapse:separate!important;border-spacing:0!important;border:1px solid var(--tb-line)!important;border-radius:12px!important;overflow:hidden}
+#tobaySellerDashboard th,#tobayAdminDashboard th,#tobayBuyerOrders th{background:#edf3fb!important;color:#24466f!important;font-weight:800!important}
+#tobaySellerDashboard td,#tobayAdminDashboard td,#tobayBuyerOrders td{color:#344963!important}
+/* Seller order overview — clearly grouped, balanced statistics */
+#tobaySellerDashboard .tobay-seller-overview-panel{border:1px solid #dbe6f4!important;border-radius:18px!important;background:linear-gradient(145deg,#fff,#f5f8fe)!important;box-shadow:0 10px 28px rgba(16,53,120,.07)!important;padding:clamp(16px,2.5vw,25px)!important}
+#tobaySellerDashboard .tobay-overview-card{border:1px solid #dce6f2!important;border-radius:13px!important;background:#fff!important;box-shadow:0 4px 12px rgba(20,48,88,.045)!important;min-width:0!important}
+#tobaySellerDashboard .tobay-overview-card-value{color:#153e79!important;font-weight:850!important;font-variant-numeric:tabular-nums}
+/* Buyer dashboard order summaries and cards */
+#tobayBuyerOrders .buyer-overall-summary,#tobayBuyerOrders .buyer-order-card{border:1px solid var(--tb-line)!important;border-radius:15px!important;box-shadow:0 5px 18px rgba(23,55,95,.055)!important;background:#fff!important}
+#tobayBuyerOrders .buyer-overall-summary{background:linear-gradient(145deg,#f5f8fe,#edf4ff)!important}
+#tobayBuyerOrders .buyer-overall-item{border:1px solid #dce6f2!important;border-radius:11px!important;background:#fff!important}
+/* Admin dashboard metric cards and management panels */
+#tobayAdminDashboard #tobayAdminMetricGrid{gap:12px!important}
+#tobayAdminDashboard #tobayAdminMetricGrid>*,#tobayAdminDashboard .tobay-admin-card,#tobayAdminDashboard [class*="metric"],#tobayAdminDashboard [class*="Metric"]{border-radius:14px!important}
+@media(min-width:701px){
+ body.tobay-dashboard-mode #account{padding:22px clamp(14px,3vw,36px)!important}
+ body.tobay-dashboard-mode #account .tobay-account-main{padding:clamp(20px,3vw,34px)!important}
+ #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{width:100%!important;max-width:1220px!important;margin:0 auto!important;padding:clamp(22px,3vw,34px)!important}
+ #tobaySellerDashboard .tobay-overview-grid,#tobaySellerDashboard .tobay-toolkit-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:700px){
+ body.tobay-dashboard-mode #account{padding:7px 4px!important}
+ body.tobay-dashboard-mode #account .tobay-account-shell{border-radius:14px!important}
+ body.tobay-dashboard-mode #account .tobay-account-main{padding:8px!important}
+ #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{width:100%!important;max-width:100%!important;margin:0 auto!important;padding:15px!important;border-radius:15px!important;font-size:14px!important;line-height:1.55!important}
+ #tobaySellerDashboard h2,#tobayAdminDashboard h2,#tobayBuyerOrders h2{font-size:22px!important}
+ #tobaySellerDashboard h3,#tobayAdminDashboard h3,#tobayBuyerOrders h3{font-size:17px!important}
+ #tobaySellerDashboard p,#tobayAdminDashboard p,#tobayBuyerOrders p,#tobaySellerDashboard li,#tobayAdminDashboard li,#tobayBuyerOrders li{font-size:13px!important}
+ #tobaySellerDashboard .tobay-seller-overview-heading{align-items:flex-start!important}
+ #tobaySellerDashboard .tobay-overview-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ #tobaySellerDashboard .tobay-overview-card{padding:12px 9px!important}
+ #tobaySellerDashboard .tobay-overview-card-value{font-size:22px!important}
+ #tobayBuyerOrders .buyer-overall-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ #tobayAdminDashboard #tobayAdminMetricGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ #tobaySellerDashboard button,#tobayAdminDashboard button,#tobayBuyerOrders button{min-height:42px!important;padding:9px 12px!important}
+ #tobaySellerDashboard table,#tobayAdminDashboard table,#tobayBuyerOrders table{display:block!important;max-width:100%!important;overflow-x:auto!important}
+}
+@media(max-width:360px){
+ #tobaySellerDashboard,#tobayAdminDashboard,#tobayBuyerOrders{padding:11px!important}
+ #tobaySellerDashboard .tobay-overview-grid,#tobayBuyerOrders .buyer-overall-grid,#tobayAdminDashboard #tobayAdminMetricGrid{gap:6px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
