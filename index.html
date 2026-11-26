@@ -4122,6 +4122,45 @@ button, input, select, textarea { touch-action: manipulation; }
   html { scroll-behavior: auto !important; }
 }
 </style>
+
+<style id="tobay-role-dashboard-routing">
+/* A signed-in member sees one role-specific dashboard as a separate workspace. */
+body.tobay-dashboard-mode{background:#f4f7fb!important;min-height:100vh}
+body.tobay-dashboard-mode> :not(#account):not(script):not(style){display:none!important}
+body.tobay-dashboard-mode>header,
+body.tobay-dashboard-mode>nav,
+body.tobay-dashboard-mode>main,
+body.tobay-dashboard-mode>footer,
+body.tobay-dashboard-mode>.hero,
+body.tobay-dashboard-mode>.section,
+body.tobay-dashboard-mode>.quick-stats,
+body.tobay-dashboard-mode>.discover-section,
+body.tobay-dashboard-mode>.categories-section,
+body.tobay-dashboard-mode>.seller-banner,
+body.tobay-dashboard-mode>#toast{display:none!important}
+body.tobay-dashboard-mode #account{display:block!important;min-height:100vh;padding:22px 12px!important;background:linear-gradient(145deg,#edf3fb,#f8faff)!important}
+body.tobay-dashboard-mode #account .tobay-account-shell{display:block!important;width:min(1220px,100%)!important;max-width:1220px!important;min-height:0!important;margin:0 auto!important;border:1px solid #dce6f2!important;border-radius:20px!important;background:#fff!important;box-shadow:0 18px 55px #102b5514!important}
+body.tobay-dashboard-mode #account .tobay-account-welcome,
+body.tobay-dashboard-mode #account .tobay-account-heading,
+body.tobay-dashboard-mode #account .tobay-account-choices,
+body.tobay-dashboard-mode #account #tobayAccountForm,
+body.tobay-dashboard-mode #account .tobay-account-footnote,
+body.tobay-dashboard-mode #account #tobayAccountBack{display:none!important}
+body.tobay-dashboard-mode #account .tobay-account-main{padding:clamp(12px,3vw,30px)!important}
+body.tobay-dashboard-mode #account #tobaySellerDashboard,
+body.tobay-dashboard-mode #account #tobayAdminDashboard,
+body.tobay-dashboard-mode #account #tobayBuyerOrders{display:none;margin:0 auto!important;width:100%!important;max-width:1160px!important}
+body.tobay-dashboard-mode #account #tobaySellerDashboard[style*="display: block"],
+body.tobay-dashboard-mode #account #tobayAdminDashboard[style*="display: block"],
+body.tobay-dashboard-mode #account #tobayBuyerOrders[style*="display: block"]{display:block!important}
+body.tobay-dashboard-mode #tobayLogoutButton{display:inline-flex!important;align-items:center;justify-content:center;margin:20px 0 4px!important;padding:11px 18px!important;border:0!important;border-radius:9px!important;background:#b42318!important;color:#fff!important;font-weight:800!important}
+@media(max-width:600px){
+ body.tobay-dashboard-mode #account{padding:8px 5px!important}
+ body.tobay-dashboard-mode #account .tobay-account-shell{border-radius:13px!important}
+ body.tobay-dashboard-mode #account .tobay-account-main{padding:10px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="tobay-market-topline">TOBAY SHOPPING FESTIVAL  •  DISCOVER GREAT FINDS, SERVICES &amp; SELLER OFFERS  •  SHOP TOBAY</div><header>
@@ -8730,6 +8769,111 @@ async function loadTobayAdminEarnings(panel) {
   }
 }
 
+
+// TOBAY role-based dashboard routing.
+// Admin privilege is verified from admin_users; seller status is verified from
+// seller_applications. Everyone else is routed to the buyer dashboard.
+async function routeTobayUserToDashboard(user) {
+  if (!user) throw new Error("Your account session could not be verified. Please sign in again.");
+
+  const message = document.getElementById("tobayAccountMessage");
+  const hidePanels = () => {
+    ["tobaySellerDashboard", "tobayAdminDashboard", "tobayBuyerOrders"].forEach(id => {
+      const panel = document.getElementById(id);
+      if (panel) panel.style.display = "none";
+    });
+  };
+  const showPanel = panelId => {
+    hidePanels();
+    document.body.classList.add("tobay-dashboard-mode");
+    const panel = document.getElementById(panelId);
+    if (!panel) throw new Error("The dashboard could not be opened. Please refresh and sign in again.");
+    panel.style.display = "block";
+    panel.dataset.activeRoleDashboard = "true";
+    const logout = document.getElementById("tobayLogoutButton");
+    if (logout) {
+      logout.style.display = "inline-flex";
+      panel.appendChild(logout);
+    }
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Check the admin allow-list first. A registration choice or user metadata
+  // can never grant administrator privileges.
+  const { data: adminRecord, error: adminError } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (adminError) throw new Error("Unable to verify administrator access: " + adminError.message);
+
+  if (adminRecord) {
+    await loadTobayAdminDashboard(user);
+    showPanel("tobayAdminDashboard");
+    if (message) message.textContent = "Welcome to your TOBAY Admin Dashboard.";
+    return "admin";
+  }
+
+  // Seller access is based on an application record, not a public role picker.
+  let { data: sellerApplication, error: sellerError } = await supabase
+    .from("seller_applications")
+    .select("id,status,business_name,business_description,business_location,contact_email,whatsapp_number")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (sellerError) throw new Error("Unable to verify seller account: " + sellerError.message);
+
+  const metadata = user.user_metadata || {};
+  const isSellerAccount = !!sellerApplication ||
+    metadata.account_role === "seller" || !!metadata.business_name;
+
+  if (isSellerAccount) {
+    // Support older seller registrations that have metadata but no application row.
+    if (!sellerApplication && metadata.business_name) {
+      const { data: createdApplication, error: createError } = await supabase
+        .from("seller_applications")
+        .insert({
+          user_id: user.id,
+          business_name: metadata.business_name,
+          business_description: metadata.business_description || "",
+          business_location: metadata.business_location || "",
+          whatsapp_number: metadata.whatsapp_number || "",
+          contact_email: user.email,
+          status: "pending"
+        })
+        .select("id,status,business_name,business_description,business_location,contact_email,whatsapp_number")
+        .single();
+      if (createError) throw new Error("Your seller application could not be loaded: " + createError.message);
+      sellerApplication = createdApplication;
+    }
+
+    await window.loadTobaySellerDashboard(user);
+    const sellerPanel = document.getElementById("tobaySellerDashboard");
+    if (!sellerPanel) throw new Error("Your seller dashboard could not be created. Please contact TOBAY support.");
+    showPanel("tobaySellerDashboard");
+    if (message) message.textContent = sellerApplication?.status === "approved"
+      ? "Welcome to your TOBAY Seller Dashboard."
+      : "Your seller dashboard is ready. Your application is awaiting approval.";
+    return "seller";
+  }
+
+  // Buyer accounts receive only buyer-facing order, wishlist and notification tools.
+  await loadTobayBuyerOrders(user);
+  const buyerResults = await Promise.allSettled([
+    loadTobayNormalBuyerOrders(user),
+    loadTobayBuyerOverallSummary(user),
+    loadTobayWishlist(user)
+  ]);
+  buyerResults.forEach((item, index) => {
+    if (item.status === "rejected") {
+      console.error("TOBAY buyer dashboard section failed to load (" + index + "):", item.reason);
+    }
+  });
+  await loadTobayNotifications(user);
+  showPanel("tobayBuyerOrders");
+  if (message) message.textContent = "Welcome to your TOBAY Buyer Dashboard.";
+  return "buyer";
+}
+
 document.getElementById("tobayAccountForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
@@ -8771,67 +8915,8 @@ document.getElementById("tobayAccountForm").addEventListener("submit", async fun
       if (result.error) throw result.error;
 
       const user = result.data.user;
-      const metadata = user.user_metadata || {};
-     await window.loadTobaySellerDashboard(user);
-await loadTobayAdminDashboard(user);
-     const { data: adminRecord, error: adminCheckError } = await supabase
-  .from("admin_users")
-  .select("user_id")
-  .eq("user_id", user.id)
-  .maybeSingle();
-
-if (adminCheckError) throw adminCheckError;
-
-if (!metadata.business_name && !adminRecord) {
-  try {
-    await loadTobayBuyerOrders(user);
-  } catch (buyerEasyBuyError) {
-    console.error("TOBAY EasyBuy buyer dashboard failed to load:", buyerEasyBuyError);
-  }
-  // Keep the Buy Now list, combined summary and saved items independent: an
-  // error in one buyer panel must not prevent the others from appearing.
-  const buyerPanelResults = await Promise.allSettled([
-    loadTobayNormalBuyerOrders(user),
-    loadTobayBuyerOverallSummary(user),
-    loadTobayWishlist(user)
-  ]);
-  buyerPanelResults.forEach((result, index) => {
-    if (result.status === "rejected") {
-      console.error("TOBAY buyer panel failed to load (panel " + index + "):", result.reason);
-    }
-  });
-} 
-      await loadTobayNotifications(user);
-      if (metadata.business_name) {
-        const { data: existing, error: checkError } = await supabase
-          .from("seller_applications")
-          .select("id")
-          .eq("user_id", user.id)
-          .limit(1);
-
-        if (checkError) throw checkError;
-
-        if (!existing || existing.length === 0) {
-          const { error: applicationError } = await supabase
-            .from("seller_applications")
-            .insert({
-              user_id: user.id,
-              business_name: metadata.business_name,
-              business_description: metadata.business_description || "",
-              business_location: metadata.business_location || "",
-              whatsapp_number: metadata.whatsapp_number || "",
-              contact_email: user.email,
-              status: "pending"
-            });
-
-          if (applicationError) throw applicationError;
-        }
-
-        message.textContent =
-          "Login successful! Your seller application is pending approval.";
-      } else {
-        message.textContent = "Login successful. Welcome to TOBAY!";
-      }
+      await routeTobayUserToDashboard(user);
+      message.textContent = "Login successful. Your dashboard is ready.";
 
     } else {
       result = await supabase.auth.signUp({
@@ -8841,6 +8926,7 @@ if (!metadata.business_name && !adminRecord) {
           captchaToken,
           data: {
             full_name: name,
+            account_role: tobayAccountMode === "seller" ? "seller" : "buyer",
             business_name: tobayAccountMode === "seller" ? business : "",
             business_description: tobayAccountMode === "seller" ? description : "",
 business_location: tobayAccountMode === "seller" ? location : "",
@@ -8869,6 +8955,7 @@ whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
 
           if (applicationError) throw applicationError;
 
+          await routeTobayUserToDashboard(user);
           message.textContent =
             "Seller account created. Your application is pending approval.";
         } else {
@@ -8876,9 +8963,12 @@ whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
             "Registration received. Confirm your email, then log in to submit your seller application.";
         }
       } else {
-        message.textContent = result.data.session
-          ? "Buyer account created successfully!"
-          : "Registration received. Please check your email to confirm your account.";
+        if (result.data.session && result.data.user) {
+          await routeTobayUserToDashboard(result.data.user);
+          message.textContent = "Buyer account created successfully. Your dashboard is ready.";
+        } else {
+          message.textContent = "Registration received. Please check your email to confirm your account, then sign in to open your Buyer Dashboard.";
+        }
       }
     }
 
@@ -8891,6 +8981,7 @@ whatsapp_number: tobayAccountMode === "seller" ? whatsapp : ""
 });
 // TOBAY LOG OUT BUTTON
 const tobayLogoutButton = document.createElement("button");
+tobayLogoutButton.id = "tobayLogoutButton";
 
 tobayLogoutButton.textContent = "Log Out";
 tobayLogoutButton.style.cssText =
