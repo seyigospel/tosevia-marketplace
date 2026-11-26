@@ -11947,5 +11947,101 @@ body .tobay-hero-search, body .tobay-hero-search * {
   body .tobay-hero-actions>a { animation:none!important; }
 }
 </style>
+
+
+<style id="tobay-landscape-dashboard-layout-v1">
+/* TOBAY dashboard workspace: use the width of laptops and phones more efficiently. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard){
+  box-sizing:border-box!important;width:min(1440px,98%)!important;max-width:1440px!important;
+  margin:12px auto!important;padding:clamp(12px,1.8vw,24px)!important;
+  border-radius:16px!important;overflow:visible!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) *{box-sizing:border-box}
+/* Keep the dashboard heading compact so the working area appears sooner. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard)>h2{
+  min-height:58px!important;margin:0 0 14px!important;padding:14px 18px!important;
+  font-size:clamp(19px,2vw,25px)!important;border-radius:12px!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) h3{
+  margin-top:12px!important;margin-bottom:8px!important;font-size:clamp(15px,1.35vw,18px)!important;
+}
+/* Buyer: arrange summary tiles across the available width. */
+html body #tobayBuyerOrders .buyer-stats,
+html body #tobayBuyerOrders .buyer-overall-grid{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin:10px 0 16px!important;
+}
+html body #tobayBuyerOrders .buyer-stat,
+html body #tobayBuyerOrders .buyer-overall-item{padding:11px!important;min-height:68px!important}
+html body #tobayBuyerOrders .buyer-stat strong,
+html body #tobayBuyerOrders .buyer-overall-item strong{font-size:clamp(18px,2vw,24px)!important}
+html body #tobayBuyerOrders .buyer-hero{padding:15px 18px!important;margin-bottom:12px!important}
+html body #tobayBuyerOrders .buyer-section-title{margin:15px 0 8px!important}
+html body #tobayBuyerOrders .buyer-order-card{padding:12px!important;margin:8px 0!important}
+/* Seller: use horizontal dashboard toolkits on wide screens. */
+html body #tobaySellerDashboard .tobay-toolkit-grid,
+html body #tobaySellerDashboard #tobaySellerOrderSummary,
+html body #tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;
+}
+html body #tobaySellerDashboard .tobay-toolkit{padding:13px!important;margin:8px 0!important}
+html body #tobaySellerDashboard #tobayListingForm{padding:14px!important}
+html body #tobaySellerDashboard #tobayListingForm label{margin:7px 0 4px!important}
+html body #tobaySellerDashboard #tobayListingForm input:not([type=file]),
+html body #tobaySellerDashboard #tobayListingForm select,
+html body #tobaySellerDashboard #tobayListingForm textarea{min-height:38px!important;padding:8px 10px!important}
+html body #tobaySellerDashboard #tobayMyListings>div,
+html body #tobaySellerDashboard [data-seller-order],
+html body #tobaySellerDashboard #tobaySellerBuyNowOrders>div{padding:12px!important;margin:8px 0!important}
+/* Admin: metrics and insight tiles in a compact multi-column layout. */
+html body #tobayAdminDashboard #tobayAdminMetricGrid,
+html body #tobayAdminDashboard #tobayAdminInsights{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;
+}
+html body #tobayAdminDashboard #tobayAdminApplications{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+html body #tobayAdminDashboard #tobayAdminApplications>div,
+html body #tobayAdminDashboard #tobayAdminMetricGrid>div,
+html body #tobayAdminDashboard #tobayAdminInsights>div>div{padding:11px!important;margin:0!important;min-width:0!important}
+/* Tables stay readable without forcing the entire dashboard wider than the screen. */
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) :is(.table-responsive,.tobay-table-wrap,#tobayCustomerList){
+  max-width:100%!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;
+}
+html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) table{min-width:620px!important}
+/* Laptop landscape: dashboard uses the full canvas and avoids oversized vertical gaps. */
+@media(min-width:900px){
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard){width:calc(100% - 24px)!important}
+  html body #tobaySellerDashboard #tobayListingForm{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:14px!important;align-items:end}
+  html body #tobaySellerDashboard #tobayListingForm h3,
+  html body #tobaySellerDashboard #tobayListingForm p,
+  html body #tobaySellerDashboard #tobayListingForm button[type=submit]{grid-column:1/-1}
+}
+/* Phones: compact 2-column cards, stacked controls, no page-level sideways scrolling. */
+@media(max-width:700px){
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard){
+    width:calc(100% - 12px)!important;margin:6px auto!important;padding:11px!important;border-radius:13px!important;
+  }
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard)>h2{padding:12px!important;margin-bottom:10px!important;font-size:19px!important}
+  html body #tobayBuyerOrders .buyer-stats,
+  html body #tobayBuyerOrders .buyer-overall-grid,
+  html body #tobaySellerDashboard .tobay-toolkit-grid,
+  html body #tobaySellerDashboard #tobaySellerOrderSummary,
+  html body #tobaySellerDashboard #tobaySellerOrderOverview .tobay-overview-grid,
+  html body #tobayAdminDashboard #tobayAdminMetricGrid,
+  html body #tobayAdminDashboard #tobayAdminInsights{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  html body #tobayAdminDashboard #tobayAdminApplications{grid-template-columns:1fr!important}
+  html body #tobayBuyerOrders .buyer-stat,
+  html body #tobayBuyerOrders .buyer-overall-item{padding:9px!important;min-height:62px!important}
+  html body #tobayBuyerOrders .buyer-hero{padding:12px!important;gap:8px!important}
+  html body #tobaySellerDashboard #tobayListingForm{display:block!important;padding:11px!important}
+  html body #tobaySellerDashboard .tobay-toolkit{padding:11px!important}
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) :is(button,input,select,textarea){max-width:100%!important;font-size:14px!important}
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard) p{line-height:1.45!important}
+}
+@media(max-width:380px){
+  html body :is(#tobayBuyerDashboard,#tobayBuyerOrders,#tobaySellerDashboard,#tobayAdminDashboard){padding:8px!important}
+  html body #tobayBuyerOrders .buyer-stat strong,
+  html body #tobayBuyerOrders .buyer-overall-item strong{font-size:18px!important}
+}
+</style>
+
 </body>
 </html>
