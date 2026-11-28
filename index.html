@@ -9760,16 +9760,34 @@ section p,section li{color:var(--tobay-body)!important}
   location.hash='explore';
   setTimeout(()=>{const cards=Array.from(document.querySelectorAll('#listingGrid .listing'));const card=cards.find(c=>c.querySelector('h3')?.textContent.trim()===(item.title||'').trim());const btn=card?.querySelector('button');if(btn)btn.click();},450);
  }
- function showSellerProfile(sellerId,data){
+ async function showSellerProfile(sellerId,data){
   const old=document.querySelector('.tobay-profile-modal');if(old)old.remove();
   const modal=document.createElement('div');modal.className='tobay-profile-modal';
   const panel=document.createElement('div');panel.className='tobay-profile-panel';
-  const close=document.createElement('button');close.textContent='✕ Close';close.style.cssText='float:right;border:0;background:#173b70;color:#fff;padding:9px 13px;border-radius:8px;cursor:pointer';close.onclick=()=>modal.remove();
+  const close=document.createElement('button');close.type='button';close.textContent='✕ Close';close.style.cssText='float:right;border:0;background:#173b70;color:#fff;padding:9px 13px;border-radius:8px;cursor:pointer';close.onclick=()=>modal.remove();
   const heading=document.createElement('h2');heading.textContent='Seller storefront';
-  const intro=document.createElement('p');intro.textContent='Published listings from this TOBAY seller.';
-  panel.append(close,heading,intro);
-  data.forEach(item=>{const row=document.createElement('div');row.className='tobay-profile-item';const name=document.createElement('b');name.textContent=item.title||'Marketplace listing';const detail=document.createElement('small');detail.textContent=(item.listing_type==='service'?'Service':'Product')+' • '+(item.category||'General category')+' • '+(item.price!=null?(item.currency||'')+' '+Number(item.price).toLocaleString():'Price not specified');const view=document.createElement('button');view.textContent='View listing details';view.style.cssText='margin-top:9px;border:0;background:#c81e35;color:#fff;border-radius:7px;padding:8px 11px;cursor:pointer';view.onclick=()=>{modal.remove();openListing(item)};row.append(name,detail,view);panel.appendChild(row)});
-  modal.appendChild(panel);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});document.body.appendChild(modal);
+  const intro=document.createElement('p');intro.textContent='Loading this seller’s published products and services…';
+  panel.append(close,heading,intro);modal.appendChild(panel);
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
+  document.body.appendChild(modal);
+  let listings=Array.isArray(data)?data.slice():[];
+  try{
+   if(window.supabase && typeof window.supabase.from==='function'){
+    const result=await window.supabase.from('listings').select('id,seller_id,title,description,category,price,currency,image_urls,listing_type,status').eq('seller_id',sellerId).eq('status','published').order('created_at',{ascending:false});
+    if(!result.error && Array.isArray(result.data))listings=result.data;
+   }
+  }catch(error){console.warn('TOBAY storefront refresh:',error)}
+  if(!modal.isConnected)return;
+  intro.textContent='Browse this seller’s published products and services.';
+  if(!listings.length){const empty=document.createElement('p');empty.className='tobay-profile-item';empty.textContent='This seller has no published listings available at the moment.';panel.appendChild(empty);return}
+  listings.forEach(item=>{
+   const row=document.createElement('div');row.className='tobay-profile-item';
+   if(Array.isArray(item.image_urls)&&item.image_urls[0]){const img=document.createElement('img');img.src=supabaseUrl+item.image_urls[0].split('/').slice(-2).join('/');img.alt=item.title||'Listing image';img.loading='lazy';img.style.cssText='width:100%;max-height:190px;object-fit:cover;border-radius:8px;margin-bottom:9px';row.appendChild(img)}
+   const name=document.createElement('b');name.textContent=item.title||'Marketplace listing';
+   const detail=document.createElement('small');detail.textContent=(String(item.listing_type||'').toLowerCase()==='service'?'Service':'Product')+' • '+(item.category||'General category')+' • '+(item.price!=null?(item.currency||'')+' '+Number(item.price).toLocaleString():'Price not specified');
+   const view=document.createElement('button');view.type='button';view.textContent='View listing details';view.style.cssText='margin-top:9px;border:0;background:#c81e35;color:#fff;border-radius:7px;padding:8px 11px;cursor:pointer';view.onclick=()=>{modal.remove();openListing(item)};
+   row.append(name,detail,view);panel.appendChild(row);
+  });
  }
  function makeCard(item){
   const card=document.createElement('article');card.className='listing';
