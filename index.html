@@ -5204,9 +5204,33 @@ profilePanel.append(
   profileHeading
 );
 
-  const sellerListings = tobayMarketplaceListings.filter(
-    listing => listing.seller_id === item.seller_id
-  );
+  // Load this seller's published listings directly so the storefront does not
+  // depend on the marketplace grid having finished loading or its cached array.
+  let sellerListings = [];
+  try {
+    const { data: storefrontListings, error: storefrontListingsError } =
+      await window.tobaySupabase
+        .from("listings")
+        .select("id, seller_id, listing_type, title, description, category, price, currency, image_urls, created_at")
+        .eq("seller_id", item.seller_id)
+        .eq("status", "published")
+        .order("created_at", { ascending: false });
+
+    if (storefrontListingsError) {
+      console.error("TOBAY seller storefront listings error:", storefrontListingsError);
+    } else if (Array.isArray(storefrontListings)) {
+      sellerListings = storefrontListings;
+    }
+  } catch (storefrontListingsException) {
+    console.error("TOBAY seller storefront could not refresh listings:", storefrontListingsException);
+  }
+
+  // Keep already-loaded public marketplace results as a fallback if the
+  // direct storefront request is temporarily unavailable.
+  if (!sellerListings.length) {
+    sellerListings = (Array.isArray(tobayMarketplaceListings) ? tobayMarketplaceListings : [])
+      .filter(listing => String(listing.seller_id) === String(item.seller_id));
+  }
   const productCount = sellerListings.filter(listing => listing.listing_type === "product").length;
   const serviceCount = sellerListings.filter(listing => listing.listing_type === "service").length;
 
