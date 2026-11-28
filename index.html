@@ -9771,14 +9771,23 @@ section p,section li{color:var(--tobay-body)!important}
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
   document.body.appendChild(modal);
   let listings=Array.isArray(data)?data.slice():[];
+  const client=window.tobaySupabase || (window.supabase && typeof window.supabase.from==='function' ? window.supabase : null);
   try{
-   if(window.supabase && typeof window.supabase.from==='function'){
-    const result=await window.supabase.from('listings').select('id,seller_id,title,description,category,price,currency,image_urls,listing_type,status').eq('seller_id',sellerId).eq('status','published').order('created_at',{ascending:false});
-    if(!result.error && Array.isArray(result.data))listings=result.data;
+   if(client && typeof client.from==='function'){
+    const result=await client.from('listings').select('id,seller_id,title,description,category,price,currency,image_urls,listing_type,status,created_at').eq('seller_id',sellerId).eq('status','published').order('created_at',{ascending:false});
+    if(result.error){
+     console.error('TOBAY storefront listings could not be loaded:',result.error);
+     if(!listings.length)intro.textContent='We could not load this seller’s storefront right now. Please refresh the page and try again.';
+    }else if(Array.isArray(result.data)){listings=result.data;}
+   }else if(!listings.length){
+    intro.textContent='The marketplace connection is still starting. Please refresh the page and try again.';
    }
-  }catch(error){console.warn('TOBAY storefront refresh:',error)}
+  }catch(error){
+   console.error('TOBAY storefront refresh:',error);
+   if(!listings.length)intro.textContent='We could not load this seller’s storefront right now. Please refresh the page and try again.';
+  }
   if(!modal.isConnected)return;
-  intro.textContent='Browse this seller’s published products and services.';
+  if(listings.length)intro.textContent='Browse this seller’s published products and services.';
   if(!listings.length){const empty=document.createElement('p');empty.className='tobay-profile-item';empty.textContent='This seller has no published listings available at the moment.';panel.appendChild(empty);return}
   listings.forEach(item=>{
    const row=document.createElement('div');row.className='tobay-profile-item';
