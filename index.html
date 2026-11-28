@@ -4144,7 +4144,7 @@ button, input, select, textarea { touch-action: manipulation; }
 <a class="btn btn-orange" href="#account">Get Started</a>
 </nav>
 </div>
-</header><nav aria-label="Shop categories" class="tobay-quick-nav"><a class="tobay-all-categories" href="#categories">☰ All Categories</a><a href="#explore">Fashion</a><a href="#explore">Phones &amp; Electronics</a><a href="#explore">Computers</a><a href="#explore">Home &amp; Living</a><a href="#explore">Beauty</a><a href="#explore">Food &amp; Groceries</a><a href="#explore">Services</a><a href="#sell">Sell on TOBAY</a></nav>
+</header><nav aria-label="Shop categories" class="tobay-quick-nav"><a class="tobay-all-categories" href="#categories">☰ All Categories</a><a href="#explore">Fashion</a><a href="#explore">Phones &amp; Electronics</a><a href="#explore">Computers</a><a href="#explore">Home &amp; Living</a><a href="#explore">Beauty</a><a href="#explore">Food &amp; Groceries</a><a href="#explore" onclick="chooseCategory('sports & accessories')">Sports &amp; Accessories</a><a href="#explore">Services</a><a href="#sell">Sell on TOBAY</a></nav>
 <main>
 <section class="hero tobay-home-hero" id="home">
 <div class="container tobay-hero-layout">
@@ -4217,6 +4217,7 @@ button, input, select, textarea { touch-action: manipulation; }
 <a class="category" href="#explore" onclick="chooseCategory('professional')"><div class="category-icon">💼</div><h3>Professional Services</h3><p>Business and expert support</p><span aria-hidden="true" class="category-arrow">↗</span></a>
 <a class="category" href="#explore" onclick="chooseCategory('creative')"><div class="category-icon">🎨</div><h3>Creative Services</h3><p>Design, photography and media</p><span aria-hidden="true" class="category-arrow">↗</span></a>
 <a class="category" href="#explore" onclick="chooseCategory('food')"><div class="category-icon">🍲</div><h3>Food &amp; Catering</h3><p>Food businesses and catering</p><span aria-hidden="true" class="category-arrow">↗</span></a>
+<a class="category" href="#explore" onclick="chooseCategory('sports & accessories')"><div class="category-icon">⚽</div><h3>Sports &amp; Accessories</h3><p>Sportswear, shoes, balls, gym and fitness equipment</p><span aria-hidden="true" class="category-arrow">↗</span></a>
 <a class="category" href="#explore" onclick="chooseCategory('repairs')"><div class="category-icon">🔧</div><h3>Repairs &amp; Trades</h3><p>Repairs and skilled trades</p><span aria-hidden="true" class="category-arrow">↗</span></a>
 <a class="category category-featured" href="#explore" onclick="chooseCategory('all')"><div class="category-icon">🌍</div><h3>Explore Everything</h3><p>Discover more possibilities across TOBAY</p><span aria-hidden="true" class="category-arrow">↗</span></a>
 </div>
@@ -4449,11 +4450,10 @@ async function loadTobayMarketplace() {
     tobayMarketplaceListings = data || [];
     window.tobayMarketplaceListings = tobayMarketplaceListings;
 
-    const categories = [...new Set(
-      tobayMarketplaceListings
-        .map(item => item.category)
-        .filter(Boolean)
-    )].sort();
+    const categories = [...new Set([
+      ...tobayMarketplaceListings.map(item => item.category).filter(Boolean),
+      "Sports & Accessories"
+    ])].sort();
 
     categorySelect.innerHTML = '<option value="">All Categories</option>';
 
@@ -5593,6 +5593,8 @@ function filterType(type, button) {
 function chooseCategory(category) {
   currentCategory = category;
   currentType = "all";
+  const categorySelect = document.getElementById("marketplaceCategory");
+  if (categorySelect) categorySelect.value = category === "all" ? "" : String(category).toLowerCase();
   document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
   document.querySelector('#explore .tab[data-type="all"]')?.classList.add("active");
   updateListings();
@@ -6062,7 +6064,7 @@ window.tobayRenderDeliveryUpdates = tobayRenderDeliveryUpdates;
 
       <label>Category</label>
       <input id="tobayListingCategory" required maxlength="100"
-        placeholder="Example: Fashion, Electronics, Catering"
+        placeholder="Example: Fashion, Electronics, Sports & Accessories, Catering"
         style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
 
       <label>Price</label>
